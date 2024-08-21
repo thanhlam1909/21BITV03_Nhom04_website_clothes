@@ -1,0 +1,63 @@
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.ProductType>
+
+@{
+    ViewData["Title"] = "Product Types";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Loại sản phẩm</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Loại sản phẩm</li>
+    </ol>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Tạo loại sản phẩm mới</a>
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-boxes me-1"></i>
+            Danh sách loại sản phẩm
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Tên loại sản phẩm</th>
+                        <th>Giới thiệu</th>
+                        <th style="text-align: center;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.First().ProductTypeName)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Description)</th>
+                        <th style="text-align: center;">Thao tác</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.ProductTypeName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td style="text-align: center;">
+                                <a asp-action="Edit" asp-route-id="@item.ProductTypeId" title="Chỉnh sửa" style="text-decoration: none; display: inline-block;">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.ProductTypeId" title="Chi tiết" style="text-decoration: none; display: inline-block;">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.ProductTypeId" title="Xóa" style="text-decoration: none; display: inline-block;">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

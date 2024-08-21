@@ -1,0 +1,61 @@
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.ProductColor>
+
+@{
+    ViewData["Title"] = "Product Colors";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Màu sản phẩm</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Màu sản phẩm</li>
+    </ol>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Tạo màu sản phẩm</a>
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-palette me-1"></i>
+            Bảng màu sản phẩm
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Tên màu</th>
+                        <th>Giới thiệu</th>
+                        <th style="text-align: center;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.First().ColorName)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Description)</th>
+                        <th style="text-align: center;">Action</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.ColorName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td style="text-align: center;">
+                                <a asp-action="Edit" asp-route-id="@item.ColorId" title="Edit" style="text-decoration: none; display: inline-block;">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.ColorId" title="Delete" style="text-decoration: none; display: inline-block;">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

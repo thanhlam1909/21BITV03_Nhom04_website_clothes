@@ -1,0 +1,43 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.ProductSize
+
+@{
+    ViewData["Title"] = "Delete Product Size";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Xóa kích thước sản phẩm</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Kích thước sản phẩm</a></li>
+        <li class="breadcrumb-item active">Xóa</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-trash-alt me-1"></i>
+            Xóa kích thước sản phẩm
+        </div>
+        <div class="card-body">
+            <h3>Bạn có chắc chắn muốn xóa mục này?</h3>
+            <div>
+                <h4>Thông tin chi tiết</h4>
+                <hr />
+                <dl class="row">
+                    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.SizeName)</dt>
+                    <dd class="col-sm-10">@Html.DisplayFor(model => model.SizeName)</dd>
+
+                    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Description)</dt>
+                    <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="card-footer">
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="ProductSizeId" />
+                <input type="submit" value="Xóa" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+            </form>
+        </div>
+    </div>
+</div>

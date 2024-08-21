@@ -1,0 +1,60 @@
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.ProductSize>
+
+@{
+    ViewData["Title"] = "Product Sizes";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Kích thước sản phẩm</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Kích thước sản phẩm</li>
+    </ol>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Tạo kích thước sản phẩm</a>
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-ruler-combined me-1"></i>
+            Bảng kích thước sản phẩm
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Kích thước</th>
+                        <th>Giới thiệu</th>
+                        <th style="text-align: center;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.First().SizeName)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Description)</th>
+                        <th style="text-align: center;">Action</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.SizeName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td style="text-align: center;">
+                                <a asp-action="Edit" asp-route-id="@item.ProductSizeId" title="Edit" style="text-decoration: none; display: inline-block;">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.ProductSizeId" title="Delete" style="text-decoration: none; display: inline-block;">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
