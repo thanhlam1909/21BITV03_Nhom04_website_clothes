@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@model UserRoleViewModel
+
+<h2>Edit Role for @Model.UserName</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="UserId" value="@Model.UserId" />
+
+    <div>
+        @foreach (var role in Model.Roles)
+        {
+            <div>
+                <input type="radio"
+                       name="SelectedRoleId"
+                       value="@role.RoleId"
+                @(role.RoleId == Model.SelectedRoleId ? "checked" : "") />
+                <label>@role.RoleName</label>
+            </div>
+        }
+    </div>
+
+    <button type="submit">Save</button>
+</form>

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Models.User>
+
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">User Management</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active">Users</li>
+    </ol>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New User</a>
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-user me-1"></i>
+            User List
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="user-row-@item.Users.Id">
+                            <td>@Html.DisplayFor(modelItem => item.Users.Id)</td>
+                            <td>@(item.UserInfo?.FullName ?? "N/A")</td>
+                            <td>@(item.UserInfo?.Email ?? "N/A")</td>
+                            <td style="text-align: center;">
+                                <a asp-action="Edit" asp-route-id="@item.Users.Id" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Users.Id" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+

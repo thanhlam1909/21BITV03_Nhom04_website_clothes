@@ -19,6 +19,8 @@ public partial class SubProduct
 
     public DateTime? CreationDate { get; set; }
 
+    public string? Linkimage { get; set; }
+
     public virtual ICollection<CartProductList> CartProductLists { get; set; } = new List<CartProductList>();
 
     public virtual ProductColor? Color { get; set; }

@@ -87,7 +87,7 @@
                                 </a>
                                 <div class="collapse" id="pagesCollapseProduct" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="tables.html">Quản lý sản phẩm</a>
+                                        <a class="nav-link" href="@Url.Action("Index", "ProductS")">Quản lý sản phẩm</a>
                                         <a class="nav-link" href="@Url.Action("Index", "ProductSizes")">Thống kê sản phẩm</a>
                                         <a class="nav-link" href="@Url.Action("Index", "ProductColors")">Quản lý màu sản phẩm</a>
                                         <a class="nav-link" href="@Url.Action("Index", "ProductSizes")">Quản lý kích thước sản phẩm</a>
@@ -102,22 +102,22 @@
                                         <a class="nav-link" href="@Url.Action("Index", "ProductTypes")">Quản lý loại sản phẩm</a>
                                     </nav>
                                 </div>
-                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapsePromotions" aria-expanded="false" aria-controls="pagesCollapsePromotions">
+                                @* <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapsePromotions" aria-expanded="false" aria-controls="pagesCollapsePromotions">
                                     Khuyến mãi
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
                                 <div class="collapse" id="pagesCollapsePromotions" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="tables.html">Quản lý loại sản phẩm</a>
+                                        <a class="nav-link" href="tables.html">Quản lý khuyến mãi</a>
                                     </nav>
-                                </div>
+                                </div> *@
                                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseUser" aria-expanded="false" aria-controls="pagesCollapseUser">
                                     Người dùng
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
                                 <div class="collapse" id="pagesCollapseUser" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="tables.html">Quản lý</a>
+                                        <a class="nav-link" href="@Url.Action("Index", "User")">Quản lý</a>
                                         <a class="nav-link" href="charts.html">Thống kê</a>
                                     </nav>
                                 </div>
@@ -127,8 +127,8 @@
                                 </a>
                                 <div class="collapse" id="pagesCollapseRole" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="tables.html">Quản lý vai trò</a>
-                                        <a class="nav-link" href="charts.html">Quản lý phân quyền</a>
+                                        <a class="nav-link" href="@Url.Action("Index", "AspNetRoles")">Quản lý vai trò</a>
+                                        <a class="nav-link" href="@Url.Action("Index", "UserRole")">Quản lý phân quyền</a>
                                     </nav>
                                 </div>
                                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseOrder" aria-expanded="false" aria-controls="pagesCollapseOrder">

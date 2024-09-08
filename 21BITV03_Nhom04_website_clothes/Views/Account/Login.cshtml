@@ -1,0 +1,37 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
+}
+
+<body>
+    <form asp-controller="Account" asp-action="Login" method="post">
+        <h1>Login</h1>
+
+        <div>
+            <input type="text" placeholder="UserName" asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div>
+            <input type="password" placeholder="Password" asp-for="PassWord" class="form-control" />
+            <span asp-validation-for="PassWord" class="text-danger"></span>
+        </div>
+
+        <div>
+            <label>
+                <input type="checkbox" asp-for="KeepLoggedIn" />
+                Keep me logged in
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+
+        @if (ViewData["ValidateMessage"] != null)
+        {
+            <br />
+            <span class="text-danger">@ViewData["ValidateMessage"]</span>
+        }
+    </form>
+</body>

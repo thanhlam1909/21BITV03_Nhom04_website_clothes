@@ -1,0 +1,74 @@
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.SubProduct>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" asp-controller="SubProducts" asp-route-id="@ViewBag.MainProductId">Add Sub-Product</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OriginalPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DiscountedPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Linkimage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Color)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MainProduct)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Size)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OriginalPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscountedPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </td>
+                <td>
+                    <img src="@Url.Content(item.Linkimage)" alt="Image" style="width:100px;height:auto;" />
+                </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Color.ColorId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MainProduct.ProductId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Size.ProductSizeId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SubProductId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SubProductId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.SubProductId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

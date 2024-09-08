@@ -57,7 +57,7 @@ public partial class WebsiteClothesContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=website_clothes;Integrated Security=True;Encrypt=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Website_clothes;Integrated Security=True;Trust Server Certificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -136,7 +136,7 @@ public partial class WebsiteClothesContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_Cart_UserInfo1");
+                .HasConstraintName("FK_Cart_UserInfo");
         });
 
         modelBuilder.Entity<CartProductList>(entity =>
@@ -152,14 +152,17 @@ public partial class WebsiteClothesContext : DbContext
 
             entity.HasOne(d => d.Cart).WithMany(p => p.CartProductLists)
                 .HasForeignKey(d => d.CartId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Cart_Product_List_Cart");
 
             entity.HasOne(d => d.Product).WithMany(p => p.CartProductLists)
                 .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Cart_Product_List_Products");
 
             entity.HasOne(d => d.SubProduct).WithMany(p => p.CartProductLists)
                 .HasForeignKey(d => d.SubProductId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Cart_Product_List_Sub_Product");
         });
 
@@ -193,10 +196,12 @@ public partial class WebsiteClothesContext : DbContext
 
             entity.HasOne(d => d.Discount).WithMany(p => p.DiscountedProductLists)
                 .HasForeignKey(d => d.DiscountId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Discounted_Product__List_Discount");
 
             entity.HasOne(d => d.Product).WithMany(p => p.DiscountedProductLists)
                 .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Discounted_Product__List_Products");
         });
 
@@ -232,10 +237,12 @@ public partial class WebsiteClothesContext : DbContext
 
             entity.HasOne(d => d.Discount).WithMany(p => p.OrderDiscountLists)
                 .HasForeignKey(d => d.DiscountId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Order_Discount_List_Discount");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDiscountLists)
                 .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Order_Discount_List_Order");
         });
 
@@ -258,10 +265,12 @@ public partial class WebsiteClothesContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderProductLists)
                 .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Order_Product_List_Order");
 
             entity.HasOne(d => d.Product).WithMany(p => p.OrderProductLists)
                 .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Order_Product_List_Products");
         });
 
@@ -323,10 +332,12 @@ public partial class WebsiteClothesContext : DbContext
 
             entity.HasOne(d => d.Product).WithMany(p => p.ProductTypeLinks)
                 .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Product_type_link_Products");
 
             entity.HasOne(d => d.ProductType).WithMany(p => p.ProductTypeLinks)
                 .HasForeignKey(d => d.ProductTypeId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Product_type_link_Product_type");
         });
 
@@ -340,12 +351,14 @@ public partial class WebsiteClothesContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("Creation_Date");
             entity.Property(e => e.DiscountedPrice).HasColumnName("Discounted_Price");
+            entity.Property(e => e.Linkimage).HasMaxLength(50);
             entity.Property(e => e.MainProductId).HasColumnName("Main_product_id");
             entity.Property(e => e.OriginalPrice).HasColumnName("Original_Price");
             entity.Property(e => e.SizeId).HasColumnName("Size_ID");
 
             entity.HasOne(d => d.Color).WithMany(p => p.SubProducts)
                 .HasForeignKey(d => d.ColorId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Sub_Product_Product_color");
 
             entity.HasOne(d => d.MainProduct).WithMany(p => p.SubProducts)
@@ -354,6 +367,7 @@ public partial class WebsiteClothesContext : DbContext
 
             entity.HasOne(d => d.Size).WithMany(p => p.SubProducts)
                 .HasForeignKey(d => d.SizeId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Sub_Product_Product_size");
         });
 
@@ -364,17 +378,17 @@ public partial class WebsiteClothesContext : DbContext
             entity.ToTable("UserInfo");
 
             entity.Property(e => e.UserId)
-                .ValueGeneratedOnAdd()
+                .ValueGeneratedNever()
                 .HasColumnName("UserID");
             entity.Property(e => e.Address).HasMaxLength(50);
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FullName).HasMaxLength(100);
+            entity.Property(e => e.Gender).HasMaxLength(50);
             entity.Property(e => e.Password).HasMaxLength(100);
             entity.Property(e => e.UserName).HasMaxLength(50);
 
             entity.HasOne(d => d.User).WithOne(p => p.UserInfo)
                 .HasForeignKey<UserInfo>(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserInfo_AspNetUsers");
         });
 

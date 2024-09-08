@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@model IEnumerable<UserRoleViewModel>
+
+<h2>User Roles</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Roles</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>
+                    @foreach (var role in user.Roles)
+                    {
+                        <span>@role.RoleName @(role.IsSelected ? "" : "")</span>
+
+                        <br />
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = user.UserId })">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

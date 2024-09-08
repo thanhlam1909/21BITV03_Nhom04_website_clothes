@@ -1,0 +1,50 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.AspNetRole
+
+@{
+    ViewData["Title"] = "Edit Role";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Chỉnh sửa vai trò</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Vai trò</a></li>
+        <li class="breadcrumb-item active">Chỉnh sửa</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-user-edit me-1"></i>
+            Chỉnh sửa thông tin vai trò
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3" hidden>
+                    <label asp-for="NormalizedName" class="form-label"></label>
+                    <input asp-for="NormalizedName" class="form-control" />
+                    <span asp-validation-for="NormalizedName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3" hidden>
+                    <label asp-for="ConcurrencyStamp" class="form-label"></label>
+                    <input asp-for="ConcurrencyStamp" class="form-control" />
+                    <span asp-validation-for="ConcurrencyStamp" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </form>
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mt-3">Quay lại danh sách</a>
+</div>

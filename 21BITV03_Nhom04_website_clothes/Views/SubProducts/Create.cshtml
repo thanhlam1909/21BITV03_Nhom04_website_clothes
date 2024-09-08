@@ -1,0 +1,50 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.SubProduct
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>SubProduct</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <input type="hidden" asp-for="MainProductId" value="@ViewBag.MainProductId" />
+                <label asp-for="OriginalPrice" class="control-label"></label>
+                <input asp-for="OriginalPrice" class="form-control" />
+                <span asp-validation-for="OriginalPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DiscountedPrice" class="control-label"></label>
+                <input asp-for="DiscountedPrice" class="form-control" />
+                <span asp-validation-for="DiscountedPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ColorId" class="control-label"></label>
+                <select asp-for="ColorId" class="form-control" asp-items="ViewBag.ColorId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SizeId" class="control-label"></label>
+                <select asp-for="SizeId" class="form-control" asp-items="ViewBag.SizeId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Linkimage" class="control-label"></label>
+                <input type="file" name="imageFile" />
+                <span asp-validation-for="Linkimage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-route-id="@ViewBag.MainProductId">Back to List</a>
+</div>

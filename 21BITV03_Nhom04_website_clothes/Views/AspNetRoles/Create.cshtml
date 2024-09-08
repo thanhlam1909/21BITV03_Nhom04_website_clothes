@@ -1,0 +1,50 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.AspNetRole
+
+@{
+    ViewData["Title"] = "Create Role";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Tạo vai trò mới</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Vai trò</a></li>
+        <li class="breadcrumb-item active">Tạo mới</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-user-tag me-1"></i>
+            Thông tin vai trò mới
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Name" class="control-label">Tên vai trò</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3" hidden>
+                    <label asp-for="NormalizedName" class="control-label">Tên vai trò chuẩn hóa</label>
+                    <input asp-for="NormalizedName" class="form-control" />
+                    <span asp-validation-for="NormalizedName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3" hidden>
+                    <label asp-for="ConcurrencyStamp" class="control-label">Concurrency Stamp</label>
+                    <input asp-for="ConcurrencyStamp" class="form-control" />
+                    <span asp-validation-for="ConcurrencyStamp" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Tạo mới" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại danh sách</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

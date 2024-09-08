@@ -1,0 +1,346 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Models.ProductViewModel
+@{
+    ViewData["Title"] = "ProductDetail";
+    Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
+}
+<style>
+    .btn.active {
+        background-color: #007bff; /* Change to desired active color */
+        color: white;
+    }
+
+    .carousel-image {
+        height: 350px; /* Adjust as needed */
+        width: 100%; /* Make sure it scales with the container */
+        object-fit: contain; /* Adjust to 'cover' if you want the image to fill the container */
+        object-position: center; /* Center the image */
+    }
+
+</style>
+<div class="mb-3" hidden>
+    <p>Product ID: @Model.ProductId</p>
+</div>
+<div class="container-fluid py-5 mt-5">
+    <div class="container py-5">
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8 col-xl-9">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div id="imageCarousel" class="border rounded carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach (var subProduct in Model.SubProducts)
+                                {
+                                    <div class="carousel-item @(subProduct == Model.SubProducts.First() ? "active" : "")">
+                                        <img src="@subProduct.LinkImage"
+                                             sizes="(max-width: 768px) 100vw, 50vw"
+                                             class="rounded carousel-image"
+                                             alt="Image @subProduct.SubProductId"
+                                             loading="lazy">
+                                    </div>
+                                }
+                            </div>
+                            <a class="carousel-control-prev" href="#imageCarousel" role="button" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#imageCarousel" role="button" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h4 class="fw-bold mb-3">@Model.ProductName</h4>
+                        <p class="mb-3">Category: Vegetables</p>
+                        <div class="mb-3">
+                            @if (Model.DiscountedPrice.HasValue)
+                            {
+                                <h5 class="fw-bold mb-1 text-danger" style="text-decoration: line-through;">@Model.OriginalPrice $</h5>
+                                <h5 class="fw-bold mb-1">@Model.DiscountedPrice.Value $</h5>
+                            }
+                            else
+                            {
+                                <h5 class="fw-bold mb-1">@Model.OriginalPrice $</h5>
+                            }
+                        </div>
+
+                        <p class="mb-4">@Model.Description</p>
+                        <!-- Color Options -->
+                        <div id="color-options" class="d-flex align-items-center mb-3">
+                            <label for="color" class="form-label me-3 mb-0">Color:</label>
+                            <div class="btn-group" role="group" aria-label="Color options">
+                                @foreach (var subProduct in Model.SubProducts)
+                                {
+                                    <button type="button" class="btn btn-sm color-btn border rounded me-2"
+                                            data-color-id="@subProduct.ColorId"
+                                            data-product-id="@Model.ProductId"
+                                            onclick="selectColor(this)">
+                                        @subProduct.ColorName
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Size Options -->
+                        <div id="size-options" class="d-flex align-items-center mb-3">
+                            <label for="size" class="form-label me-3 mb-0">Size:</label>
+                            <div class="btn-group" role="group" aria-label="Size options">
+                                @foreach (var subProduct in Model.SubProducts)
+                                {
+                                    <button type="button" class="btn btn-sm size-btn border rounded me-2"
+                                            data-size-id="@subProduct.SizeId"
+                                            data-product-id="@Model.ProductId"
+                                            onclick="selectSize(this)">
+                                        @subProduct.SizeName
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                        <div class="input-group quantity mb-5" style="width: 100px;">
+                            <div class="input-group-prepend">
+                                <button id="btn-minus" class="btn btn-sm btn-minus rounded-circle bg-light border" type="button">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input id="quantity-input" type="number" class="form-control form-control-sm text-center border-0" value="1" min="1">
+                            <div class="input-group-append">
+                                <button id="btn-plus" class="btn btn-sm btn-plus rounded-circle bg-light border" type="button">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary" onclick="addToCart()">
+                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                        </a>
+
+                    </div>
+                    <div class="col-lg-12">
+                        <nav>
+                            <div class="nav nav-tabs mb-3">
+                                <button class="nav-link active border-white border-bottom-0" type="button" role="tab" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about" aria-controls="nav-about" aria-selected="true">Description</button>
+                                <button class="nav-link border-white border-bottom-0" type="button" role="tab" id="nav-reviews-tab" data-bs-toggle="tab" data-bs-target="#nav-reviews" aria-controls="nav-reviews" aria-selected="false">Reviews</button>
+                            </div>
+                        </nav>
+                        <div class="tab-content mb-5">
+                            <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
+                                <p>@Model.Description</p>
+                                <div class="px-2">
+                                    <div class="row g-4">
+                                        <div class="col-6">
+                                            <div class="row bg-light align-items-center text-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Weight</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">1 kg</p>
+                                                </div>
+                                            </div>
+                                            <div class="row text-center align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Country of Origin</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">Agro Farm</p>
+                                                </div>
+                                            </div>
+                                            <div class="row bg-light text-center align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Quality</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">Organic</p>
+                                                </div>
+                                            </div>
+                                            <div class="row text-center align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Check</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">Healthy</p>
+                                                </div>
+                                            </div>
+                                            <div class="row bg-light text-center align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Min Weight</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">250 Kg</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="nav-reviews" role="tabpanel" aria-labelledby="nav-reviews-tab">
+
+                            </div>
+                        </div>
+                    </div>
+                    <form action="#" method="post">
+                        <h4 class="mb-5 fw-bold">Leave a Reply</h4>
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="border-bottom rounded">
+                                    <input type="text" class="form-control border-0 me-4" placeholder="Your Name *" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="border-bottom rounded">
+                                    <input type="email" class="form-control border-0 me-4" placeholder="Your Email *" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="border-bottom rounded">
+                                    <textarea class="form-control border-0" rows="5" placeholder="Your Message *" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary rounded-pill px-4 py-2" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let selectedColorId = null;
+    let selectedSizeId = null;
+
+    function selectColor(button) {
+        const colorId = button.getAttribute('data-color-id');
+        const productId = button.getAttribute('data-product-id');
+        const isActive = button.classList.contains('active');
+
+        // Bỏ chọn tất cả màu sắc
+        document.querySelectorAll('#color-options .btn').forEach(btn => btn.classList.remove('active'));
+
+        if (!isActive) {
+            // Chọn màu mới
+            button.classList.add('active');
+            selectedColorId = colorId;
+
+            $.ajax({
+                url: '/ThuNghiem/GetAvailableSizes',
+                type: 'GET',
+                data: { colorId: colorId, productId: productId },
+                success: function (response) {
+                    // Cập nhật kích thước có sẵn
+                    document.querySelectorAll('#size-options .btn').forEach(btn => {
+                        const sizeId = parseInt(btn.getAttribute('data-size-id'));
+                        if (!response.availableSizes.includes(sizeId)) {
+                            btn.classList.add('disabled');
+                            if (btn.classList.contains('active')) {
+                                btn.classList.remove('active');
+                                selectedSizeId = null;
+                            }
+                        } else {
+                            btn.classList.remove('disabled');
+                        }
+                    });
+                }
+            });
+        } else {
+            selectedColorId = null;
+            restoreAllSizes(); // Khôi phục tất cả kích thước nếu không chọn màu nào
+        }
+    }
+
+    function selectSize(button) {
+        const sizeId = button.getAttribute('data-size-id');
+        const productId = button.getAttribute('data-product-id');
+        const isActive = button.classList.contains('active');
+
+        // Bỏ chọn tất cả kích thước
+        document.querySelectorAll('#size-options .btn').forEach(btn => btn.classList.remove('active'));
+
+        if (!isActive) {
+            // Chọn kích thước mới
+            button.classList.add('active');
+            selectedSizeId = sizeId;
+
+            $.ajax({
+                url: '/ThuNghiem/GetAvailableColors',
+                type: 'GET',
+                data: { sizeId: sizeId, productId: productId },
+                success: function (response) {
+                    // Cập nhật màu sắc có sẵn
+                    document.querySelectorAll('#color-options .btn').forEach(btn => {
+                        const colorId = parseInt(btn.getAttribute('data-color-id'));
+                        if (!response.availableColors.includes(colorId)) {
+                            btn.classList.add('disabled');
+                            if (btn.classList.contains('active')) {
+                                btn.classList.remove('active');
+                                selectedColorId = null;
+                            }
+                        } else {
+                            btn.classList.remove('disabled');
+                        }
+                    });
+                }
+            });
+        } else {
+            selectedSizeId = null;
+            restoreAllColors(); // Khôi phục tất cả màu sắc nếu không chọn kích thước nào
+        }
+    }
+
+    function restoreAllSizes() {
+        // Khôi phục tất cả kích thước để chọn lại
+        document.querySelectorAll('#size-options .btn').forEach(btn => {
+            btn.classList.remove('disabled');
+        });
+    }
+
+    function restoreAllColors() {
+        // Khôi phục tất cả màu sắc để chọn lại
+        document.querySelectorAll('#color-options .btn').forEach(btn => {
+            btn.classList.remove('disabled');
+        });
+    }
+    function addToCart() {
+        // Validate if a color and size are selected
+        if (!selectedColorId || !selectedSizeId) {
+            alert("Please select both color and size options.");
+            return;
+        }
+
+        // Get the selected product ID, color ID, size ID, and quantity
+        const productId = '@Model.ProductId';
+        const colorId = selectedColorId;
+        const sizeId = selectedSizeId;
+        const quantity = parseInt(document.getElementById("quantity-input").value);
+
+        // Prepare the data to be sent to the server
+        const cartData = {
+            productId: productId,
+            colorId: colorId,
+            sizeId: sizeId,
+            quantity: quantity
+        };
+
+        // Send an AJAX request to add the item to the cart
+        $.ajax({
+            url: '/ThuNghiem/AddToCart', // Adjust this URL to your cart controller and action
+            type: 'POST',
+            data: cartData,
+            success: function (response) {
+                if (response.success) {
+                    alert("Item added to cart successfully!");
+                    // Optionally, update the cart UI or redirect the user to the cart page
+                    // window.location.href = '/Cart';
+                } else {
+                    alert("Failed to add item to cart. Please try again.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error adding item to cart:", error);
+                alert("An error occurred while adding the item to the cart.");
+            }
+        });
+    }
+
+   
+</script>

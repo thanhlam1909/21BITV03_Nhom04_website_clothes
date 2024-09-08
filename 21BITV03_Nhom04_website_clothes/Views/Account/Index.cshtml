@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
+}
+
+<h1>Index</h1>
+
+<form asp-action="LogOut" asp-controller="Account" method="post">
+    <button type="submit" class="btn btn-danger">Logout</button>
+</form>
