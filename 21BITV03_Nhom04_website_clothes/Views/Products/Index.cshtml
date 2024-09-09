@@ -1,63 +1,68 @@
 ﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.Product>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Product Management";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Index</h1>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Product Management</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active">Products</li>
+    </ol>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeleteStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletionDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeleteStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletionDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-                    <a asp-action="Index" asp-controller="SubProducts" asp-route-id="@item.ProductId">View Sub-Products</a>
+    <p>
+        <a asp-action="Create" class="btn btn-primary mb-3">Create New Product</a>
+    </p>
 
-                    <a asp-action="Create" asp-controller="SubProducts" asp-route-id="@item.ProductId">Add Sub-Product</a>
-                </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-box me-1"></i>
+            Product List
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.First().ProductName)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Description)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Status)</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+
+                            <td>
+                                @if (item.Status == true)
+                                {
+                                    <i class="fas fa-check text-success"></i> <!-- Green check icon for true -->
+                                }
+                                else if (item.Status == false)
+                                {
+                                    <i class="fas fa-times text-danger"></i> <!-- Red cross icon for false -->
+                                }
+                                else
+                                {
+                                    <i class="fas fa-question text-warning"></i> <!-- Yellow question mark icon for null -->
+                                }
+                            </td>
+                            <td style="text-align: center;">
+                                <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-warning me-1">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-sm btn-info me-1">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-sm btn-danger me-1">Delete</a>
+                                <a asp-action="Index" asp-controller="SubProducts" asp-route-id="@item.ProductId" class="btn btn-sm btn-primary me-1">View SP</a>
+                                <a asp-action="Create" asp-controller="SubProducts" asp-route-id="@item.ProductId" class="btn btn-sm btn-success">Add SP</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

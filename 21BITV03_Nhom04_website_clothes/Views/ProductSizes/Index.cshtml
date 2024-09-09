@@ -44,13 +44,14 @@
                             <td>@Html.DisplayFor(modelItem => item.SizeName)</td>
                             <td>@Html.DisplayFor(modelItem => item.Description)</td>
                             <td style="text-align: center;">
-                                <a asp-action="Edit" asp-route-id="@item.ProductSizeId" title="Edit" style="text-decoration: none; display: inline-block;">
+                                <a asp-action="Edit" asp-route-id="@item.ProductSizeId" title="Edit" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.ProductSizeId" title="Delete" style="text-decoration: none; display: inline-block;">
+                                <a asp-action="Delete" asp-route-id="@item.ProductSizeId" title="Delete" class="btn btn-sm btn-danger">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </a>
                             </td>
+
                         </tr>
                     }
                 </tbody>

@@ -170,6 +170,119 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             return Json(new { success = true, message = "Product added to cart successfully!" });
         }
 
+        public async Task<IActionResult> Cart()
+        {
+            var username = HttpContext.User.Identity.Name;
+            if (username == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            var userId = await _context.UserInfos
+                .Where(u => u.UserName == username)
+                .Select(u => u.UserId)
+                .FirstOrDefaultAsync();
+
+            if (userId == 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var cart = await _context.Carts
+                .Include(c => c.CartProductLists)
+                    .ThenInclude(cpl => cpl.SubProduct)
+                        .ThenInclude(sp => sp.Color)
+                .Include(c => c.CartProductLists)
+                    .ThenInclude(cpl => cpl.SubProduct)
+                        .ThenInclude(sp => sp.Size)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (cart == null || !cart.CartProductLists.Any())
+            {
+                return View("CartEmpty");
+            }
+
+            var cartViewModel = new CartViewModel
+            {
+                CartId = cart.CartId,
+                UserId = userId,
+                CartProducts = cart.CartProductLists.Select(cpl => new CartProductViewModel
+                {
+                    ProductId = cpl.ProductId ?? 0,
+                    SubProductId = cpl.SubProductId ?? 0,
+                    ProductName = cpl.SubProduct?.MainProduct?.ProductName,
+                    ColorName = cpl.SubProduct?.Color?.ColorName,
+                    SizeName = cpl.SubProduct?.Size?.SizeName,
+                    Quantity = cpl.Quantity ?? 1,
+                    OriginalPrice = cpl.SubProduct?.OriginalPrice ?? 0,
+                    DiscountedPrice = cpl.SubProduct?.DiscountedPrice ?? cpl.SubProduct?.OriginalPrice ?? 0,
+                    ImageUrl = cpl.SubProduct?.Linkimage ?? "default-image.png",
+                    CartProductListId = cpl.CartProductList1 // Adjust to use CartProductList1
+                }).ToList()
+            };
+
+            return View(cartViewModel);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateQuantity(int cartProductListId, int quantity)
+        {
+            var username = HttpContext.User.Identity.Name;
+
+            if (string.IsNullOrEmpty(username))
+            {
+                return Json(new { success = false, message = "User is not authenticated" });
+            }
+
+            var userId = await _context.UserInfos
+                .Where(u => u.UserName == username)
+                .Select(u => u.UserId)
+                .FirstOrDefaultAsync();
+
+            var cartProduct = await _context.Carts
+                .Where(c => c.UserId == userId)
+                .SelectMany(c => c.CartProductLists)
+                .FirstOrDefaultAsync(cpl => cpl.CartProductList1 == cartProductListId);
+
+            if (cartProduct != null && quantity > 0)
+            {
+                cartProduct.Quantity = quantity;
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Update to quantity item" });
+            }
+
+            return Json(new { success = false, message = "Failed to update quantity" });
+        }
+        [HttpPost]
+        public async Task<JsonResult> RemoveFromCart(int cartProductListId)
+        {
+            var username = HttpContext.User.Identity.Name;
+
+            if (string.IsNullOrEmpty(username))
+            {
+                return Json(new { success = false, message = "User is not authenticated" });
+            }
+
+            var userId = await _context.UserInfos
+                .Where(u => u.UserName == username)
+                .Select(u => u.UserId)
+                .FirstOrDefaultAsync();
+
+            var cartProduct = await _context.Carts
+                .Where(c => c.UserId == userId)
+                .SelectMany(c => c.CartProductLists)
+                .FirstOrDefaultAsync(cpl => cpl.CartProductList1 == cartProductListId);
+
+            if (cartProduct != null)
+            {
+                _context.CartProductLists.Remove(cartProduct);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true , message = "Success to remove item" });
+            }
+
+            return Json(new { success = false, message = "Failed to remove item" });
+        }
+
 
 
     }

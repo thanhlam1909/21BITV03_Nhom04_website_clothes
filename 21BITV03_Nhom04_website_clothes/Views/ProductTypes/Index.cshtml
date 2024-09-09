@@ -44,16 +44,17 @@
                             <td>@Html.DisplayFor(modelItem => item.ProductTypeName)</td>
                             <td>@Html.DisplayFor(modelItem => item.Description)</td>
                             <td style="text-align: center;">
-                                <a asp-action="Edit" asp-route-id="@item.ProductTypeId" title="Chỉnh sửa" style="text-decoration: none; display: inline-block;">
+                                <a asp-action="Edit" asp-route-id="@item.ProductTypeId" title="Chỉnh sửa" class="btn btn-sm btn-warning" style="text-decoration: none; display: inline-block;">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <a asp-action="Details" asp-route-id="@item.ProductTypeId" title="Chi tiết" style="text-decoration: none; display: inline-block;">
+                                <a asp-action="Details" asp-route-id="@item.ProductTypeId" title="Chi tiết" class="btn btn-sm btn-info" style="text-decoration: none; display: inline-block;">
                                     <i class="fas fa-info-circle"></i> Details
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.ProductTypeId" title="Xóa" style="text-decoration: none; display: inline-block;">
+                                <a asp-action="Delete" asp-route-id="@item.ProductTypeId" title="Xóa" class="btn btn-sm btn-danger" style="text-decoration: none; display: inline-block;">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </a>
                             </td>
+
                         </tr>
                     }
                 </tbody>

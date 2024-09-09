@@ -53,10 +53,15 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,Description,DeleteStatus,DeletionDate,Status")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,Description")] Product product)
         {
             if (ModelState.IsValid)
             {
+                // Set default values for DeleteStatus, DeletionDate, and Status
+                product.DeleteStatus = null; // Assuming DeleteStatus is nullable; otherwise, use a default value like 0 or false.
+                product.DeletionDate = null; // Assuming DeletionDate is nullable.
+                product.Status = true; // Set Status to true.
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -81,11 +86,9 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         }
 
         // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,Description,DeleteStatus,DeletionDate,Status")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,Description,DeleteStatus,Status")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -96,6 +99,16 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             {
                 try
                 {
+                    // Automatically set DeletionDate if DeleteStatus is true
+                    if (product.DeleteStatus == true)
+                    {
+                        product.DeletionDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        product.DeletionDate = null; // Clear the DeletionDate if DeleteStatus is false
+                    }
+
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
@@ -114,6 +127,7 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             }
             return View(product);
         }
+
 
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)

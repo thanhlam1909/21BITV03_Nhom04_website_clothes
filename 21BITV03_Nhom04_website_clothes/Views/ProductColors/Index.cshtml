@@ -6,35 +6,35 @@
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Màu sản phẩm</h1>
+    <h1 class="mt-4">Product Colors</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Màu sản phẩm</li>
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active">Product Colors</li>
     </ol>
 
     <p>
-        <a asp-action="Create" class="btn btn-primary">Tạo màu sản phẩm</a>
+        <a asp-action="Create" class="btn btn-primary">Create Product Color</a>
     </p>
 
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-palette me-1"></i>
-            Bảng màu sản phẩm
+            Product Color List
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Tên màu</th>
-                        <th>Giới thiệu</th>
-                        <th style="text-align: center;">Thao tác</th>
+                        <th>@Html.DisplayNameFor(model => model.First().ColorName)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Description)</th>
+                        <th style="text-align: center;">Actions</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>@Html.DisplayNameFor(model => model.First().ColorName)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Description)</th>
-                        <th style="text-align: center;">Action</th>
+                        <th style="text-align: center;">Actions</th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -44,11 +44,11 @@
                             <td>@Html.DisplayFor(modelItem => item.ColorName)</td>
                             <td>@Html.DisplayFor(modelItem => item.Description)</td>
                             <td style="text-align: center;">
-                                <a asp-action="Edit" asp-route-id="@item.ColorId" title="Edit" style="text-decoration: none; display: inline-block;">
+                                <a asp-action="Edit" asp-route-id="@item.ColorId" class="btn btn-sm btn-warning" title="Edit">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.ColorId" title="Delete" style="text-decoration: none; display: inline-block;">
-                                    <i class="fas fa-trash-alt"></i> Delete
+                                <a asp-action="Delete" asp-route-id="@item.ColorId" class="btn btn-sm btn-danger" title="Delete">
+                                    <i class="fas fa-trash"></i> Delete
                                 </a>
                             </td>
                         </tr>
@@ -58,4 +58,3 @@
         </div>
     </div>
 </div>
-

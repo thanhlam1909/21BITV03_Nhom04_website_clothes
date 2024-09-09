@@ -1,38 +1,60 @@
-﻿
+﻿@model IEnumerable<UserRoleViewModel>
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "User Roles Management";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-@model IEnumerable<UserRoleViewModel>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">User Roles Management</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active">User Roles</li>
+    </ol>
 
-<h2>User Roles</h2>
-
-<table>
-    <thead>
-        <tr>
-            <th>User Name</th>
-            <th>Roles</th>
-            <th>Edit</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.UserName</td>
-                <td>
-                    @foreach (var role in user.Roles)
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-user-cog me-1"></i>
+            User Roles List
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Roles</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Roles</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var user in Model)
                     {
-                        <span>@role.RoleName @(role.IsSelected ? "" : "")</span>
+                        <tr id="user-role-row-@user.UserId">
+                            <td>@user.UserName</td>
+                            <td>
+                                @foreach (var role in user.Roles)
+                                {
+                                    <span>@role.RoleName</span>
 
-                        <br />
+                                    <br />
+                                }
+                            </td>
+                            <td style="text-align: center;">
+                                <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </td>
+                        </tr>
                     }
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit", new { id = user.UserId })">Edit</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

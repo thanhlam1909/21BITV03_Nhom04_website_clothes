@@ -128,44 +128,25 @@
                                 <div class="px-2">
                                     <div class="row g-4">
                                         <div class="col-6">
+                                            <!-- Selected Color Display -->
                                             <div class="row bg-light align-items-center text-center justify-content-center py-2">
                                                 <div class="col-6">
-                                                    <p class="mb-0">Weight</p>
+                                                    <p class="mb-0">Color</p>
                                                 </div>
-                                                <div class="col-6">
-                                                    <p class="mb-0">1 kg</p>
+                                                <div class="col-6" id="selected-color">
+                                                    <!-- This will dynamically display the selected color or be empty -->
+                                                    <p class="mb-0"></p>
                                                 </div>
                                             </div>
+
+                                            <!-- Selected Size Display -->
                                             <div class="row text-center align-items-center justify-content-center py-2">
                                                 <div class="col-6">
-                                                    <p class="mb-0">Country of Origin</p>
+                                                    <p class="mb-0">Size</p>
                                                 </div>
-                                                <div class="col-6">
-                                                    <p class="mb-0">Agro Farm</p>
-                                                </div>
-                                            </div>
-                                            <div class="row bg-light text-center align-items-center justify-content-center py-2">
-                                                <div class="col-6">
-                                                    <p class="mb-0">Quality</p>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p class="mb-0">Organic</p>
-                                                </div>
-                                            </div>
-                                            <div class="row text-center align-items-center justify-content-center py-2">
-                                                <div class="col-6">
-                                                    <p class="mb-0">Check</p>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p class="mb-0">Healthy</p>
-                                                </div>
-                                            </div>
-                                            <div class="row bg-light text-center align-items-center justify-content-center py-2">
-                                                <div class="col-6">
-                                                    <p class="mb-0">Min Weight</p>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p class="mb-0">250 Kg</p>
+                                                <div class="col-6" id="selected-size">
+                                                    <!-- This will dynamically display the selected size or be empty -->
+                                                    <p class="mb-0"></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -214,20 +195,23 @@
         const productId = button.getAttribute('data-product-id');
         const isActive = button.classList.contains('active');
 
-        // Bỏ chọn tất cả màu sắc
+        // Remove 'active' class from all color buttons
         document.querySelectorAll('#color-options .btn').forEach(btn => btn.classList.remove('active'));
 
         if (!isActive) {
-            // Chọn màu mới
+            // Add 'active' class to the clicked button
             button.classList.add('active');
             selectedColorId = colorId;
+
+            // Update selected color display
+            document.getElementById('selected-color').innerHTML = `<p class="mb-0">${button.textContent}</p>`;
 
             $.ajax({
                 url: '/ThuNghiem/GetAvailableSizes',
                 type: 'GET',
                 data: { colorId: colorId, productId: productId },
                 success: function (response) {
-                    // Cập nhật kích thước có sẵn
+                    // Update available sizes
                     document.querySelectorAll('#size-options .btn').forEach(btn => {
                         const sizeId = parseInt(btn.getAttribute('data-size-id'));
                         if (!response.availableSizes.includes(sizeId)) {
@@ -235,6 +219,7 @@
                             if (btn.classList.contains('active')) {
                                 btn.classList.remove('active');
                                 selectedSizeId = null;
+                                document.getElementById('selected-size').innerHTML = `<p class="mb-0"></p>`;
                             }
                         } else {
                             btn.classList.remove('disabled');
@@ -244,29 +229,34 @@
             });
         } else {
             selectedColorId = null;
-            restoreAllSizes(); // Khôi phục tất cả kích thước nếu không chọn màu nào
+            restoreAllSizes();
+            document.getElementById('selected-color').innerHTML = `<p class="mb-0"></p>`;
         }
     }
+
 
     function selectSize(button) {
         const sizeId = button.getAttribute('data-size-id');
         const productId = button.getAttribute('data-product-id');
         const isActive = button.classList.contains('active');
 
-        // Bỏ chọn tất cả kích thước
+        // Remove 'active' class from all size buttons
         document.querySelectorAll('#size-options .btn').forEach(btn => btn.classList.remove('active'));
 
         if (!isActive) {
-            // Chọn kích thước mới
+            // Add 'active' class to the clicked button
             button.classList.add('active');
             selectedSizeId = sizeId;
+
+            // Update selected size display
+            document.getElementById('selected-size').innerHTML = `<p class="mb-0">${button.textContent}</p>`;
 
             $.ajax({
                 url: '/ThuNghiem/GetAvailableColors',
                 type: 'GET',
                 data: { sizeId: sizeId, productId: productId },
                 success: function (response) {
-                    // Cập nhật màu sắc có sẵn
+                    // Update available colors
                     document.querySelectorAll('#color-options .btn').forEach(btn => {
                         const colorId = parseInt(btn.getAttribute('data-color-id'));
                         if (!response.availableColors.includes(colorId)) {
@@ -274,6 +264,7 @@
                             if (btn.classList.contains('active')) {
                                 btn.classList.remove('active');
                                 selectedColorId = null;
+                                document.getElementById('selected-color').innerHTML = `<p class="mb-0"></p>`;
                             }
                         } else {
                             btn.classList.remove('disabled');
@@ -283,9 +274,11 @@
             });
         } else {
             selectedSizeId = null;
-            restoreAllColors(); // Khôi phục tất cả màu sắc nếu không chọn kích thước nào
+            restoreAllColors();
+            document.getElementById('selected-size').innerHTML = `<p class="mb-0"></p>`;
         }
     }
+
 
     function restoreAllSizes() {
         // Khôi phục tất cả kích thước để chọn lại

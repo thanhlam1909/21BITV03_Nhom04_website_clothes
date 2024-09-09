@@ -18,20 +18,25 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         [HttpGet("GetCartCount")]
         public async Task<IActionResult> GetCartCount()
         {
-            // Assuming you have some way to get the user ID from the current context
-            var username = HttpContext.User.Identity?.Name; // Adjust as needed for your user identification
+            var username = HttpContext.User.Identity?.Name;
+            if (username == null)
+            {
+                return Unauthorized();
+            }
+
             var userId = await _context.UserInfos
                 .Where(u => u.UserName == username)
-                .Select(u => u.UserId) // Select only the UserId
+                .Select(u => u.UserId)
                 .FirstOrDefaultAsync();
+
             if (userId == null)
             {
                 return Unauthorized();
             }
 
-            // Find the cart for the current user
             var cart = await _context.Carts
-                .Include(c => c.CartProductLists) // Ensure to include related data
+                .Include(c => c.CartProductLists)
+                .ThenInclude(cpl => cpl.SubProduct) // Ensure to include SubProduct
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (cart == null)
@@ -39,10 +44,13 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 return NotFound("Cart not found for the current user.");
             }
 
-            // Count the number of items in the cart
-            var cartCount = cart.CartProductLists.Sum(cpl => cpl.Quantity ?? 0);
+            // Count the number of unique SubProduct items in the cart
+            var distinctSubProductCount = cart.CartProductLists
+                .Select(cpl => cpl.SubProductId) // Select SubProductId
+                .Distinct() // Ensure uniqueness
+                .Count();
 
-            return Ok(new { cartCount });
+            return Ok(new { cartCount = distinctSubProductCount });
         }
     }
 }
