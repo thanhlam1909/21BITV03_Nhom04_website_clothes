@@ -25,5 +25,7 @@ public partial class Product
 
     public virtual ICollection<ProductTypeLink> ProductTypeLinks { get; set; } = new List<ProductTypeLink>();
 
+    public virtual ICollection<ReviewProduct> ReviewProducts { get; set; } = new List<ReviewProduct>();
+
     public virtual ICollection<SubProduct> SubProducts { get; set; } = new List<SubProduct>();
 }

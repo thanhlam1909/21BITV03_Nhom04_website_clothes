@@ -55,7 +55,8 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 .Include(p => p.SubProducts)
                     .ThenInclude(sp => sp.Color)  // Include ProductColor
                 .Include(p => p.SubProducts)
-                    .ThenInclude(sp => sp.Size)  // Include ProductSize
+                    .ThenInclude(sp => sp.Size)
+                .Include(p => p.ReviewProducts)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
             // Check if the product exists
@@ -86,10 +87,43 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                     SizeName = sp.Size?.SizeName,    // Include size name
                     LinkImage = sp.Linkimage,
                     CreationDate = sp.CreationDate ?? DateTime.Now
-                }).ToList()
+                }).ToList(),
+                Reviews = product.ReviewProducts.Select(rp => new ReviewProductView
+                {
+                    IdRv = rp.IdRv,
+                    ProductId = rp.ProductId,
+                    Username = rp.Username,
+                    Email = rp.Email,
+                    Comment = rp.Comment
+                }).ToList()  // Map ReviewProduct to ProductViewModel
             };
 
             return View(productViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddReview(ReviewViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Create a new ReviewProduct object from the submitted data
+                var newReview = new ReviewProduct
+                {
+                    ProductId = model.ProductId,
+                    Username = model.Username,
+                    Email = model.Email,
+                    Comment = model.Comment
+                };
+
+                // Add the new review to the database
+                _context.ReviewProducts.Add(newReview);
+                await _context.SaveChangesAsync();
+
+                // Redirect back to the product detail page
+                return RedirectToAction("ProductDetail", new { id = model.ProductId });
+            }
+
+            // If the model is not valid, return to the view with the current model
+            return View(model);
         }
         public IActionResult GetAvailableSizes(int colorId, int productId)
         {

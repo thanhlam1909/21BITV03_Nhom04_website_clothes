@@ -51,6 +51,8 @@ public partial class WebsiteClothesContext : DbContext
 
     public virtual DbSet<ProductTypeLink> ProductTypeLinks { get; set; }
 
+    public virtual DbSet<ReviewProduct> ReviewProducts { get; set; }
+
     public virtual DbSet<SubProduct> SubProducts { get; set; }
 
     public virtual DbSet<UserInfo> UserInfos { get; set; }
@@ -339,6 +341,28 @@ public partial class WebsiteClothesContext : DbContext
                 .HasForeignKey(d => d.ProductTypeId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Product_type_link_Product_type");
+        });
+
+        modelBuilder.Entity<ReviewProduct>(entity =>
+        {
+            entity.HasKey(e => e.IdRv).HasName("PK__ReviewPr__B7702B0FA03531EF");
+
+            entity.ToTable("ReviewProduct");
+
+            entity.Property(e => e.Comment)
+                .HasMaxLength(255)
+                .HasColumnName("comment");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .HasColumnName("email");
+            entity.Property(e => e.Username)
+                .HasMaxLength(255)
+                .HasColumnName("username");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ReviewProducts)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_ReviewProduct_Products");
         });
 
         modelBuilder.Entity<SubProduct>(entity =>
