@@ -17,9 +17,10 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            // Fetch all products from the database
+            // Fetch products that have at least one SubProduct from the database
             var products = await _context.Products
                 .Include(p => p.SubProducts)
+                .Where(p => p.SubProducts.Any()) // Only include products with SubProducts
                 .ToListAsync();
 
             // Map the products to ProductViewModel
@@ -209,7 +210,7 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             var username = HttpContext.User.Identity.Name;
             if (username == null)
             {
-                return RedirectToAction("Index", "Login");
+                return RedirectToAction("Login", "Account");
             }
 
             var userId = await _context.UserInfos
@@ -231,9 +232,10 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                         .ThenInclude(sp => sp.Size)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            if (cart == null || !cart.CartProductLists.Any())
+            if (cart == null || cart.CartProductLists == null || !cart.CartProductLists.Any())
             {
-                return View("CartEmpty");
+                // Return a view that indicates the cart is empty
+                return View(new CartViewModel { CartProducts = new List<CartProductViewModel>() });
             }
 
             var cartViewModel = new CartViewModel
@@ -244,9 +246,9 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 {
                     ProductId = cpl.ProductId ?? 0,
                     SubProductId = cpl.SubProductId ?? 0,
-                    ProductName = cpl.SubProduct?.MainProduct?.ProductName,
-                    ColorName = cpl.SubProduct?.Color?.ColorName,
-                    SizeName = cpl.SubProduct?.Size?.SizeName,
+                    ProductName = cpl.SubProduct?.MainProduct?.ProductName ?? "Unknown Product",
+                    ColorName = cpl.SubProduct?.Color?.ColorName ?? "Unknown Color",
+                    SizeName = cpl.SubProduct?.Size?.SizeName ?? "Unknown Size",
                     Quantity = cpl.Quantity ?? 1,
                     OriginalPrice = cpl.SubProduct?.OriginalPrice ?? 0,
                     DiscountedPrice = cpl.SubProduct?.DiscountedPrice ?? cpl.SubProduct?.OriginalPrice ?? 0,
@@ -257,6 +259,7 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
 
             return View(cartViewModel);
         }
+
 
         [HttpPost]
         public async Task<JsonResult> UpdateQuantity(int cartProductListId, int quantity)

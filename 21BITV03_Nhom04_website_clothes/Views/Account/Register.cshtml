@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Đăng ký";
+    Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
+}
+
+@model _21BITV03_Nhom04_website_clothes.Models.UserViewModel
+
+<div class="container-fluid page-header-login py-5">
+    <h1 class="text-center text-white display-6">Trang đăng ký</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="#">Đăng ký</a></li>
+    </ol>
+</div>
+<div class="container-fluid py-5" id="create-user">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 text-center mb-4">Đăng ký</h1>
+
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="UserName" class="form-label"></label>
+                        <input asp-for="UserName" class="form-control" placeholder="Nhập tên người dùng" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="Nhập email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Tạo mật khẩu" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label"></label>
+                        <input asp-for="FullName" class="form-control" placeholder="Nhập họ tên" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Address" class="form-label"></label>
+                        <input asp-for="Address" class="form-control" placeholder="Nhập địa chỉ" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Phone" class="form-label"></label>
+                        <input asp-for="Phone" class="form-control" placeholder="Nhập số điện thoại" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    @* <div class="mb-3">
+                    <label asp-for="RoleId" class="form-label">Vai trò</label>
+                    <select asp-for="RoleId" class="form-control" asp-items="@(new SelectList(ViewBag.Roles, "Id", "Name"))"></select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                    </div> *@
+
+                    <button type="submit" class="btn btn-primary w-100">Tạo tài khoản</button>
+                </form>
+
+                <p class="text-center mt-3">Bạn đã có tài khoản? <a href="@Url.Action("Login", "Account")">Đăng nhập tại đây</a></p>
+
+            </div>
+        </div>
+    </div>
+</div>

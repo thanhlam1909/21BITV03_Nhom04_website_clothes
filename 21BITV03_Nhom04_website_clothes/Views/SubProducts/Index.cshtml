@@ -1,74 +1,63 @@
 ﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.SubProduct>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "SubProduct Management";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Index</h1>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">SubProduct Management</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Products</a></li>
+        <li class="breadcrumb-item active">SubProducts</li>
+    </ol>
 
-<p>
-    <a asp-action="Create" asp-controller="SubProducts" asp-route-id="@ViewBag.MainProductId">Add Sub-Product</a>
-</p>
+    <p>
+        <a asp-action="Create" asp-controller="SubProducts" asp-route-id="@ViewBag.MainProductId" class="btn btn-primary mb-3">Add Sub-Product</a>
+    </p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.OriginalPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DiscountedPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Linkimage)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MainProduct)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Size)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.OriginalPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DiscountedPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
-            </td>
-                <td>
-                    <img src="@Url.Content(item.Linkimage)" alt="Image" style="width:100px;height:auto;" />
-                </td>
-
-            <td>
-                @Html.DisplayFor(modelItem => item.Color.ColorId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MainProduct.ProductId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Size.ProductSizeId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SubProductId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SubProductId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SubProductId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-box me-1"></i>
+            SubProduct List
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.First().OriginalPrice)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().DiscountedPrice)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().CreationDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Linkimage)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Color)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().MainProduct)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Size)</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.OriginalPrice)</td>
+                            <td>@Html.DisplayFor(modelItem => item.DiscountedPrice)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CreationDate)</td>
+                            <td>
+                                <img src="@Url.Content(item.Linkimage)" alt="Image" style="width:100px;height:auto;" />
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.Color.ColorId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.MainProduct.ProductId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Size.ProductSizeId)</td>
+                            <td style="text-align: center;">
+                                <a asp-action="Edit" asp-route-id="@item.SubProductId" class="btn btn-sm btn-warning me-1">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.SubProductId" class="btn btn-sm btn-info me-1">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.SubProductId" class="btn btn-sm btn-danger me-1">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

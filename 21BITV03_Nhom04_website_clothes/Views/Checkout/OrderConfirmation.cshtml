@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Order Confirmation";
+    Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
+}
+<div class="container-fluid page-header-login py-5">
+    <h1 class="text-center text-white display-6">Trang xác nhận thanh toán</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="#">Xác nhận thanh toán</a></li>
+
+    </ol>
+</div>
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="text-center">
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading">Order Confirmed!</h4>
+                <p>Your order has been placed successfully. Thank you for shopping with us!</p>
+                <hr>
+            </div>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-4">Continue Shopping</a>
+        </div>
+    </div>
+</div>

@@ -1,61 +1,69 @@
 ﻿@model _21BITV03_Nhom04_website_clothes.Data.SubProduct
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit SubProduct";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Edit</h1>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Edit SubProduct</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Products</a></li>
+        <li class="breadcrumb-item"><a asp-controller="SubProducts" asp-action="Index" asp-route-id="@ViewBag.MainProductId">SubProducts</a></li>
+        <li class="breadcrumb-item active">Edit</li>
+    </ol>
 
-<h4>SubProduct</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SubProductId" />
-            <input type="hidden" asp-for="MainProductId" />
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-edit me-1"></i>
+            Edit SubProduct
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="SubProductId" />
+                <input type="hidden" asp-for="MainProductId" />
 
-            <div class="form-group">
-                <label asp-for="OriginalPrice" class="control-label"></label>
-                <input asp-for="OriginalPrice" class="form-control" />
-                <span asp-validation-for="OriginalPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DiscountedPrice" class="control-label"></label>
-                <input asp-for="DiscountedPrice" class="form-control" />
-                <span asp-validation-for="DiscountedPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ColorId" class="control-label"></label>
-                <select asp-for="ColorId" class="form-control" asp-items="ViewBag.ColorId"></select>
-                <span asp-validation-for="ColorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SizeId" class="control-label"></label>
-                <select asp-for="SizeId" class="form-control" asp-items="ViewBag.SizeId"></select>
-                <span asp-validation-for="SizeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreationDate" class="control-label"></label>
-                <input asp-for="CreationDate" class="form-control" />
-                <span asp-validation-for="CreationDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Linkimage" class="control-label"></label>
+                <div class="form-group mb-3">
+                    <label asp-for="OriginalPrice" class="form-label"></label>
+                    <input asp-for="OriginalPrice" class="form-control" />
+                    <span asp-validation-for="OriginalPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="DiscountedPrice" class="form-label"></label>
+                    <input asp-for="DiscountedPrice" class="form-control" />
+                    <span asp-validation-for="DiscountedPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="ColorId" class="form-label"></label>
+                    <select asp-for="ColorId" class="form-control" asp-items="ViewBag.ColorId"></select>
+                    <span asp-validation-for="ColorId" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="SizeId" class="form-label"></label>
+                    <select asp-for="SizeId" class="form-control" asp-items="ViewBag.SizeId"></select>
+                    <span asp-validation-for="SizeId" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="CreationDate" class="form-label"></label>
+                    <input asp-for="CreationDate" class="form-control" />
+                    <span asp-validation-for="CreationDate" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Linkimage" class="form-label"></label>
+                    <input type="file" name="imageFile" class="form-control" />
+                    <span asp-validation-for="Linkimage" class="text-danger"></span>
+                </div>
 
-                    <input type="file" name="imageFile" />
-
-                <span asp-validation-for="Linkimage" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index" asp-route-id="@ViewBag.MainProductId">Back to List</a>
+    <div class="mt-4">
+        <a asp-action="Index" asp-route-id="@ViewBag.MainProductId" class="btn btn-secondary">Back to List</a>
+    </div>
 </div>

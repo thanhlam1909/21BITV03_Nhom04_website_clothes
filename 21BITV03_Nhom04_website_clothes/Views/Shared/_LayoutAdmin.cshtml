@@ -35,7 +35,11 @@
                     <li><a class="dropdown-item" href="@Url.Action("Index", "Admin")">Trang cá nhân</a></li>
                     <!-- <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                     <li><hr class="dropdown-divider" /></li> -->
-                    <li><a class="dropdown-item" href="#!">Đăng xuất</a></li>
+                    <li>
+                        <form asp-controller="Account" asp-action="LogOut" method="post" class="m-0">
+                            <button type="submit" class="dropdown-item">Đăng xuất</button>
+                        </form>
+                    </li>
                 </ul>
             </li>
         </ul>

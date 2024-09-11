@@ -1,10 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Index";
+﻿@model _21BITV03_Nhom04_website_clothes.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Tổng quan tài khoản";
     Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
 }
 
-<h1>Index</h1>
+<div class="container-fluid page-header-login py-5">
+    <h1 class="text-center text-white display-6">Trang người dùng</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="#">Trang người dùng</a></li>
+    </ol>
+</div>
 
-<form asp-action="LogOut" asp-controller="Account" method="post">
-    <button type="submit" class="btn btn-danger">Logout</button>
-</form>
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 text-center mb-4">Tổng quan tài khoản</h1>
+
+                <!-- Hiển thị thông tin người dùng nếu cần -->
+                <div class="mb-4">
+                    <div class="alert alert-info">
+                        Chào mừng, @User.Identity.Name! Tại đây bạn có thể quản lý thông tin tài khoản của mình.
+                    </div>
+                </div>
+
+                <!-- Biểu mẫu Đăng xuất -->
+                <form asp-controller="Account" asp-action="LogOut" method="post">
+                    <button type="submit" class="btn btn-danger w-100">Đăng xuất</button>
+                </form>
+
+                <!-- Các liên kết đến các trang liên quan đến tài khoản -->
+
+            </div>
+        </div>
+    </div>
+</div>

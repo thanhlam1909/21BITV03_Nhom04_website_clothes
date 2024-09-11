@@ -1,6 +1,9 @@
-﻿@{
+﻿@model _21BITV03_Nhom04_website_clothes.Data.UserInfo
+
+@{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+
 <div class="container-fluid px-4">
     <h1 class="mt-4">Thông tin cá nhân</h1>
     <ol class="breadcrumb mb-4">
@@ -20,12 +23,11 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-8">
-                    <h5>Họ và tên: Nguyễn Văn A</h5>
-                    <p>Email: nguyenvana@example.com</p>
-                    <p>Số điện thoại: 0123456789</p>
-                    <p>Địa chỉ: 123 Đường ABC, Phường XYZ, TP. Hồ Chí Minh</p>
-                    <p>Ngày sinh: 01/01/1990</p>
-                    <p>Giới tính: Nam</p>
+                    <h5>@(Model.FullName ?? "Chưa cập nhật")</h5>
+                    <p>Email: @(Model.Email ?? "Chưa cập nhật")</p>
+                    <p>Số điện thoại: @(Model.Phone.HasValue ? Model.Phone.Value.ToString() : "Chưa cập nhật")</p>
+                    <p>Địa chỉ: @(Model.Address ?? "Chưa cập nhật")</p>
+                    <p>Giới tính: @(Model.Gender ?? "Chưa cập nhật")</p>
                 </div>
             </div>
         </div>

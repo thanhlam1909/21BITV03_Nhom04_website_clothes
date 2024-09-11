@@ -1,71 +1,132 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model _21BITV03_Nhom04_website_clothes.Models.HomeProductViewModel
 
-<div class="container-fluid fruite py-5">
+<div class="container-fluid fruit py-5">
+
     <div class="container py-5">
         <div class="tab-class text-center">
             <div class="row g-4">
-                <div class="col-lg-4 text-start">
-                    <h1>Our Organic Products</h1>
-                </div>
+                <!-- Navigation for Product Types -->
                 <div class="col-lg-8 text-end">
                     <ul class="nav nav-pills d-inline-flex text-center mb-5">
+                        <!-- All Products Tab -->
                         <li class="nav-item">
-                            <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-1">
+                            <a class="d-flex m-2 py-2 bg-light rounded-pill @(ViewBag.ActiveProductTypeId == null ? "active" : "")" data-bs-toggle="pill" href="#tab-all">
                                 <span class="text-dark" style="width: 130px;">All Products</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2">
-                                <span class="text-dark" style="width: 130px;">Vegetables</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-3">
-                                <span class="text-dark" style="width: 130px;">Fruits</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-4">
-                                <span class="text-dark" style="width: 130px;">Bread</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-5">
-                                <span class="text-dark" style="width: 130px;">Meat</span>
-                            </a>
-                        </li>
+                        @foreach (var productType in Model.ProductTypes.Take(5)) // Display only the first 5 product types
+                        {
+                            <li class="nav-item">
+                                <a class="d-flex m-2 py-2 bg-light rounded-pill @(productType.ProductTypeId == ViewBag.ActiveProductTypeId ? "active" : "")" data-bs-toggle="pill" href="#tab-@(productType.ProductTypeId)">
+                                    <span class="text-dark" style="width: 130px;">@productType.ProductTypeName</span>
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
+
+            <!-- Tab content for All Products -->
             <div class="tab-content">
+                <div id="tab-all" class="tab-pane fade p-0 @(ViewBag.ActiveProductTypeId == null ? "show active" : "")">
+                    <div class="row g-4">
+                        <div class="col-lg-12">
+                            <div class="row g-4">
+                                @foreach (var product in Model.AllProducts)
+                                {
+
+                                    <div class="col-md-6 col-lg-4 col-xl-3">
+                                        <a href="@Url.Action("ProductDetail", "ThuNghiem", new { id = product.ProductId })" class="text-decoration-none text-dark">
+                                            <div class="rounded position-relative fruit-item">
+                                                <div class="fruit-img">
+                                                    <!-- Display the first SubProduct image as the thumbnail -->
+                                                    <img src="@product.SubProducts.FirstOrDefault()?.LinkImage"
+                                                         class="img-fluid rounded-top bg-light"
+                                                         alt="@product.ProductName"
+                                                         style="width: 200px; height: 150px;">
+                                                </div>
+                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">@(product.ProductName)</div>
+                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                    <h4>@product.ProductName</h4>
+                                                    <p>@product.Description</p>
+                                                    <div class="d-flex justify-content-center">
+                                                        <!-- Display the price from the first SubProduct -->
+                                                        <p class="text-dark fs-5 fw-bold mb-0">
+                                                            @if (product.SubProducts.Any())
+                                                            {
+                                                                @String.Format("{0:C}", product.SubProducts.FirstOrDefault()?.DiscountedPrice ?? product.SubProducts.FirstOrDefault()?.OriginalPrice)
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center">
+                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tab content for each Product Type -->
+                @foreach (var productType in Model.ProductTypes)
+                {
+                    <div id="tab-@(productType.ProductTypeId)" class="tab-pane fade p-0 @(productType.ProductTypeId == ViewBag.ActiveProductTypeId ? "show active" : "")">
+                        <div class="row g-4">
+                            <div class="col-lg-12">
+                                <div class="row g-4">
+                                    <!-- Displaying Products for each Product Type -->
+                                    @foreach (var product in productType.Products)
+                                    {
+
+                                        <div class="col-md-6 col-lg-4 col-xl-3">
+                                            <a href="@Url.Action("ProductDetail", "ThuNghiem", new { id = product.ProductId })" class="text-decoration-none text-dark">
+                                                <div class="rounded position-relative fruit-item">
+                                                    <div class="fruit-img">
+                                                        <!-- Display the first SubProduct image as the thumbnail -->
+                                                        <img src="@product.SubProducts.FirstOrDefault()?.LinkImage"
+                                                             class="img-fluid rounded-top bg-light"
+                                                             alt="@product.ProductName"
+                                                             style="width: 200px; height: 150px;">
+                                                    </div>
+                                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">@(product.ProductName)</div>
+                                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                        <h4>@product.ProductName</h4>
+                                                        <p>@product.Description</p>
+                                                        <div class="d-flex justify-content-center">
+                                                            <!-- Display the price from the first SubProduct -->
+                                                            <p class="text-dark fs-5 fw-bold mb-0">
+                                                                @if (product.SubProducts.Any())
+                                                                {
+                                                                    @String.Format("{0:C}", product.SubProducts.FirstOrDefault()?.DiscountedPrice ?? product.SubProducts.FirstOrDefault()?.OriginalPrice)
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                        <div class="d-flex justify-content-center">
+                                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
-<!-- Fruits Shop End-->
-<!-- Featurs Start -->
-<div class="container-fluid service py-5">
-    <div class="container py-5">
-        <div class="row g-4 justify-content-center">
-        </div>
-    </div>
-</div>
-<!-- Featurs End -->
-<!-- Vesitable Shop Start-->
-<div class="container-fluid vesitable py-5">
-    <div class="container py-5">
-        <h1 class="mb-0">Fresh Organic Vegetables</h1>
-        <div class="owl-carousel vegetable-carousel justify-content-center">
-        </div>
-    </div>
-</div>
-<!-- Vesitable Shop End -->
-<!-- Banner Section Start-->
-<div class="container-fluid banner bg-secondary my-5">
-    <div class="container py-5">
-        <div class="row g-4 align-items-center">
-        </div>
-    </div>
-</div>
+

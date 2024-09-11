@@ -47,27 +47,27 @@
                             <h1 class="mb-0">Fresh Organic Fruits & Vegetables</h1>
                             <div class="row g-4">
                                 @foreach (var product in Model)
-                                {                    <a href="@Url.Action("ProductDetail", "ThuNghiem", new { id = product.ProductId })" >
+                                {
+                                    <a href="@Url.Action("ProductDetail", "ThuNghiem", new { id = product.ProductId })">
+                                        <div class="col-md-6 col-lg-4 col-xl-3">
+                                            <div class="rounded position-relative fruite-item">
+                                                <div class="fruite-img">
+                                                    <img src="@product.ImageUrl" class="img-fluid w-100 rounded-top bg-light" alt="@product.ProductName">
+                                                </div>
+                                                @*                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                                            </div> *@
+                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                    <h4>@product.ProductName</h4>
+                                                    <p>@product.Description</p>
+                                                    <p class="text-dark fs-5 fw-bold mb-0">$@product.DiscountedPrice</p>
 
-                                    <div class="col-md-6 col-lg-4 col-xl-3">
-                                        <div class="rounded position-relative fruite-item">
-                                            <div class="fruite-img">
-                                                <img src="@product.ImageUrl" class="img-fluid w-100 rounded-top bg-light" alt="@product.ProductName">
-                                            </div>
-                                            @*                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-                                        </div> *@
-                                            <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                <h4>@product.ProductName</h4>
-                                                <p>@product.Description</p>
-                                                <p class="text-dark fs-5 fw-bold mb-0">$@product.DiscountedPrice</p>
-
-                                                    <a href="#" class="btn border border-secondary rounded-pill justify-content-between px-3 text-primary">
+                                                    <a href="@Url.Action("ProductDetail", "ThuNghiem", new { id = product.ProductId })" class="btn border border-secondary rounded-pill justify-content-between px-3 text-primary">
                                                         <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                                     </a>
 
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </a>
                                 }
                             </div>

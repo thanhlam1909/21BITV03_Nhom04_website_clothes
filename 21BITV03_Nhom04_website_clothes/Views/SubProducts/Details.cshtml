@@ -1,63 +1,74 @@
 ﻿@model _21BITV03_Nhom04_website_clothes.Data.SubProduct
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "SubProduct Details";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Details</h1>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">SubProduct Details</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Products</a></li>
+        <li class="breadcrumb-item"><a asp-controller="SubProducts" asp-action="Index" asp-route-id="@ViewBag.MainProductId">SubProducts</a></li>
+        <li class="breadcrumb-item active">Details</li>
+    </ol>
 
-<div>
-    <h4>SubProduct</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OriginalPrice)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OriginalPrice)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DiscountedPrice)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DiscountedPrice)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreationDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreationDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Linkimage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Linkimage)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Color)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Color.ColorId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MainProduct)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MainProduct.ProductId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Size)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Size.ProductSizeId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.SubProductId">Edit</a> |
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-info-circle me-1"></i>
+            SubProduct Details
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.OriginalPrice)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.OriginalPrice)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.DiscountedPrice)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.DiscountedPrice)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CreationDate)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.CreationDate)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Linkimage)
+                </dt>
+                <dd class="col-sm-10">
+                    <img src="@Url.Content(Model.Linkimage)" alt="Image" style="width:100px;height:auto;" />
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Color)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Color.ColorId)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.MainProduct)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.MainProduct.ProductId)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Size)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Size.ProductSizeId)
+                </dd>
+            </dl>
+        </div>
+    </div>
 
-        <a asp-action="Index" asp-route-id="@ViewBag.MainProductId">Back to List</a>
-
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.SubProductId" class="btn btn-warning me-2">Edit</a>
+        <a asp-action="Index" asp-route-id="@ViewBag.MainProductId" class="btn btn-secondary">Back to List</a>
+    </div>
 </div>

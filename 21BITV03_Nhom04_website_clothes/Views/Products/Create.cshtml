@@ -1,4 +1,4 @@
-﻿@model _21BITV03_Nhom04_website_clothes.Data.Product
+﻿@model _21BITV03_Nhom04_website_clothes.Models.ProductViewAdminModel
 
 @{
     ViewData["Title"] = "Create Product";
@@ -34,23 +34,16 @@
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
-@*                 <div class="form-group mb-3">
-                    <label asp-for="DeleteStatus" class="form-label"></label>
-                    <input asp-for="DeleteStatus" class="form-control" />
-                    <span asp-validation-for="DeleteStatus" class="text-danger"></span>
-                </div>
-
+                <!-- Multi-select for Product Types -->
                 <div class="form-group mb-3">
-                    <label asp-for="DeletionDate" class="form-label"></label>
-                    <input asp-for="DeletionDate" class="form-control" />
-                    <span asp-validation-for="DeletionDate" class="text-danger"></span>
+                    <label for="SelectedProductTypeIds" class="form-label">Product Types</label>
+                    <select asp-for="SelectedProductTypeIds" class="form-control" multiple>
+                        @foreach (var type in Model.AvailableProductTypes)
+                        {
+                            <option value="@type.ProductTypeId">@type.ProductTypeName</option>
+                        }
+                    </select>
                 </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="Status" class="form-label"></label>
-                    <input asp-for="Status" class="form-control" />
-                    <span asp-validation-for="Status" class="text-danger"></span>
-                </div> *@
 
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />

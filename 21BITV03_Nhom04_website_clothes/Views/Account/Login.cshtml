@@ -1,37 +1,56 @@
 ﻿@model _21BITV03_Nhom04_website_clothes.Models.LoginViewModel
 
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Đăng nhập";
     Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
 }
 
 <body>
-    <form asp-controller="Account" asp-action="Login" method="post">
-        <h1>Login</h1>
+    <div class="container-fluid page-header-login py-5">
+        <h1 class="text-center text-white display-6">Trang đăng nhập</h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="#">Đăng nhập</a></li>
+        </ol>
+    </div>
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 text-center mb-4">Đăng nhập</h1>
 
-        <div>
-            <input type="text" placeholder="UserName" asp-for="UserName" class="form-control" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
+                    <form asp-controller="Account" asp-action="Login" method="post">
+                        <div class="mb-3">
+                            <label for="loginUserName" class="form-label">Tên người dùng</label>
+                            <input type="text" id="loginUserName" placeholder="Tên người dùng" asp-for="UserName" class="form-control" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Mật khẩu</label>
+                            <input type="password" id="loginPassword" placeholder="Mật khẩu" asp-for="PassWord" class="form-control" />
+                            <span asp-validation-for="PassWord" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>
+                                <input type="checkbox" asp-for="KeepLoggedIn" />
+                                Giữ tôi đăng nhập
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+
+                        @if (ViewData["ValidateMessage"] != null)
+                        {
+                            <br />
+                            <span class="text-danger d-block text-center mt-3">@ViewData["ValidateMessage"]</span>
+                        }
+                    </form>
+                    <p class="text-center mt-3">Chưa có tài khoản? <a href="@Url.Action("Register", "Account")">Đăng ký tại đây</a></p>
+
+                </div>
+            </div>
         </div>
-
-        <div>
-            <input type="password" placeholder="Password" asp-for="PassWord" class="form-control" />
-            <span asp-validation-for="PassWord" class="text-danger"></span>
-        </div>
-
-        <div>
-            <label>
-                <input type="checkbox" asp-for="KeepLoggedIn" />
-                Keep me logged in
-            </label>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Login</button>
-
-        @if (ViewData["ValidateMessage"] != null)
-        {
-            <br />
-            <span class="text-danger">@ViewData["ValidateMessage"]</span>
-        }
-    </form>
+    </div>
 </body>

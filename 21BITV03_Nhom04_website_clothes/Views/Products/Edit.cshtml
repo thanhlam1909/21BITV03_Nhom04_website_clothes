@@ -1,4 +1,4 @@
-﻿@model _21BITV03_Nhom04_website_clothes.Data.Product
+﻿@model _21BITV03_Nhom04_website_clothes.Models.ProductViewAdminModel
 
 @{
     ViewData["Title"] = "Edit Product";
@@ -35,11 +35,35 @@
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
+                <!-- Multi-select for Product Types -->
+                <div class="form-group mb-3">
+                    <label for="SelectedProductTypeIds" class="form-label">Product Types</label>
+                    <select asp-for="SelectedProductTypeIds" class="form-control" multiple>
+                        @foreach (var type in Model.AvailableProductTypes)
+                        {
+                            <option value="@type.ProductTypeId">
+                                @type.ProductTypeName
+                                @if (Model.SelectedProductTypeIds.Contains(type.ProductTypeId))
+                                {
+                                    @Html.Raw("selected")
+                                }
+                            </option>
+
+                        }
+                    </select>
+                </div>
+
                 <div class="form-group mb-3">
                     <label asp-for="DeleteStatus" class="form-label">Delete Status</label>
                     <select asp-for="DeleteStatus" class="form-control">
-                        <option value="true">True</option>
-                        <option value="false">False</option>
+                        <option value="true">True @if (Model.DeleteStatus == true)
+                            {
+                                <text>selected</text>
+                            }</option>
+                        <option value="false">False @if (Model.DeleteStatus == false)
+                            {
+                                <text>selected</text>
+                            }</option>
                     </select>
                     <span asp-validation-for="DeleteStatus" class="text-danger"></span>
                 </div>
@@ -47,8 +71,14 @@
                 <div class="form-group mb-3">
                     <label asp-for="Status" class="form-label">Status</label>
                     <select asp-for="Status" class="form-control">
-                        <option value="true">True</option>
-                        <option value="false">False</option>
+                        <option value="true">True @if (Model.Status == true)
+                            {
+                                <text>selected</text>
+                            }</option>
+                        <option value="false">False @if (Model.Status == false)
+                            {
+                                <text>selected</text>
+                            }</option>
                     </select>
                     <span asp-validation-for="Status" class="text-danger"></span>
                 </div>

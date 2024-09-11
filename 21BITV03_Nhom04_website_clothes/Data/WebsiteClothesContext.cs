@@ -283,7 +283,7 @@ public partial class WebsiteClothesContext : DbContext
             entity.Property(e => e.DeletionDate)
                 .HasColumnType("datetime")
                 .HasColumnName("Deletion_date");
-            entity.Property(e => e.Description).HasMaxLength(50);
+            entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.ProductName)
                 .HasMaxLength(50)
                 .HasColumnName("Product_name");

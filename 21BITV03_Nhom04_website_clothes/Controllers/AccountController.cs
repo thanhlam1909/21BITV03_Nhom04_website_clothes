@@ -6,6 +6,7 @@ using System.Security.Claims;
 using _21BITV03_Nhom04_website_clothes.Models;
 using Microsoft.AspNetCore.Authorization;
 using _21BITV03_Nhom04_website_clothes.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace _21BITV03_Nhom04_website_clothes.Controllers
 {
@@ -75,6 +76,63 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
 
             ViewData["ValidateMessage"] = "User not found or password incorrect.";
             return View(modelLogin);
+        }
+        [HttpGet]
+        public IActionResult Register()
+        {
+            ViewBag.Roles = _context.AspNetRoles.ToList();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(UserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Check if the username already exists
+                var existingUser = await _context.AspNetUsers.FirstOrDefaultAsync(u => u.UserName == model.UserName);
+                if (existingUser != null)
+                {
+                    // Add a validation error to ModelState
+                    ModelState.AddModelError("UserName", "Username is already taken. Please choose a different one.");
+
+                    // Reload roles and return the view with the error
+                    ViewBag.Roles = _context.AspNetRoles.ToList();
+                    return View(model);
+                }
+
+                var user = new AspNetUser
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    PasswordHash = model.Password, // Consider hashing the password before storing it
+                    PhoneNumber = model.Phone.ToString(), // Assuming Phone is stored as a string
+                    UserInfo = new UserInfo
+                    {
+                        FullName = model.FullName,
+                        Address = model.Address,
+                        Phone = model.Phone,
+                        Email = model.Email,      // Adding Email to UserInfo
+                        Password = model.Password, // Adding Password to UserInfo
+                        UserName = model.UserName  // Adding UserName to UserInfo
+                    }
+                };
+
+                // Assign role to user
+                var role = await _context.AspNetRoles.FirstOrDefaultAsync(r => r.Name == "user");
+                if (role != null)
+                {
+                    user.Roles.Add(role);
+                }
+
+                _context.AspNetUsers.Add(user);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Roles = _context.AspNetRoles.ToList();
+            return View(model);
         }
     }
 }

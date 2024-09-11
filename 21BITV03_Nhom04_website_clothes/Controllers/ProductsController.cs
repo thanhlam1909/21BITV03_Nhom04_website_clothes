@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using _21BITV03_Nhom04_website_clothes.Data;
+using _21BITV03_Nhom04_website_clothes.Models;
 
 namespace _21BITV03_Nhom04_website_clothes.Controllers
 {
@@ -45,30 +46,55 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            return View();
+            var viewModel = new ProductViewAdminModel
+            {
+                AvailableProductTypes = _context.ProductTypes.ToList() // Fetch the available product types from the database
+            };
+            return View(viewModel);
         }
+
 
         // POST: Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,Description")] Product product)
+        public async Task<IActionResult> Create(ProductViewAdminModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                // Set default values for DeleteStatus, DeletionDate, and Status
-                product.DeleteStatus = null; // Assuming DeleteStatus is nullable; otherwise, use a default value like 0 or false.
-                product.DeletionDate = null; // Assuming DeletionDate is nullable.
-                product.Status = true; // Set Status to true.
+                var product = new Product
+                {
+                    ProductName = viewModel.ProductName,
+                    Description = viewModel.Description,
+                    DeleteStatus = false,
+                    DeletionDate = null,
+                    Status = true
+                };
 
-                _context.Add(product);
+                _context.Products.Add(product);
                 await _context.SaveChangesAsync();
+
+                // Add selected ProductTypeLinks
+                foreach (var productTypeId in viewModel.SelectedProductTypeIds)
+                {
+                    var productTypeLink = new ProductTypeLink
+                    {
+                        ProductId = product.ProductId,
+                        ProductTypeId = productTypeId
+                    };
+                    _context.ProductTypeLinks.Add(productTypeLink);
+                }
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
-        }
 
+            // Re-populate AvailableProductTypes if the model state is invalid
+            viewModel.AvailableProductTypes = _context.ProductTypes.ToList();
+            return View(viewModel);
+        }
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -82,15 +108,30 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             {
                 return NotFound();
             }
-            return View(product);
-        }
 
+            // Populate the view model
+            var viewModel = new ProductViewAdminModel
+            {
+                ProductId = product.ProductId,
+                ProductName = product.ProductName,
+                Description = product.Description,
+                DeleteStatus = product.DeleteStatus,
+                Status = product.Status,
+                AvailableProductTypes = _context.ProductTypes.ToList(), // Load available product types
+                SelectedProductTypeIds = _context.ProductTypeLinks
+    .Where(pt => pt.ProductId == product.ProductId)
+    .Select(pt => pt.ProductTypeId.HasValue ? pt.ProductTypeId.Value : 0) // Convert nullable to non-nullable
+    .ToList()
+            };
+
+            return View(viewModel);
+        }
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,Description,DeleteStatus,Status")] Product product)
+        public async Task<IActionResult> Edit(int id, ProductViewAdminModel viewModel)
         {
-            if (id != product.ProductId)
+            if (id != viewModel.ProductId)
             {
                 return NotFound();
             }
@@ -99,8 +140,20 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             {
                 try
                 {
+                    var product = await _context.Products.FindAsync(id);
+                    if (product == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Update product fields
+                    product.ProductName = viewModel.ProductName;
+                    product.Description = viewModel.Description;
+                    product.Status = viewModel.Status;
+                    product.DeleteStatus = viewModel.DeleteStatus;
+
                     // Automatically set DeletionDate if DeleteStatus is true
-                    if (product.DeleteStatus == true)
+                    if (viewModel.DeleteStatus == true)
                     {
                         product.DeletionDate = DateTime.Now;
                     }
@@ -111,10 +164,29 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
 
                     _context.Update(product);
                     await _context.SaveChangesAsync();
+
+                    // Update ProductTypeLinks
+                    var existingLinks = _context.ProductTypeLinks.Where(pt => pt.ProductId == id).ToList();
+                    _context.ProductTypeLinks.RemoveRange(existingLinks);
+                    await _context.SaveChangesAsync();
+
+                    foreach (var productTypeId in viewModel.SelectedProductTypeIds)
+                    {
+                        var productTypeLink = new ProductTypeLink
+                        {
+                            ProductId = product.ProductId,
+                            ProductTypeId = productTypeId
+                        };
+                        _context.ProductTypeLinks.Add(productTypeLink);
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!ProductExists(viewModel.ProductId))
                     {
                         return NotFound();
                     }
@@ -123,9 +195,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(product);
+
+            // Re-populate AvailableProductTypes if the model state is invalid
+            viewModel.AvailableProductTypes = _context.ProductTypes.ToList();
+            return View(viewModel);
         }
 
 
