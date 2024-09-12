@@ -29,6 +29,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
         }
+        [HttpGet]
+        public IActionResult IsUserLoggedIn()
+        {
+            return Json(User.Identity.IsAuthenticated);
+        }
         public IActionResult Login()
         {
             ClaimsPrincipal claimUser = HttpContext.User;
@@ -49,17 +54,22 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 return View(modelLogin);
             }
 
-            var user = _context.AspNetUsers
-                .FirstOrDefault(u => u.UserName == modelLogin.UserName);
+            var user = await _context.AspNetUsers
+                .Include(u => u.Roles) // Include the Roles navigation property
+                .FirstOrDefaultAsync(u => u.UserName == modelLogin.UserName);
 
             if (user != null && modelLogin.UserName == user.UserName && modelLogin.PassWord == user.PasswordHash)
             {
+                // Check the user's roles
+                var userRole = user.Roles.FirstOrDefault();
+                var roleName = userRole?.Name;
+
                 List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, modelLogin.UserName),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim("OtherProperties", "Example Role") // Add more claims as needed
-            };
+        {
+            new Claim(ClaimTypes.NameIdentifier, modelLogin.UserName),
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Role, roleName ?? "User") // Add role claim
+        };
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -71,12 +81,21 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), properties);
 
-                return RedirectToAction("Index", "Account");
+                // Redirect based on role
+                if (roleName == "Admin")
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home"); // or other default page for non-admin users
+                }
             }
 
             ViewData["ValidateMessage"] = "User not found or password incorrect.";
             return View(modelLogin);
         }
+
         [HttpGet]
         public IActionResult Register()
         {

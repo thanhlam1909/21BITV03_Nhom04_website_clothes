@@ -50,17 +50,16 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <h4 class="fw-bold mb-3">@Model.ProductName</h4>
-                        <p class="mb-3">Category: Vegetables</p>
+                        <h4 class="fw-bold mt-4 mb-3">@Model.ProductName</h4>
                         <div class="mb-3">
                             @if (Model.DiscountedPrice.HasValue)
                             {
-                                <h5 class="fw-bold mb-1 text-danger" style="text-decoration: line-through;">@Model.OriginalPrice $</h5>
-                                <h5 class="fw-bold mb-1">@Model.DiscountedPrice.Value $</h5>
+                                <h5 class="fw-bold mb-1 text-danger" style="text-decoration: line-through;">@Model.OriginalPrice.ToString("N0")</h5>
+                                <h5 class="fw-bold mb-1">@Model.DiscountedPrice.Value.ToString("N0") </h5>
                             }
                             else
                             {
-                                <h5 class="fw-bold mb-1">@Model.OriginalPrice $</h5>
+                                <h5 class="fw-bold mb-1">@Model.OriginalPrice.ToString("N0") </h5>
                             }
                         </div>
 
@@ -314,6 +313,18 @@
         });
     }
     function addToCart() {
+        fetch('/Account/IsUserLoggedIn')
+            .then(response => response.json())
+            .then(isLoggedIn => {
+                if (isLoggedIn) {
+                    // Logic để thêm sản phẩm vào giỏ hàng
+                    alert('Product added to cart!');
+                } else {
+                    // Chuyển hướng đến trang đăng nhập
+                    window.location.href = '/Account/Login';
+                }
+            })
+            .catch(error => console.error('Error:', error));
         // Validate if a color and size are selected
         if (!selectedColorId || !selectedSizeId) {
             alert("Please select both color and size options.");

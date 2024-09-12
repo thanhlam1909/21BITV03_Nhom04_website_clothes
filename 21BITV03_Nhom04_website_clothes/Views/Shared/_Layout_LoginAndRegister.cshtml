@@ -61,7 +61,7 @@
                     <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                         <div class="navbar-nav mx-auto">
                         <a href="@Url.Action("Index", "Home")" class="nav-item nav-link">Home</a>
-                        <a href="@Url.Action("Index", "ThuNghiem")" class="nav-item nav-link">
+                        <a href="@Url.Action("FilterColor_Size", "Search")" class="nav-item nav-link">
                             Shop</a>
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -100,23 +100,27 @@
         </div>
         <!-- Navbar End -->
         <!-- Modal Search Start -->
-        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content rounded-0">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body d-flex align-items-center">
-                        <div class="input-group w-75 mx-auto d-flex">
-                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
-                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center">
+                    <form asp-action="Search" asp-controller="Search" method="post" class="w-75 mx-auto d-flex">
+                        <div class="input-group w-100">
+                            <input type="search" name="ProductName" class="form-control p-3" placeholder="Keywords" aria-describedby="search-icon-1" />
+                            <button type="submit" class="btn btn-primary input-group-text p-3" id="search-icon-1">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <!-- Modal Search End -->
+    </div>
+    <!-- Modal Search End -->
         <!-- Single Page Header start -->
 
         <!-- Single Page Header End -->

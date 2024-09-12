@@ -15,25 +15,59 @@
 
 <div class="container-fluid py-5">
     <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 text-center mb-4">Tổng quan tài khoản</h1>
-
-                <!-- Hiển thị thông tin người dùng nếu cần -->
-                <div class="mb-4">
-                    <div class="alert alert-info">
-                        Chào mừng, @User.Identity.Name! Tại đây bạn có thể quản lý thông tin tài khoản của mình.
+        <div class="row">
+            <!-- Sidebar Menu -->
+            <div class="col-lg-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Quản lý tài khoản</h4>
+                        <ul class="list-group">
+                            <li class="list-group-item"><a href="#" class="nav-link" data-target="personal-info">Thông tin cá nhân</a></li>
+                            <li class="list-group-item"><a href="#" class="nav-link" data-target="orders">Đơn hàng</a></li>
+                            <li class="list-group-item">
+                                <form asp-controller="Account" asp-action="LogOut" method="post">
+                                    <button type="submit" class="btn btn-danger w-100">Đăng xuất</button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+            </div>
 
-                <!-- Biểu mẫu Đăng xuất -->
-                <form asp-controller="Account" asp-action="LogOut" method="post">
-                    <button type="submit" class="btn btn-danger w-100">Đăng xuất</button>
-                </form>
-
-                <!-- Các liên kết đến các trang liên quan đến tài khoản -->
-
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <div id="content">
+                    <!-- Sections for personal info and orders -->
+                    <div id="personal-info" class="section-content" style="display:none;">
+                        <h2>Thông tin cá nhân</h2>
+                        <p>Thông tin cá nhân của bạn sẽ được hiển thị ở đây.</p>
+                    </div>
+                    <div id="orders" class="section-content" style="display:none;">
+                        <h2>Đơn hàng</h2>
+                        <p>Danh sách đơn hàng của bạn sẽ được hiển thị ở đây.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Include jQuery for simplicity -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.nav-link').click(function (e) {
+            e.preventDefault();
+            var targetId = $(this).data('target');
+
+            // Hide all section contents
+            $('.section-content').hide();
+
+            // Show the selected section content
+            $('#' + targetId).show();
+        });
+
+        // Optionally, show default section
+        $('#personal-info').show(); // or whichever you want to show by default
+    });
+</script>

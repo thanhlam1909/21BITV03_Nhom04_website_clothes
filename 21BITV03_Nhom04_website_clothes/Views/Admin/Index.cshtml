@@ -16,18 +16,18 @@
                 <i class="fas fa-user me-1"></i>
                 Hồ sơ của bạn
             </span>
-            <button class="btn btn-primary" id="editProfileButton">
+            <a href="@Url.Action("Edit", "Admin", new { id = Model.UserId })" class="btn btn-primary">
                 <i class="fas fa-edit"></i> Sửa
-            </button>
+            </a>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-8">
+                    <h1 hidden>@Model.UserId</h1>
                     <h5>@(Model.FullName ?? "Chưa cập nhật")</h5>
                     <p>Email: @(Model.Email ?? "Chưa cập nhật")</p>
-                    <p>Số điện thoại: @(Model.Phone.HasValue ? Model.Phone.Value.ToString() : "Chưa cập nhật")</p>
+                    <p>Số điện thoại: @(Model.Phone.HasValue ? Model.Phone.Value : "Chưa cập nhật")</p>
                     <p>Địa chỉ: @(Model.Address ?? "Chưa cập nhật")</p>
-                    <p>Giới tính: @(Model.Gender ?? "Chưa cập nhật")</p>
                 </div>
             </div>
         </div>
