@@ -1,4 +1,5 @@
-﻿@model _21BITV03_Nhom04_website_clothes.Models.LoginViewModel
+﻿
+@model _21BITV03_Nhom04_website_clothes.Models.AccountViewModel
 
 @{
     ViewData["Title"] = "Tổng quan tài khoản";
@@ -6,10 +7,10 @@
 }
 
 <div class="container-fluid page-header-login py-5">
-    <h1 class="text-center text-white display-6">Trang người dùng</h1>
+    <h1 class="text-center text-white display-6">Trang cá nhân</h1>
     <ol class="breadcrumb justify-content-center mb-0">
         <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-        <li class="breadcrumb-item"><a href="#">Trang người dùng</a></li>
+        <li class="breadcrumb-item"><a href="#">Trang cá nhân</a></li>
     </ol>
 </div>
 
@@ -22,8 +23,8 @@
                     <div class="card-body">
                         <h4 class="card-title">Quản lý tài khoản</h4>
                         <ul class="list-group">
-                            <li class="list-group-item"><a href="#" class="nav-link" data-target="personal-info">Thông tin cá nhân</a></li>
-                            <li class="list-group-item"><a href="#" class="nav-link" data-target="orders">Đơn hàng</a></li>
+                            <li class="list-group-item"><a href="#" class="nav-link" data-target="user-info">Thông tin cá nhân</a></li>
+                            <li class="list-group-item"><a href="#" class="nav-link" data-target="order-info">Đơn hàng</a></li>
                             <li class="list-group-item">
                                 <form asp-controller="Account" asp-action="LogOut" method="post">
                                     <button type="submit" class="btn btn-danger w-100">Đăng xuất</button>
@@ -37,14 +38,95 @@
             <!-- Main Content -->
             <div class="col-lg-9">
                 <div id="content">
-                    <!-- Sections for personal info and orders -->
-                    <div id="personal-info" class="section-content" style="display:none;">
-                        <h2>Thông tin cá nhân</h2>
-                        <p>Thông tin cá nhân của bạn sẽ được hiển thị ở đây.</p>
+                    <!-- Sections for user info and orders -->
+                    <div id="user-info" class="section-content" style="display:none;">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h4 class="mb-0">Thông tin cá nhân</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <p class="mb-0"><strong>Username:</strong></p>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="mb-0">@Model.Users.UserName</p>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <p class="mb-0"><strong>Full Name:</strong></p>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="mb-0">@Model.UserInfoes.FullName</p>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <p class="mb-0"><strong>Email:</strong></p>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="mb-0">@Model.Users.Email</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <div id="orders" class="section-content" style="display:none;">
-                        <h2>Đơn hàng</h2>
-                        <p>Danh sách đơn hàng của bạn sẽ được hiển thị ở đây.</p>
+                    <div id="order-info" class="section-content" style="display:none;">
+                        <h2>Thông tin đơn hàng</h2>
+                        @if (Model.Orders != null)
+                        {
+                            <ul class="list-group">
+                                @foreach (var order in Model.UserInfoes.Orders)
+                                {
+                                    <li class="list-group-item">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-4">
+                                                <p><strong>Order ID:</strong> @order.OrderId</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p><strong>Order Status:</strong> @order.OrderStatus</p>
+                                            </div>
+                                            <div class="col-md-4 text-end">
+                                                <button class="btn btn-primary" onclick="toggleOrderDetails('order-@order.OrderId')">View Order Product Details</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden Order Product Details -->
+                                        <div id="order-@order.OrderId" class="order-product-details" style="display:none;">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product Name</th>
+                                                        <th>Quantity</th>
+                                                        <th>Color</th>
+                                                        <th>Size</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var orderProduct in order.OrderProductLists)
+                                                    {
+                                                        <tr>
+                                                            <td>@orderProduct.ProductName</td>
+                                                            <td>@orderProduct.Quanity</td>
+                                                            <td>@orderProduct.ColorName</td>
+                                                            <td>@orderProduct.SizeName</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p>No orders found for this user.</p>
+                        }
                     </div>
                 </div>
             </div>
@@ -68,6 +150,15 @@
         });
 
         // Optionally, show default section
-        $('#personal-info').show(); // or whichever you want to show by default
+        $('#user-info').show(); // or whichever you want to show by default
     });
+
+    function toggleOrderDetails(orderId) {
+        var element = document.getElementById(orderId);
+        if (element.style.display === "none") {
+            element.style.display = "block";
+        } else {
+            element.style.display = "none";
+        }
+    }
 </script>

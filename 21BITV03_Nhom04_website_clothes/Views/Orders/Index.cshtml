@@ -1,0 +1,80 @@
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.Order>
+
+@{
+    ViewData["Title"] = "Order Management";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Order Management</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active">Orders</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-shopping-cart me-1"></i>
+            Order List
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Message)</th>
+                        <th>@Html.DisplayNameFor(model => model.PaymentMethod)</th>
+                        <th>@Html.DisplayNameFor(model => model.OrderStatus)</th>
+                        <th>@Html.DisplayNameFor(model => model.User)</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Message)</th>
+                        <th>@Html.DisplayNameFor(model => model.PaymentMethod)</th>
+                        <th>@Html.DisplayNameFor(model => model.OrderStatus)</th>
+                        <th>@Html.DisplayNameFor(model => model.User)</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="order-row-@item.OrderId">
+                            <td>@Html.DisplayFor(modelItem => item.Message)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
+                            <td>@Html.DisplayFor(modelItem => item.OrderStatus)</td>
+                            <td>@Html.DisplayFor(modelItem => item.User.UserId)</td>
+                            <td style="text-align: center;">
+                                <form asp-action="UpdateStatusToCancelled" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.OrderId" />
+                                    <button type="submit" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-ban"></i> Cancel
+                                    </button>
+                                </form>
+                                <form asp-action="UpdateStatusToShipped" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.OrderId" />
+                                    <button type="submit" class="btn btn-sm btn-info">
+                                        <i class="fas fa-shipping-fast"></i> Shipped
+                                    </button>
+                                </form>
+                                <form asp-action="UpdateStatusToCompleted" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.OrderId" />
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="fas fa-check"></i> Completed
+                                    </button>
+                                </form>
+                                <form asp-action="Delete"  style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.OrderId" />
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

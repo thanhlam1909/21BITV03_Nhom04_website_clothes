@@ -19,10 +19,39 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var username = HttpContext.User.Identity.Name; // Get the username from the context
+            if (username == null)
+            {
+                return Json(new { success = false, message = "User is not logged in." });
+            }
+
+            // Retrieve the user information based on the username
+            var userInfo = await _context.UserInfos
+                .Include(u => u.User) // Include AspNetUser details
+                .Include(u => u.Orders) // Include orders associated with the user
+                    .ThenInclude(o => o.OrderProductLists) // Include order product details
+                .Where(u => u.UserName == username)
+                .FirstOrDefaultAsync();
+
+            if (userInfo == null)
+            {
+                return Json(new { success = false, message = "User not found." });
+            }
+
+            // Prepare the AccountViewModel
+            var accountViewModel = new AccountViewModel
+            {
+                Users = userInfo.User, // AspNetUser information
+                UserInfoes = userInfo, // UserInfo information
+                Orders = userInfo.Orders.FirstOrDefault(), // Get the first order as an example
+                OrderProductLists = userInfo.Orders.SelectMany(o => o.OrderProductLists).ToList() // All order product details
+            };
+
+            return View(accountViewModel); // Pass the ViewModel to the view
         }
+
         public async Task<IActionResult> LogOut()
         {
 
