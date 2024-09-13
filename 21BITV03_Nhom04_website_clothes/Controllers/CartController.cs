@@ -18,6 +18,7 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         [HttpGet("GetCartCount")]
         public async Task<IActionResult> GetCartCount()
         {
+
             var username = HttpContext.User.Identity?.Name;
             if (username == null)
             {

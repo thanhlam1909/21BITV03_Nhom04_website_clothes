@@ -70,17 +70,19 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             }
 
             // Clear existing roles
-            user.Roles.Clear();
 
             // Get selected role ID from the form submission
             var selectedRoleId = model.SelectedRoleId;
 
             if (selectedRoleId != 0)  // Check if a valid role ID is selected
-            {
+            {           
+
                 // Fetch the role from the database
                 var role = _context.AspNetRoles.Find(selectedRoleId);
                 if (role != null)
                 {
+                    user.Roles.Clear();
+
                     // Add the role to the user's roles
                     user.Roles.Add(role);
                 }

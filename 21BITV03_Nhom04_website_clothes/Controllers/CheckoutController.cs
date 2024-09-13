@@ -1,4 +1,5 @@
 ﻿using _21BITV03_Nhom04_website_clothes.Data;
+using _21BITV03_Nhom04_website_clothes.Helper;
 using _21BITV03_Nhom04_website_clothes.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         public async Task<IActionResult> Index()
 
         {
+            var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
+            if (redirectResult != null)
+            {
+                return redirectResult;
+            }
             var username = HttpContext.User.Identity.Name;
             if (username == null)
             {
@@ -71,6 +77,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         [HttpPost]
         public async Task<IActionResult> Checkout(CartViewModel model, string orderMessage, string paymentMethod)
         {
+            var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
+            if (redirectResult != null)
+            {
+                return redirectResult;
+            }
             var username = HttpContext.User.Identity.Name;
             if (username == null)
             {
@@ -142,6 +153,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         }
         public IActionResult OrderConfirmation()
         {
+            var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
+            if (redirectResult != null)
+            {
+                return redirectResult;
+            }
             return View();
         }
 

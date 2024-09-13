@@ -7,6 +7,7 @@ using _21BITV03_Nhom04_website_clothes.Models;
 using Microsoft.AspNetCore.Authorization;
 using _21BITV03_Nhom04_website_clothes.Data;
 using Microsoft.EntityFrameworkCore;
+using _21BITV03_Nhom04_website_clothes.Helper;
 
 namespace _21BITV03_Nhom04_website_clothes.Controllers
 {
@@ -21,6 +22,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
+            if (redirectResult != null)
+            {
+                return redirectResult;
+            }
             var username = HttpContext.User.Identity.Name; // Get the username from the context
             if (username == null)
             {

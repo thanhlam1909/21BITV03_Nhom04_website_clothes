@@ -1,4 +1,5 @@
 using _21BITV03_Nhom04_website_clothes.Data;
+using _21BITV03_Nhom04_website_clothes.Helper;
 using _21BITV03_Nhom04_website_clothes.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         }
         public IActionResult Index()
         {
+            var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
+            if (redirectResult != null)
+            {
+                return redirectResult;
+            }
             var productTypes = _context.ProductTypes
                     .Include(pt => pt.ProductTypeLinks)
                         .ThenInclude(ptl => ptl.Product)
@@ -70,6 +76,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
 
         public IActionResult ThuNghiem()
         {
+            var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
+            if (redirectResult != null)
+            {
+                return redirectResult;
+            }
             var productTypes = _context.ProductTypes
         .Include(pt => pt.ProductTypeLinks)
             .ThenInclude(ptl => ptl.Product)
