@@ -46,9 +46,9 @@
                             <td>
                                 <img src="@Url.Content(item.Linkimage)" alt="Image" style="width:100px;height:auto;" />
                             </td>
-                            <td>@Html.DisplayFor(modelItem => item.Color.ColorId)</td>
-                            <td>@Html.DisplayFor(modelItem => item.MainProduct.ProductId)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Size.ProductSizeId)</td>
+                            <td>@item.Color.ColorName</td> <!-- Updated -->
+                            <td>@item.MainProductId</td>
+                            <td>@item.Size.SizeName</td>  <!-- Updated -->
                             <td style="text-align: center;">
                                 <a asp-action="Edit" asp-route-id="@item.SubProductId" class="btn btn-sm btn-warning me-1">Edit</a>
                                 <a asp-action="Details" asp-route-id="@item.SubProductId" class="btn btn-sm btn-info me-1">Details</a>

@@ -23,8 +23,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             }
 
             var product = await _context.Products
-                .Include(p => p.SubProducts)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+      .Include(p => p.SubProducts)
+          .ThenInclude(sp => sp.Color)
+      .Include(p => p.SubProducts)
+          .ThenInclude(sp => sp.Size)
+      .FirstOrDefaultAsync(m => m.ProductId == id);
 
             if (product == null)
             {
