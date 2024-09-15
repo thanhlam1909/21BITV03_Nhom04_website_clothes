@@ -1,4 +1,5 @@
 ﻿using _21BITV03_Nhom04_website_clothes.Data;
+using _21BITV03_Nhom04_website_clothes.Helper;
 using _21BITV03_Nhom04_website_clothes.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         }
         public IActionResult Index(SearchViewModel model)
         {
+            var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
+            if (redirectResult != null)
+            {
+                return redirectResult;
+            }
             var productTypes = _context.ProductTypes.ToList();
             var colors = _context.ProductColors.ToList();
             var sizes = _context.ProductSizes.ToList();
@@ -46,6 +52,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         [HttpPost]
         public IActionResult Search(SearchViewModel model)
         {
+            var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
+            if (redirectResult != null)
+            {
+                return redirectResult;
+            }
             // Ensure model.PageNumber and model.PageSize are set
             model.PageNumber = model.PageNumber > 0 ? model.PageNumber : 1;
             model.PageSize = model.PageSize > 0 ? model.PageSize : 10; // Default page size
@@ -86,6 +97,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         [HttpGet]
         public IActionResult FilterColor_Size(List<int> colorIds, List<int> sizeIds, double? minPrice, double? maxPrice)
         {
+            var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
+            if (redirectResult != null)
+            {
+                return redirectResult;
+            }
             var filterViewModel = new FilterViewModel
             {
                 AvailableColors = _context.ProductColors.ToList(),

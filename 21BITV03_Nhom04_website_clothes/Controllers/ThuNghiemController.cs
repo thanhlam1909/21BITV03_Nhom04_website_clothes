@@ -1,4 +1,5 @@
 ﻿using _21BITV03_Nhom04_website_clothes.Data;
+using _21BITV03_Nhom04_website_clothes.Helper;
 using _21BITV03_Nhom04_website_clothes.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +52,11 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
 
         public async Task<IActionResult> ProductDetail(int id)
         {
+            var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
+            if (redirectResult != null)
+            {
+                return redirectResult;
+            }
             // Fetch the specific product by ID from the database
             var product = await _context.Products
                 .Include(p => p.SubProducts)

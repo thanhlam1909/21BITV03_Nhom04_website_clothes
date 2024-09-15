@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Linq;
 
 namespace _21BITV03_Nhom04_website_clothes.Helper
 {
@@ -7,26 +8,30 @@ namespace _21BITV03_Nhom04_website_clothes.Helper
     {
         public static IActionResult RedirectToRoleBasedPage(Controller controller)
         {
-            // Kiểm tra nếu người dùng đã đăng nhập
-            if (controller.User.Identity.IsAuthenticated)
+            if (!controller.User.Identity.IsAuthenticated)
             {
-                // Lấy vai trò của người dùng đã đăng nhập
-                var roleClaim = controller.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-                var roleName = roleClaim?.Value;
-
-                // Chuyển hướng dựa trên vai trò
-                if (roleName == "Admin")
-                {
-                    return controller.RedirectToAction("Index", "Admin");
-                }
-                else
-                {
-                    return controller.RedirectToAction("Index", "Home"); // Trang mặc định cho người dùng không phải admin
-                }
+                return null; // No redirection for unauthenticated users
             }
 
-            // Nếu chưa đăng nhập, không chuyển hướng
-            return null;
+            var roleClaim = controller.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            var roleName = roleClaim?.Value;
+
+            if (string.IsNullOrEmpty(roleName))
+            {
+                return null; // No redirection if user has no role
+            }
+
+            var currentController = controller.ControllerContext.ActionDescriptor.ControllerName;
+
+            if (roleName == "Admin" && currentController != "Admin")
+            {
+                return controller.RedirectToAction("Index", "Admin"); // Redirect Admins to Admin area
+            }
+            else
+            {
+                // Non-Admins don't get redirected - stay on current page
+                return null;
+            }
         }
     }
 }
