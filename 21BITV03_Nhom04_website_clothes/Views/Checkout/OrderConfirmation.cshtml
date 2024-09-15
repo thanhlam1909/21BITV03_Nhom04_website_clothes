@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Order Confirmation";
+    ViewData["Title"] = "Xác nhận đơn hàng";
     Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
 }
 <div class="container-fluid page-header-login py-5">
@@ -14,11 +14,11 @@
     <div class="container py-5">
         <div class="text-center">
             <div class="alert alert-success" role="alert">
-                <h4 class="alert-heading">Order Confirmed!</h4>
-                <p>Your order has been placed successfully. Thank you for shopping with us!</p>
+                <h4 class="alert-heading">Đơn hàng đã được xác nhận!</h4>
+                <p>Đơn hàng của bạn đã được đặt thành công. Cảm ơn bạn đã mua sắm với chúng tôi!</p>
                 <hr>
             </div>
-            <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-4">Continue Shopping</a>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-4">Tiếp tục mua sắm</a>
         </div>
     </div>
 </div>

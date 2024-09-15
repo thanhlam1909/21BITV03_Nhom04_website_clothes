@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Order";
+    ViewData["Title"] = "Đặt hàng";
     Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
 }
 @model CartViewModel
@@ -13,27 +13,27 @@
 </div>
 <div class="container-fluid py-5">
     <div class="container py-5">
-        <h1 class="mb-4">Billing details</h1>
+        <h1 class="mb-4">Chi tiết thanh toán</h1>
         <form id="checkoutForm" asp-action="Checkout" method="post">
             <div class="row g-5">
                 <div class="col-md-12 col-lg-6 col-xl-8">
-                    <!-- Table of Products -->
+                    <!-- Bảng sản phẩm -->
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Products</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Total</th>
+                                    <th scope="col">Sản phẩm</th>
+                                    <th scope="col">Tên</th>
+                                    <th scope="col">Giá</th>
+                                    <th scope="col">Số lượng</th>
+                                    <th scope="col">Tổng</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (Model.CartProducts.Count == 0)
                                 {
                                     <tr>
-                                        <td colspan="5" class="text-center">Your checkout is empty.</td>
+                                        <td colspan="5" class="text-center">Giỏ hàng của bạn trống.</td>
                                     </tr>
                                 }
                                 else
@@ -54,13 +54,13 @@
                                             <td class="py-5">@((item.Quantity * item.DiscountedPrice).ToString("N0")) $</td>
                                         </tr>
                                     }
-                                    <!-- Subtotal -->
+                                    <!-- Tổng phụ -->
                                     <tr>
                                         <th scope="row"></th>
                                         <td class="py-5"></td>
                                         <td class="py-5"></td>
                                         <td class="py-5">
-                                            <p class="mb-0 text-dark py-3">Subtotal</p>
+                                            <p class="mb-0 text-dark py-3">Tổng phụ</p>
                                         </td>
                                         <td class="py-5">
                                             <div class="py-3 border-bottom border-top">
@@ -68,11 +68,11 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <!-- Total -->
+                                    <!-- Tổng cộng -->
                                     <tr>
                                         <th scope="row"></th>
                                         <td class="py-5">
-                                            <p class="mb-0 text-dark text-uppercase py-3">TOTAL</p>
+                                            <p class="mb-0 text-dark text-uppercase py-3">TỔNG CỘNG</p>
                                         </td>
                                         <td class="py-5"></td>
                                         <td class="py-5"></td>
@@ -87,26 +87,26 @@
                         </table>
                     </div>
 
-                    <!-- Message Section -->
+                    <!-- Phần tin nhắn -->
                     <div class="mb-4">
-                        <label for="orderMessage" class="form-label">Your Message</label>
-                        <textarea id="orderMessage" name="orderMessage" class="form-control" rows="4" placeholder="Enter any additional instructions or messages here..."></textarea>
+                        <label for="orderMessage" class="form-label">Tin nhắn của bạn</label>
+                        <textarea id="orderMessage" name="orderMessage" class="form-control" rows="4" placeholder="Nhập bất kỳ hướng dẫn hoặc tin nhắn bổ sung nào ở đây..."></textarea>
                     </div>
 
-                    <!-- Payment Methods Section -->
+                    <!-- Phương thức thanh toán -->
                     <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
                         <div class="col-12">
                             <div class="form-check text-start my-3">
-                                <input type="radio" class="form-check-input bg-primary border-0" id="Transfer-1" name="PaymentMethod" value="Direct Bank Transfer">
-                                <label class="form-check-label" for="Transfer-1">Direct Bank Transfer</label>
+                                <input type="radio" class="form-check-input bg-primary border-0" id="Transfer-1" name="PaymentMethod" value="Chuyển khoản ngân hàng">
+                                <label class="form-check-label" for="Transfer-1">Chuyển khoản ngân hàng</label>
                             </div>
                             <div class="form-check text-start my-3">
-                                <input type="radio" class="form-check-input bg-primary border-0" id="Payments-1" name="PaymentMethod" value="Check Payments">
-                                <label class="form-check-label" for="Payments-1">Check Payments</label>
+                                <input type="radio" class="form-check-input bg-primary border-0" id="Payments-1" name="PaymentMethod" value="Thanh toán bằng séc">
+                                <label class="form-check-label" for="Payments-1">Thanh toán bằng séc</label>
                             </div>
                             <div class="form-check text-start my-3">
-                                <input type="radio" class="form-check-input bg-primary border-0" id="Delivery-1" name="PaymentMethod" value="Cash On Delivery">
-                                <label class="form-check-label" for="Delivery-1">Cash On Delivery</label>
+                                <input type="radio" class="form-check-input bg-primary border-0" id="Delivery-1" name="PaymentMethod" value="Thanh toán khi nhận hàng">
+                                <label class="form-check-label" for="Delivery-1">Thanh toán khi nhận hàng</label>
                             </div>
                             <div class="form-check text-start my-3">
                                 <input type="radio" class="form-check-input bg-primary border-0" id="Paypal-1" name="PaymentMethod" value="Paypal">
@@ -115,9 +115,9 @@
                         </div>
                     </div>
 
-                    <!-- Place Order Button -->
+                    <!-- Nút đặt hàng -->
                     <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                        <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Place Order</button>
+                        <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Đặt hàng</button>
                     </div>
                 </div>
             </div>
@@ -128,13 +128,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('checkoutForm').addEventListener('submit', function (event) {
-            // Check if any radio button is selected
+            // Kiểm tra xem có nút radio nào được chọn không
             const paymentMethodSelected = document.querySelector('input[name="PaymentMethod"]:checked');
 
             if (!paymentMethodSelected) {
-                // If no radio button is selected, prevent form submission and show an alert
+                // Nếu không có nút radio nào được chọn, ngăn chặn việc gửi form và hiển thị thông báo
                 event.preventDefault();
-                alert('Please select a payment method.');
+                alert('Vui lòng chọn phương thức thanh toán.');
             }
         });
     });
