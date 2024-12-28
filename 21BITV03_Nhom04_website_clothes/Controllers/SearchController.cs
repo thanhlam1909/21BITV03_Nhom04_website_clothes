@@ -8,8 +8,7 @@ using System.Linq;
 
 namespace _21BITV03_Nhom04_website_clothes.Controllers
 {
-    [Authorize]
-    [Authorize(Roles = "Admin")]
+
     public class SearchController : Controller
     {
         private readonly WebsiteClothesContext _context;

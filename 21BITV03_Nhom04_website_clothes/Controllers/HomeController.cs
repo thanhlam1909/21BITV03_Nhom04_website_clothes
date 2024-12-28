@@ -126,8 +126,16 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
 
             return View(viewModel);
         }
+        public IActionResult Privacy()
+        {
+            return View();
 
+        }
+        public IActionResult Terms()
+        {
+            return View();
 
+        }
         /*        public IActionResult Privacy()
                 {
                     return View();
