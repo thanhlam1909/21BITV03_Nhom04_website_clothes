@@ -1,4 +1,4 @@
-
+﻿
 /*** Spinner Start ***/
 #spinner {
     opacity: 0;
@@ -186,16 +186,27 @@
 
 .carousel-item {
     position: relative;
+    height: 400px; /* Chiều cao cố định cho carousel */
 }
 
-.carousel-item a {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 25px;
-    background: linear-gradient(rgba(255, 181, 36, 0.7), rgba(255, 181, 36, 0.7));
-}
+    .carousel-item img {
+        object-fit: cover; /* Đảm bảo ảnh không bị biến dạng */
+        width: 100%; /* Chiều rộng cố định */
+        height: 100%; /* Chiều cao cố định */
+        border-radius: 10px; /* Bo góc cho ảnh */
+    }
+
+    .carousel-item a {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 25px;
+        background: linear-gradient(rgba(255, 181, 36, 0.7), rgba(255, 181, 36, 0.7));
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+
 
 .carousel-control-next,
 .carousel-control-prev {
@@ -250,24 +261,66 @@
 
 
 /*** featurs Start ***/
-.featurs .featurs-item .featurs-icon {
+.features .features-item .features-icon {
     position: relative;
     width: 120px;
     height: 120px;
+    background: var(--bs-secondary); /* Màu nền của icon */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%; /* Làm tròn icon */
+    color: #fff; /* Màu của biểu tượng */
 }
 
-.featurs .featurs-item .featurs-icon::after {
-    content: "";
-    width: 35px;
-    height: 35px;
-    background: var(--bs-secondary);
-    position: absolute;
-    bottom: -10px;
-    transform: translate(-50%);
-    transform: rotate(45deg);
-    background: var(--bs-secondary);
-    
+    .features .features-item .features-icon::after {
+        content: "";
+        width: 35px;
+        height: 35px;
+        background: var(--bs-secondary); /* Màu nền hình vuông nhỏ */
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg); /* Canh giữa và xoay 45 độ */
+    }
+
+.features-item {
+    height: 100%; /* Đảm bảo các item luôn chiếm toàn bộ chiều cao của cột */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #f8f9fa; /* Màu nền của item */
+    border-radius: 10px; /* Bo góc */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+    .features-item:hover {
+        transform: translateY(-5px); /* Hiệu ứng hover */
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Tăng đổ bóng khi hover */
+    }
+
+.features-content {
+    flex-grow: 1; /* Chiếm khoảng trống còn lại */
+    text-align: center;
+}
+
+    .features-content h5 {
+        margin-bottom: 0.5rem; /* Khoảng cách giữa tiêu đề và nội dung */
+        font-size: 1.2rem; /* Đảm bảo kích thước chữ đồng đều */
+        color: #343a40; /* Màu chữ tiêu đề */
+        font-weight: 600; /* Tăng độ đậm */
+    }
+
+    .features-content p {
+        margin: 0; /* Xóa khoảng cách thừa */
+        font-size: 1rem; /* Đảm bảo đồng bộ kích thước chữ */
+        color: #6c757d; /* Màu chữ nội dung */
+    }
+
+
 /*** featurs End ***/
 
 
