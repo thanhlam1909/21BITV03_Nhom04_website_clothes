@@ -66,9 +66,9 @@
                                 </td>
                                 <td>
                                     <p class="mb-0 mt-3">
-                                    <button class="btn btn-md rounded-circle bg-light border" onclick="removeFromCart('@item.CartProductListId')">
-                                        <i class="fa fa-times text-danger"></i>
-                                    </button>
+                                        <button class="btn btn-md rounded-circle bg-light border" onclick="removeFromCart('@item.CartProductListId')">
+                                            <i class="fa fa-times text-danger"></i>
+                                        </button>
                                     </p>
                                 </td>
                             </tr>
@@ -85,7 +85,7 @@
                         <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                             <h5 class="mb-0 ps-4 me-4">Total</h5>
                             <p class="mb-0 pe-4" id="cart-total">
-                                $@Model.CartProducts.Sum(p => p.Quantity * p.DiscountedPrice).ToString("N2")
+                                $@Model.CartProducts.Sum(p => p.Quantity * p.DiscountedPrice).ToString("N0")
                             </p>
                         </div>
                         <a asp-controller="Checkout" asp-action="Index" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">Proceed Checkout</a>
@@ -109,7 +109,7 @@
         quantityInput.value = newQuantity;
 
         $.ajax({
-            url: '@Url.Action("UpdateQuantity", "ThuNghiem")', // Ensure this is the correct controller
+            url: '@Url.Action("UpdateQuantity", "Cart")', // Ensure this is the correct controller
             type: 'POST',
             data: { cartProductListId: cartProductListId, quantity: newQuantity },
             success: function (result) {
@@ -117,7 +117,7 @@
                     // Update the total for this row
                     var unitPrice = parseFloat(totalCell.dataset.price.replace(/,/g, '')); // Remove commas for parsing
                     var newTotal = newQuantity * unitPrice;
-                    totalCell.innerText = formatNumber(newTotal);
+                    totalCell.innerHTML = '<p class="mb-0 mt-4 text-center">' + formatNumber(newTotal) + '</p>';
 
                     // Recalculate and update the cart total
                     var newCartTotal = 0;
@@ -137,7 +137,7 @@
 
     function removeFromCart(cartProductListId) {
         $.ajax({
-            url: '@Url.Action("RemoveFromCart", "ThuNghiem")', // Ensure this is the correct controller
+            url: '@Url.Action("RemoveFromCart", "Cart")', // Ensure this is the correct controller
             type: 'POST',
             data: { cartProductListId: cartProductListId },
             success: function (result) {
