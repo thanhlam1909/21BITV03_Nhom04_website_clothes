@@ -72,7 +72,6 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                     Description = viewModel.Description,
                     DeleteStatus = false,
                     DeletionDate = null,
-                    Status = true
                 };
 
                 _context.Products.Add(product);
@@ -119,7 +118,6 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 ProductName = product.ProductName,
                 Description = product.Description,
                 DeleteStatus = product.DeleteStatus,
-                Status = product.Status,
                 AvailableProductTypes = _context.ProductTypes.ToList(), // Load available product types
                 SelectedProductTypeIds = _context.ProductTypeLinks
     .Where(pt => pt.ProductId == product.ProductId)
@@ -152,7 +150,6 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                     // Update product fields
                     product.ProductName = viewModel.ProductName;
                     product.Description = viewModel.Description;
-                    product.Status = viewModel.Status;
                     product.DeleteStatus = viewModel.DeleteStatus;
 
                     // Automatically set DeletionDate if DeleteStatus is true

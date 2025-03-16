@@ -33,7 +33,6 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 OriginalPrice = p.SubProducts.FirstOrDefault()?.OriginalPrice ?? 0,
                 DiscountedPrice = p.SubProducts.FirstOrDefault()?.DiscountedPrice,
                 ImageUrl = p.SubProducts.FirstOrDefault()?.Linkimage ?? "default-image.png",
-                IsAvailable = p.Status ?? false,
                 SubProducts = p.SubProducts.Select(sp => new SubProductViewModel
                 {
                     SubProductId = sp.SubProductId,
@@ -81,7 +80,6 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 OriginalPrice = product.SubProducts.FirstOrDefault()?.OriginalPrice ?? 0,
                 DiscountedPrice = product.SubProducts.FirstOrDefault()?.DiscountedPrice,
                 ImageUrl = product.SubProducts.FirstOrDefault()?.Linkimage ?? "default-image.png",
-                IsAvailable = product.Status ?? false,
                 SubProducts = product.SubProducts.Select(sp => new SubProductViewModel
                 {
                     SubProductId = sp.SubProductId,

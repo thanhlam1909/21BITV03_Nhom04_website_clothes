@@ -21,9 +21,15 @@ public partial class SubProduct
 
     public string? Linkimage { get; set; }
 
+    public int? QuantityInStock { get; set; }
+
+    public string? Status { get; set; }
+
     public virtual ICollection<CartProductList> CartProductLists { get; set; } = new List<CartProductList>();
 
     public virtual ProductColor? Color { get; set; }
+
+    public virtual ICollection<InventoryTransactionDetail> InventoryTransactionDetails { get; set; } = new List<InventoryTransactionDetail>();
 
     public virtual Product? MainProduct { get; set; }
 

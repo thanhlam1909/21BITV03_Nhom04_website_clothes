@@ -15,8 +15,6 @@ public partial class Product
 
     public DateTime? DeletionDate { get; set; }
 
-    public bool? Status { get; set; }
-
     public virtual ICollection<CartProductList> CartProductLists { get; set; } = new List<CartProductList>();
 
     public virtual ICollection<DiscountedProductList> DiscountedProductLists { get; set; } = new List<DiscountedProductList>();

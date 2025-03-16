@@ -27,7 +27,6 @@
                     <tr>
                         <th>@Html.DisplayNameFor(model => model.First().ProductName)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Description)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().Status)</th>
                         <th style="text-align: center;">Actions</th>
                     </tr>
                 </thead>
@@ -38,20 +37,7 @@
                             <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
                             <td>@Html.DisplayFor(modelItem => item.Description)</td>
 
-                            <td>
-                                @if (item.Status == true)
-                                {
-                                    <i class="fas fa-check text-success"></i> <!-- Green check icon for true -->
-                                }
-                                else if (item.Status == false)
-                                {
-                                    <i class="fas fa-times text-danger"></i> <!-- Red cross icon for false -->
-                                }
-                                else
-                                {
-                                    <i class="fas fa-question text-warning"></i> <!-- Yellow question mark icon for null -->
-                                }
-                            </td>
+
                             <td style="text-align: center;">
                                 <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-warning me-1">Edit</a>
                                 <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-sm btn-info me-1">Details</a>
