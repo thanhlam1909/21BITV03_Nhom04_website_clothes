@@ -1,5 +1,6 @@
 ﻿using _21BITV03_Nhom04_website_clothes.Data;
 using _21BITV03_Nhom04_website_clothes.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +40,9 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 .Include(c => c.CartProductLists)
                     .ThenInclude(cpl => cpl.SubProduct)
                         .ThenInclude(sp => sp.Size)
+                .Include(c => c.CartProductLists)
+                    .ThenInclude(cpl => cpl.SubProduct)
+                        .ThenInclude(sp => sp.MainProduct)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (cart == null || cart.CartProductLists == null || !cart.CartProductLists.Any())
@@ -69,7 +73,73 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             return View(cartViewModel);
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<JsonResult> AddToCart(int productId, int quantity, int colorId, int sizeId,int materialId)
+        {
+            var username = HttpContext.User.Identity.Name; // Get the username from the context
+            if (username == null)
+            {
+                return Json(new { success = false, message = "User is not logged in." });
+            }
 
+            // Retrieve the userId based on the username
+            var userId = await _context.UserInfos
+                .Where(u => u.UserName == username)
+                .Select(u => u.UserId) // Select only the UserId
+                .FirstOrDefaultAsync();
+
+            if (userId == 0)
+            {
+                return Json(new { success = false, message = "User not found." });
+            }
+            var subProductId = await _context.Products
+                            .Where(p => p.ProductId == productId)
+                            .SelectMany(p => p.SubProducts) // Navigate to SubProducts of this Product
+                            .Where(sp => sp.ColorId == colorId && sp.SizeId == sizeId && sp.MaterialId == materialId) // Filter by ColorId and SizeId
+                            .Select(sp => sp.SubProductId) // Select only SubProductId
+                            .FirstOrDefaultAsync();
+
+            if (subProductId == 0) // If no matching SubProduct is found
+            {
+                return Json(new { success = false, message = "Product variant not found." });
+            }
+            // Check if the cart exists for the user, otherwise create a new one
+            var cart = await _context.Carts
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (cart == null)
+            {
+                cart = new Cart { UserId = userId };
+                _context.Carts.Add(cart);
+                await _context.SaveChangesAsync();
+            }
+            var existingCartProduct = await _context.CartProductLists
+                   .FirstOrDefaultAsync(cp => cp.CartId == cart.CartId && cp.SubProductId == subProductId);
+
+            if (existingCartProduct != null)
+            {
+                // If it exists, increase the quantity
+                existingCartProduct.Quantity += quantity;
+                _context.CartProductLists.Update(existingCartProduct);
+            }
+            else
+            {
+                // If it doesn't exist, add a new product to the cart
+                var cartProduct = new CartProductList
+                {
+                    CartId = cart.CartId,
+                    ProductId = productId,
+                    SubProductId = subProductId, // Make sure SubProductId corresponds to the selected product variant
+                    Quantity = quantity
+                };
+                _context.CartProductLists.Add(cartProduct);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Product added to cart successfully!" });
+        }
         [HttpPost]
         public async Task<JsonResult> UpdateQuantity(int cartProductListId, int quantity)
         {

@@ -27,6 +27,8 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                     .ThenInclude(sp => sp.Color)  // Include ProductColor
                 .Include(p => p.SubProducts)
                     .ThenInclude(sp => sp.Size)
+                                    .Include(p => p.SubProducts)
+                    .ThenInclude(sp => sp.Material)
                 .Include(p => p.ReviewProducts)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
@@ -54,7 +56,9 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                     ColorId = sp.ColorId ?? 0,
                     ColorName = sp.Color?.ColorName,  // Include color name
                     SizeId = sp.SizeId ?? 0,
-                    SizeName = sp.Size?.SizeName,    // Include size name
+                    SizeName = sp.Size?.SizeName,
+                    MaterialId = sp.MaterialId ?? 0,
+                    MaterialName = sp.Material?.MaterialName,
                     LinkImage = sp.Linkimage,
                     CreationDate = sp.CreationDate ?? DateTime.Now
                 }).ToList(),
@@ -69,6 +73,56 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             };
 
             return View(productViewModel);
+        }
+        public IActionResult GetAvailableColorsAndSizesByMaterial(int materialId, int productId)
+        {
+            var availableColors = _context.SubProducts
+                .Where(sp => sp.MaterialId == materialId && sp.MainProductId == productId)
+                .Select(sp => sp.ColorId)
+                .Distinct()
+                .ToList();
+
+            var availableSizes = _context.SubProducts
+                .Where(sp => sp.MaterialId == materialId && sp.MainProductId == productId)
+                .Select(sp => sp.SizeId)
+                .Distinct()
+                .ToList();
+
+            return Json(new { availableColors, availableSizes });
+        }
+
+        public IActionResult GetAvailableSizesAndMaterials(int colorId, int productId)
+        {
+            var availableSizes = _context.SubProducts
+                .Where(sp => sp.ColorId == colorId && sp.MainProductId == productId)
+                .Select(sp => sp.SizeId)
+                .Distinct()
+                .ToList();
+
+            var availableMaterials = _context.SubProducts
+                .Where(sp => sp.ColorId == colorId && sp.MainProductId == productId)
+                .Select(sp => sp.MaterialId)
+                .Distinct()
+                .ToList();
+
+            return Json(new { availableSizes, availableMaterials });
+        }
+
+        public IActionResult GetAvailableColorsAndMaterials(int sizeId, int productId)
+        {
+            var availableColors = _context.SubProducts
+                .Where(sp => sp.SizeId == sizeId && sp.MainProductId == productId)
+                .Select(sp => sp.ColorId)
+                .Distinct()
+                .ToList();
+
+            var availableMaterials = _context.SubProducts
+                .Where(sp => sp.SizeId == sizeId && sp.MainProductId == productId)
+                .Select(sp => sp.MaterialId)
+                .Distinct()
+                .ToList();
+
+            return Json(new { availableColors, availableMaterials });
         }
         [HttpPost]
         public async Task<IActionResult> AddReview(ReviewViewModel model)
@@ -95,17 +149,7 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             // If the model is not valid, return to the view with the current model
             return View(model);
         }
-        public IActionResult GetAvailableSizes(int colorId, int productId)
-        {
-            // Fetch sizes available for the selected color and product
-            var availableSizes = _context.SubProducts
-                .Where(sp => sp.ColorId == colorId && sp.MainProductId == productId)
-                .Select(sp => sp.SizeId)
-                .Distinct()
-                .ToList();
 
-            return Json(new { availableSizes });
-        }
         [Authorize]
         [HttpPost]
         public async Task<JsonResult> AddToCart(int productId, int quantity, int colorId, int sizeId)

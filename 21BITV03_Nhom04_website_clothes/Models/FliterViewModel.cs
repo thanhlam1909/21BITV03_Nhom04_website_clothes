@@ -6,13 +6,12 @@ namespace _21BITV03_Nhom04_website_clothes.Models
     {
         public List<ProductColor> AvailableColors { get; set; } = new List<ProductColor>();
         public List<ProductSize> AvailableSizes { get; set; } = new List<ProductSize>();
-
         public List<int> SelectedColorIds { get; set; } = new List<int>();
         public List<int> SelectedSizeIds { get; set; } = new List<int>();
-
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
-
+        public List<ProductType> AvailableProductTypes { get; set; } = new List<ProductType>();
+        public List<int> SelectedProductTypeIds { get; set; } = new List<int>();
         public List<Product> FilteredProducts { get; set; } = new List<Product>();
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 2;

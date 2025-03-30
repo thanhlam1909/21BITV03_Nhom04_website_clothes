@@ -21,9 +21,11 @@ public partial class SubProduct
 
     public string? Linkimage { get; set; }
 
-    public int? QuantityInStock { get; set; }
-
     public string? Status { get; set; }
+
+    public int? MaterialId { get; set; }
+
+    public int? SkuId { get; set; }
 
     public virtual ICollection<CartProductList> CartProductLists { get; set; } = new List<CartProductList>();
 
@@ -33,5 +35,9 @@ public partial class SubProduct
 
     public virtual Product? MainProduct { get; set; }
 
+    public virtual Material? Material { get; set; }
+
     public virtual ProductSize? Size { get; set; }
+
+    public virtual Sku? Sku { get; set; }
 }

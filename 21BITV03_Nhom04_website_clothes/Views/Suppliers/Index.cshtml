@@ -1,0 +1,79 @@
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.Supplier>
+
+@{
+    ViewData["Title"] = "Danh sách nhà cung cấp";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Danh sách nhà cung cấp</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang quản trị</a></li>
+        <li class="breadcrumb-item active">Nhà cung cấp</li>
+    </ol>
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Thêm nhà cung cấp
+        </a>
+
+        <form asp-action="ExportToExcel" method="post" target="_blank" class="m-0">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-file-excel me-1"></i> Tải xuống Excel
+            </button>
+        </form>
+    </div>
+
+
+    <div class="card mb-4 shadow-sm rounded-3">
+        <div class="card-header">
+            <i class="fas fa-industry me-2"></i> Danh sách nhà cung cấp
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tên nhà cung cấp</th>
+                        <th>Liên hệ</th>
+                        <th>Địa chỉ</th>
+                        <th>Email</th>
+                        <th>Điện thoại</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot class="table-light">
+                    <tr>
+                        <th>Tên nhà cung cấp</th>
+                        <th>Liên hệ</th>
+                        <th>Địa chỉ</th>
+                        <th>Email</th>
+                        <th>Điện thoại</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.SupplierName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ContactInfo)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.SupplierId" class="btn btn-sm btn-warning me-1" title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.SupplierId" class="btn btn-sm btn-info me-1 text-white" title="Chi tiết">
+                                    <i class="fas fa-info-circle"></i> Chi tiết
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.SupplierId" class="btn btn-sm btn-danger" title="Xoá">
+                                    <i class="fas fa-trash"></i> Xoá
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

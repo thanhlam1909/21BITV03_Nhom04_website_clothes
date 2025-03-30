@@ -1,48 +1,53 @@
 ﻿@model _21BITV03_Nhom04_website_clothes.Data.ProductColor
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa màu sản phẩm";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Edit Product Color</h1>
+    <h1 class="mt-4">Chỉnh sửa màu sản phẩm</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
-        <li class="breadcrumb-item"><a asp-controller="ProductColors" asp-action="Index">Product Colors</a></li>
-        <li class="breadcrumb-item active">Edit</li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home me-1"></i> Trang quản trị</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-controller="ProductColors" asp-action="Index"><i class="fas fa-palette me-1"></i> Danh sách màu sản phẩm</a>
+        </li>
+        <li class="breadcrumb-item active">Chỉnh sửa</li>
     </ol>
 
-    <div class="card mb-4">
+    <div class="card shadow-sm rounded-3 mb-4">
         <div class="card-header">
-            <i class="fas fa-edit me-1"></i>
-            Edit Product Color
+            <i class="fas fa-edit me-2"></i> Cập nhật thông tin màu
         </div>
-        <div class="card-body">
-            <form asp-action="Edit">
+        <div class="card-body p-4">
+            <form asp-action="Edit" enctype="multipart/form-data" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                 <input type="hidden" asp-for="ColorId" />
 
                 <div class="form-group mb-3">
-                    <label asp-for="ColorName" class="form-label"></label>
-                    <input asp-for="ColorName" class="form-control" />
+                    <label asp-for="ColorName" class="form-label fw-bold">Tên màu</label>
+                    <input asp-for="ColorName" class="form-control" placeholder="Nhập tên màu..." />
                     <span asp-validation-for="ColorName" class="text-danger"></span>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label asp-for="Description" class="form-label"></label>
-                    <input asp-for="Description" class="form-control" />
+                    <label asp-for="Description" class="form-label fw-bold">Mô tả</label>
+                    <input asp-for="Description" class="form-control" placeholder="Mô tả chi tiết về màu..." />
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                <div class="form-group d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Lưu thay đổi
+                    </button>
+                    <a asp-action="Index" asp-route-transactionId="@ViewBag.TransactionId" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
                 </div>
             </form>
         </div>
-    </div>
-
-    <div class="mt-4">
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 </div>

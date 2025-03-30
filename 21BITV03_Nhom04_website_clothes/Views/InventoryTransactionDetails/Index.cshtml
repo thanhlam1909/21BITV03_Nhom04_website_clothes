@@ -1,0 +1,70 @@
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.InventoryTransactionDetail>
+
+@{
+    ViewData["Title"] = "Inventory Transaction Details";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var transaction = ViewBag.Transaction as _21BITV03_Nhom04_website_clothes.Data.InventoryTransaction;
+    var transactionId = ViewBag.TransactionId as int?;
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Chi tiết giao dịch kho</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang quản trị</a></li>
+        <li class="breadcrumb-item"><a asp-controller="InventoryTransaction" asp-action="Index">Giao dịch kho</a></li>
+        <li class="breadcrumb-item active">Chi tiết giao dịch</li>
+    </ol>
+
+    <p>
+        <a asp-action="Create" asp-route-transactionId="@ViewBag.TransactionId" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Thêm mới chi tiết
+        </a>
+    </p>
+
+    <div class="card mb-4 shadow-sm rounded-3">
+        <div class="card-header">
+            <i class="fas fa-boxes me-2"></i> Danh sách chi tiết giao dịch kho
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Sản phẩm phụ</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Mã giao dịch</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot class="table-light">
+                    <tr>
+                        <th>Sản phẩm phụ</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Mã giao dịch</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.SubProduct?.MainProduct?.ProductName</td>
+                            <td>@item.Quantity</td>
+                            <td>@String.Format("{0:N0}₫", item.UnitPrice)</td>
+                            <td>@item.TransactionId</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.TransactionDetailId" class="btn btn-sm btn-warning me-1" title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+
+                                <a asp-action="Delete" asp-route-id="@item.TransactionDetailId" class="btn btn-sm btn-danger" title="Xoá">
+                                    <i class="fas fa-trash"></i> Xoá
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

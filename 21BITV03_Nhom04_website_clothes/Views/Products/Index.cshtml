@@ -1,49 +1,81 @@
 ﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.Product>
 
 @{
-    ViewData["Title"] = "Product Management";
+    ViewData["Title"] = "Danh sách sản phẩm";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Product Management</h1>
+    <h1 class="mt-4">Danh sách sản phẩm</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active">Products</li>
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang quản trị</a></li>
+        <li class="breadcrumb-item active">Sản phẩm</li>
     </ol>
 
     <p>
-        <a asp-action="Create" class="btn btn-primary mb-3">Create New Product</a>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Thêm sản phẩm
+        </a>
     </p>
 
-    <div class="card mb-4">
+    <div class="card mb-4 shadow-sm rounded-3">
         <div class="card-header">
-            <i class="fas fa-box me-1"></i>
-            Product List
+            <i class="fas fa-box me-2"></i> Danh sách sản phẩm
         </div>
         <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
+            <table id="datatablesSimple" class="table table-bordered table-striped">
+                <thead class="table-light">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.First().ProductName)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().Description)</th>
-                        <th style="text-align: center;">Actions</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Mô tả</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày xoá</th>
+                        <th class="text-center">Xem biến thể</th>
+                        <th class="text-center">Thao tác</th>
                     </tr>
                 </thead>
+                <tfoot class="table-light">
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th>Mô tả</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày xoá</th>
+                        <th class="text-center">Xem biến thể</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </tfoot>
                 <tbody>
                     @foreach (var item in Model)
                     {
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
                             <td>@Html.DisplayFor(modelItem => item.Description)</td>
-
-
-                            <td style="text-align: center;">
-                                <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-warning me-1">Edit</a>
-                                <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-sm btn-info me-1">Details</a>
-                                <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-sm btn-danger me-1">Delete</a>
-                                <a asp-action="Index" asp-controller="SubProducts" asp-route-id="@item.ProductId" class="btn btn-sm btn-primary me-1">View SP</a>
-                                <a asp-action="Create" asp-controller="SubProducts" asp-route-id="@item.ProductId" class="btn btn-sm btn-success">Add SP</a>
+                            <td>
+                                @if (item.DeleteStatus == true)
+                                {
+                                    <span class="badge bg-danger">Đã xoá</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Còn sử dụng</span>
+                                }
+                            </td>
+                            <td>@(item.DeletionDate?.ToString("dd/MM/yyyy") ?? "-")</td>
+                            <td class="text-center">
+                                <a asp-controller="SubProducts" asp-action="Index" asp-route-productId="@item.ProductId" class="btn btn-sm btn-secondary" title="Xem biến thể">
+                                    <i class="fas fa-boxes"></i> Biến thể
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-warning me-1" title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-sm btn-info me-1" title="Chi tiết">
+                                    <i class="fas fa-info-circle"></i> Chi tiết
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-sm btn-danger" title="Xoá">
+                                    <i class="fas fa-trash"></i> Xoá
+                                </a>
                             </td>
                         </tr>
                     }

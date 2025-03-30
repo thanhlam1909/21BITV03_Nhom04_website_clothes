@@ -1,0 +1,57 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.Warehouse
+
+@{
+    ViewData["Title"] = "Tạo Kho Hàng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Tạo Kho Hàng</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home me-1"></i> Trang quản trị</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Warehouses" asp-action="Index"><i class="fas fa-warehouse me-1"></i> Danh sách kho hàng</a>
+        </li>
+        <li class="breadcrumb-item active">Tạo mới</li>
+    </ol>
+
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-plus-circle me-2"></i> Thêm kho hàng mới
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="WarehouseName" class="form-label fw-semibold">Tên kho</label>
+                    <input asp-for="WarehouseName" class="form-control" placeholder="Nhập tên kho..." />
+                    <span asp-validation-for="WarehouseName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Location" class="form-label fw-semibold">Vị trí</label>
+                    <input asp-for="Location" class="form-control" placeholder="Nhập vị trí kho..." />
+                    <span asp-validation-for="Location" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Capacity" class="form-label fw-semibold">Sức chứa</label>
+                    <input asp-for="Capacity" class="form-control" placeholder="Nhập sức chứa (số lượng tối đa)..." />
+                    <span asp-validation-for="Capacity" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-start gap-2">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="fas fa-check me-1"></i> Tạo mới
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

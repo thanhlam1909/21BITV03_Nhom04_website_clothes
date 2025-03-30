@@ -25,20 +25,21 @@
             <table id="datatablesSimple" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.Name)</th>
-                        <th>@Html.DisplayNameFor(model => model.NormalizedName)</th>
-                        <th>@Html.DisplayNameFor(model => model.ConcurrencyStamp)</th>
+                        <th>Tên vai trò</th>
+                        <th>Tên vai trò chuẩn hoá</th>
+                        <th>Concurrency Stamp</th>
                         <th style="text-align: center;">Thao tác</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.Name)</th>
-                        <th>@Html.DisplayNameFor(model => model.NormalizedName)</th>
-                        <th>@Html.DisplayNameFor(model => model.ConcurrencyStamp)</th>
+                        <th>Tên vai trò</th>
+                        <th>Tên vai trò chuẩn hoá</th>
+                        <th>Concurrency Stamp</th>
                         <th style="text-align: center;">Thao tác</th>
                     </tr>
                 </tfoot>
+
                 <tbody>
                     @foreach (var item in Model)
                     {

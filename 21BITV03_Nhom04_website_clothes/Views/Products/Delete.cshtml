@@ -1,45 +1,57 @@
 ﻿@model _21BITV03_Nhom04_website_clothes.Data.Product
 
 @{
-    ViewData["Title"] = "Delete Product";
+    ViewData["Title"] = "Xoá sản phẩm";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Delete Product</h1>
+    <h1 class="mt-4">Xoá sản phẩm</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Products</a></li>
-        <li class="breadcrumb-item active">Delete</li>
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang quản trị</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Danh sách sản phẩm</a></li>
+        <li class="breadcrumb-item active">Xoá sản phẩm</li>
     </ol>
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-trash-alt me-1"></i>
-            Delete Product
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-danger text-white">
+            <i class="fas fa-trash me-2"></i> Xác nhận xoá sản phẩm
         </div>
         <div class="card-body">
-            <h3>Are you sure you want to delete this product?</h3>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group mb-3">
-                        <label class="form-label">@Html.DisplayNameFor(model => model.ProductName)</label>
-                        <p class="form-control-plaintext">@Html.DisplayFor(model => model.ProductName)</p>
-                    </div>
+            <h5 class="mb-3 text-danger">Bạn có chắc chắn muốn xoá sản phẩm sau?</h5>
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">Tên sản phẩm</dt>
+                <dd class="col-sm-9">@Model.ProductName</dd>
 
-                    <div class="form-group mb-3">
-                        <label class="form-label">@Html.DisplayNameFor(model => model.Description)</label>
-                        <p class="form-control-plaintext">@Html.DisplayFor(model => model.Description)</p>
-                    </div>
+                <dt class="col-sm-3 fw-bold">Mô tả</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
 
+                <dt class="col-sm-3 fw-bold">Trạng thái</dt>
+                <dd class="col-sm-9">
+                    @if (Model.DeleteStatus == true)
+                    {
+                        <span class="badge bg-danger">Đã xoá</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Còn sử dụng</span>
+                    }
+                </dd>
 
-                </div>
-            </div>
+                <dt class="col-sm-3 fw-bold">Ngày xoá (nếu có)</dt>
+                <dd class="col-sm-9">
+                    @Model.DeletionDate?.ToString("dd/MM/yyyy HH:mm") ?? "-"
+                </dd>
+            </dl>
 
             <form asp-action="Delete">
                 <input type="hidden" asp-for="ProductId" />
-                <button type="submit" class="btn btn-danger">Delete</button>
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <button type="submit" class="btn btn-danger me-2">
+                    <i class="fas fa-trash-alt me-1"></i> Xoá
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                </a>
             </form>
         </div>
     </div>

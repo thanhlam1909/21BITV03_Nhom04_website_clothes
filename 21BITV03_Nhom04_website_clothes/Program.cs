@@ -1,16 +1,18 @@
 ﻿using _21BITV03_Nhom04_website_clothes.Data;
 using _21BITV03_Nhom04_website_clothes.Database;
+using _21BITV03_Nhom04_website_clothes.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+//using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
-
+//ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 // Configure DbContext
 builder.Services.AddDbContext<WebsiteClothesContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
         .EnableSensitiveDataLogging());
-
+builder.Services.AddScoped<OrderService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

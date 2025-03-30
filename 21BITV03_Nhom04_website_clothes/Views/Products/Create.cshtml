@@ -1,58 +1,69 @@
-﻿@model _21BITV03_Nhom04_website_clothes.Models.ProductViewAdminModel
+﻿@model _21BITV03_Nhom04_website_clothes.Models.ManageProduct
 
 @{
-    ViewData["Title"] = "Create Product";
+    ViewData["Title"] = "Tạo Sản Phẩm";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Create Product</h1>
+    <h1 class="mt-4">Tạo Sản Phẩm</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Products</a></li>
-        <li class="breadcrumb-item active">Create</li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home me-1"></i> Trang quản trị</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Products" asp-action="Index"><i class="fas fa-box-open me-1"></i> Danh sách sản phẩm</a>
+        </li>
+        <li class="breadcrumb-item active">Tạo mới</li>
     </ol>
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-plus me-1"></i>
-            Create Product
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-plus-circle me-2"></i> Thêm sản phẩm mới
         </div>
-        <div class="card-body">
-            <form asp-action="Create" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post" class="needs-validation">
+                <!-- Tổng hợp lỗi -->
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="ProductName" class="form-label"></label>
-                    <input asp-for="ProductName" class="form-control" />
-                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                <!-- Tên sản phẩm -->
+                <div class="mb-3">
+                    <label asp-for="Product.ProductName" class="form-label fw-semibold">Tên sản phẩm</label>
+                    <input asp-for="Product.ProductName" class="form-control" placeholder="Nhập tên sản phẩm..." />
+                    <span asp-validation-for="Product.ProductName" class="text-danger small"></span>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Description" class="form-label"></label>
-                    <input asp-for="Description" class="form-control" />
-                    <span asp-validation-for="Description" class="text-danger"></span>
+                <!-- Mô tả sản phẩm -->
+                <div class="mb-3">
+                    <label asp-for="Product.Description" class="form-label fw-semibold">Mô tả</label>
+                    <textarea asp-for="Product.Description" class="form-control" rows="3" placeholder="Nhập mô tả sản phẩm..."></textarea>
+                    <span asp-validation-for="Product.Description" class="text-danger small"></span>
                 </div>
 
-                <!-- Multi-select for Product Types -->
-                <div class="form-group mb-3">
-                    <label for="SelectedProductTypeIds" class="form-label">Product Types</label>
-                    <select asp-for="SelectedProductTypeIds" class="form-control" multiple>
-                        @foreach (var type in Model.AvailableProductTypes)
-                        {
-                            <option value="@type.ProductTypeId">@type.ProductTypeName</option>
-                        }
+                <!-- Loại sản phẩm -->
+                <div class="mb-3">
+                    <label asp-for="SelectedProductTypeIds" class="form-label fw-semibold">Loại sản phẩm</label>
+                    <select asp-for="SelectedProductTypeIds"
+                            asp-items="@(new MultiSelectList(Model.AvailableProductTypes, "ProductTypeId", "ProductTypeName"))"
+                            class="form-control" multiple="multiple">
                     </select>
+                    <span asp-validation-for="SelectedProductTypeIds" class="text-danger small"></span>
                 </div>
 
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                <!-- Nút thao tác -->
+                <div class="d-flex justify-content-start gap-2">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="fas fa-check me-1"></i> Tạo mới
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
                 </div>
             </form>
         </div>
     </div>
-
-    <div class="mt-4">
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

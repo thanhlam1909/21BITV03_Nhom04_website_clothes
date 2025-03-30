@@ -15,6 +15,12 @@ public partial class Order
 
     public string? OrderStatus { get; set; }
 
+    public double? OrderTotal { get; set; }
+
+    public DateTime? OrderDate { get; set; }
+
+    public DateTime? DeliveryDate { get; set; }
+
     public virtual ICollection<OrderDiscountList> OrderDiscountLists { get; set; } = new List<OrderDiscountList>();
 
     public virtual ICollection<OrderProductList> OrderProductLists { get; set; } = new List<OrderProductList>();

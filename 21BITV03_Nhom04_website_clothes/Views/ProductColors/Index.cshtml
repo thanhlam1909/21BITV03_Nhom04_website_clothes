@@ -1,40 +1,42 @@
 ﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.ProductColor>
 
 @{
-    ViewData["Title"] = "Product Colors";
+    ViewData["Title"] = "Danh sách màu sản phẩm";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Product Colors</h1>
+    <h1 class="mt-4">Danh sách màu sản phẩm</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active">Product Colors</li>
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang quản trị</a></li>
+        <li class="breadcrumb-item active">Màu sản phẩm</li>
     </ol>
 
     <p>
-        <a asp-action="Create" class="btn btn-primary">Create Product Color</a>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Thêm màu sản phẩm
+        </a>
     </p>
 
-    <div class="card mb-4">
+    <div class="card mb-4 shadow-sm rounded-3">
         <div class="card-header">
-            <i class="fas fa-palette me-1"></i>
-            Product Color List
+            <i class="fas fa-palette me-2"></i> Danh sách màu sản phẩm
         </div>
         <div class="card-body">
-            <table id="datatablesSimple" class="table table-bordered">
-                <thead>
+            <table id="datatablesSimple" class="table table-bordered table-striped">
+                <thead class="table-light">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.First().ColorName)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().Description)</th>
-                        <th style="text-align: center;">Actions</th>
+                        <th>Tên màu</th>
+                        <th>Mô tả</th>
+
+                        <th class="text-center">Thao tác</th>
                     </tr>
                 </thead>
-                <tfoot>
+                <tfoot class="table-light">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.First().ColorName)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().Description)</th>
-                        <th style="text-align: center;">Actions</th>
+                        <th>Tên màu</th>
+                        <th>Mô tả</th>
+                        <th class="text-center">Thao tác</th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -43,12 +45,12 @@
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.ColorName)</td>
                             <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                            <td style="text-align: center;">
-                                <a asp-action="Edit" asp-route-id="@item.ColorId" class="btn btn-sm btn-warning" title="Edit">
-                                    <i class="fas fa-edit"></i> Edit
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.ColorId" class="btn btn-sm btn-warning me-1" title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i> Sửa
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.ColorId" class="btn btn-sm btn-danger" title="Delete">
-                                    <i class="fas fa-trash"></i> Delete
+                                <a asp-action="Delete" asp-route-id="@item.ColorId" class="btn btn-sm btn-danger" title="Xoá">
+                                    <i class="fas fa-trash"></i> Xoá
                                 </a>
                             </td>
                         </tr>

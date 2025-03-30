@@ -19,6 +19,8 @@ namespace _21BITV03_Nhom04_website_clothes.Models
         public List<SubProductViewModel> SubProducts { get; set; } = new List<SubProductViewModel>();
         public List<ProductColor> ColorOptions { get; set; } = new List<ProductColor>();
         public List<ProductSize> SizeOptions { get; set; } = new List<ProductSize>();
+        public List<Material> MaterialOptions { get; set; } = new List<Material>();
+
         public List<ReviewProductView> Reviews { get; set; } = new List<ReviewProductView>(); 
 
     }
@@ -34,6 +36,8 @@ namespace _21BITV03_Nhom04_website_clothes.Models
         public string? ColorName { get; set; }
         public int SizeId { get; set; }
         public string? SizeName { get; set; }
+        public int MaterialId { get; set; }
+        public string? MaterialName { get; set; }
         public string LinkImage { get; set; }
         public DateTime CreationDate { get; set; }
     }

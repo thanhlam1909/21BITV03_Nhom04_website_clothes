@@ -1,0 +1,48 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.Material
+
+@{
+    ViewData["Title"] = "Xóa Chất Liệu";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Xóa Chất Liệu</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home me-1"></i> Trang quản trị</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Materials" asp-action="Index"><i class="fas fa-cubes me-1"></i> Danh sách chất liệu</a>
+        </li>
+        <li class="breadcrumb-item active">Xóa</li>
+    </ol>
+
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-danger text-white">
+            <i class="fas fa-trash-alt me-2"></i> Xác nhận xóa chất liệu
+        </div>
+        <div class="card-body p-4">
+            <h5 class="text-danger mb-3">Bạn có chắc chắn muốn xóa chất liệu này không?</h5>
+
+            <dl class="row mb-4">
+                <dt class="col-sm-3 fw-semibold">Tên chất liệu</dt>
+                <dd class="col-sm-9">@Model.MaterialName</dd>
+
+                <dt class="col-sm-3 fw-semibold">Mô tả</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="MaterialId" />
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="fas fa-trash me-1"></i> Xóa
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

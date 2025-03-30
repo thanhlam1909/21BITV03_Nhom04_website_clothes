@@ -7,6 +7,8 @@ namespace _21BITV03_Nhom04_website_clothes.Models
         public AspNetUser Users { get; set; }
         public UserInfo UserInfoes { get; set; }
         public Order Orders { get; set; }
+        public OrderProductList OrderProductList { get; set; }
+
         public List<OrderProductList> OrderProductLists { get; set; }
     }
 }

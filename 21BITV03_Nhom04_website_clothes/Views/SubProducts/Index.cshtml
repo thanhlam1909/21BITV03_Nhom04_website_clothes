@@ -1,58 +1,78 @@
-@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.SubProduct>
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.SubProduct>
 
 @{
-    ViewData["Title"] = "SubProduct Management";
+    ViewData["Title"] = "Biến thể sản phẩm";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">SubProduct Management</h1>
+    <h1 class="mt-4">Danh sách biến thể sản phẩm</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Products</a></li>
-        <li class="breadcrumb-item active">SubProducts</li>
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang quản trị</a></li>
+        <li class="breadcrumb-item"><a asp-controller="ProductS" asp-action="Index">Danh sách sản phẩm</a></li>
+
+        <li class="breadcrumb-item active">Biến thể sản phẩm</li>
     </ol>
 
+    @* <h5>Sản phẩm chính: Mã @ViewBag.MainProductId</h5> *@
+
     <p>
-        <a asp-action="Create" asp-controller="SubProducts" asp-route-id="@ViewBag.MainProductId" class="btn btn-primary mb-3">Add Sub-Product</a>
+        <a asp-action="Create" asp-route-productId="@ViewBag.MainProductId" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Thêm biến thể sản phẩm
+        </a>
     </p>
 
-    <div class="card mb-4">
+    <div class="card mb-4 shadow-sm rounded-3">
         <div class="card-header">
-            <i class="fas fa-box me-1"></i>
-            SubProduct List
+            <i class="fas fa-box-open me-2"></i> Danh sách biến thể sản phẩm
         </div>
         <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.First().OriginalPrice)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().DiscountedPrice)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().CreationDate)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().Linkimage)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().Color)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().MainProduct)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().Size)</th>
-                        <th style="text-align: center;">Actions</th>
+                        <th>Giá gốc</th>
+                        <th>Giá khuyến mãi</th>
+                        <th>Ngày tạo</th>
+                        <th>Hình ảnh</th>
+                        <th>Trạng thái</th>
+                        <th>Màu sắc</th>
+                        <th>Sản phẩm chính</th>
+                        <th>Chất liệu</th>
+                        <th>Kích cỡ</th>
+                        <th>Mã SKU</th>
+                        <th class="text-center">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@Html.DisplayFor(modelItem => item.OriginalPrice)</td>
-                            <td>@Html.DisplayFor(modelItem => item.DiscountedPrice)</td>
-                            <td>@Html.DisplayFor(modelItem => item.CreationDate)</td>
+                            <td>@item.OriginalPrice ₫</td>
+                            <td>@item.DiscountedPrice ₫</td>
+                            <td>@item.CreationDate</td>
                             <td>
-                                <img src="@Url.Content(item.Linkimage)" alt="Image" style="width:100px;height:auto;" />
+                                @if (!string.IsNullOrEmpty(item.Linkimage))
+                                {
+                                    <img src="@item.Linkimage" alt="Hình ảnh" width="80" class="rounded shadow-sm" />
+                                }
+                                else
+                                {
+                                    <span>Không có ảnh</span>
+                                }
                             </td>
-                            <td>@item.Color.ColorName</td> <!-- Updated -->
-                            <td>@item.MainProductId</td>
-                            <td>@item.Size.SizeName</td>  <!-- Updated -->
-                            <td style="text-align: center;">
-                                <a asp-action="Edit" asp-route-id="@item.SubProductId" class="btn btn-sm btn-warning me-1">Edit</a>
-                                <a asp-action="Details" asp-route-id="@item.SubProductId" class="btn btn-sm btn-info me-1">Details</a>
-                                <a asp-action="Delete" asp-route-id="@item.SubProductId" class="btn btn-sm btn-danger me-1">Delete</a>
+                            <td>@item.Status</td>
+                            <td>@item.Color?.ColorName</td>
+                            <td>@item.MainProduct?.ProductName</td>
+                            <td>@item.Material?.MaterialName</td>
+                            <td>@item.Size?.SizeName</td>
+                            <td>@item.Sku?.SkuCode</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.SubProductId" asp-route-productId="@ViewBag.MainProductId" class="btn btn-sm btn-warning me-1">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.SubProductId" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i> Xoá
+                                </a>
                             </td>
                         </tr>
                     }

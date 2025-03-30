@@ -1,0 +1,51 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.Warehouse
+
+@{
+    ViewData["Title"] = "Xóa Kho Hàng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Xóa Kho Hàng</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home me-1"></i> Trang quản trị</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Warehouses" asp-action="Index"><i class="fas fa-warehouse me-1"></i> Danh sách kho hàng</a>
+        </li>
+        <li class="breadcrumb-item active">Xóa</li>
+    </ol>
+
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-danger text-white">
+            <i class="fas fa-trash-alt me-2"></i> Xác nhận xóa kho hàng
+        </div>
+        <div class="card-body p-4">
+            <p class="mb-4 fw-semibold text-danger">Bạn có chắc chắn muốn xóa kho hàng này không? Hành động này không thể hoàn tác.</p>
+
+            <dl class="row mb-4">
+                <dt class="col-sm-3 fw-semibold">Tên kho:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.WarehouseName)</dd>
+
+                <dt class="col-sm-3 fw-semibold">Vị trí:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Location)</dd>
+
+                <dt class="col-sm-3 fw-semibold">Sức chứa:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Capacity)</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="WarehouseId" />
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="fas fa-trash me-1"></i> Xóa
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

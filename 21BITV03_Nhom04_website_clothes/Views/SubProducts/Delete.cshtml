@@ -1,76 +1,91 @@
 ﻿@model _21BITV03_Nhom04_website_clothes.Data.SubProduct
 
 @{
-    ViewData["Title"] = "Delete SubProduct";
+    ViewData["Title"] = "Xóa sản phẩm phụ";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Delete SubProduct</h1>
+    <h1 class="mt-4">Xóa sản phẩm phụ</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Products</a></li>
-        <li class="breadcrumb-item"><a asp-controller="SubProducts" asp-action="Index" asp-route-id="@ViewBag.MainProductId">SubProducts</a></li>
-        <li class="breadcrumb-item active">Delete</li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home me-1"></i> Trang quản trị</a>
+        </li>
+  
+        <li class="breadcrumb-item">
+            <a asp-controller="SubProduct" asp-action="Index"><i class="fas fa-box me-1"></i> Danh sách sản phẩm phụ</a>
+        </li>
+        <li class="breadcrumb-item active">Xóa</li>
     </ol>
 
-    <div class="card mb-4">
+    <div class="card shadow-sm rounded-3 mb-4">
         <div class="card-header">
-            <i class="fas fa-trash-alt me-1"></i>
-            Delete SubProduct
+            <i class="fas fa-trash-alt me-2"></i> Xác nhận xóa sản phẩm phụ
         </div>
-        <div class="card-body">
-            <h3>Are you sure you want to delete this?</h3>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.OriginalPrice)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.OriginalPrice)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.DiscountedPrice)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.DiscountedPrice)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.CreationDate)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.CreationDate)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Linkimage)
-                </dt>
-                <dd class="col-sm-10">
-                    <img src="@Url.Content(Model.Linkimage)" alt="Image" style="width:100px;height:auto;" />
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Color)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Color.ColorId)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.MainProduct)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.MainProduct.ProductId)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Size)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Size.ProductSizeId)
-                </dd>
-            </dl>
+        <div class="card-body p-4">
+            <h3 class="text-danger">Bạn có chắc chắn muốn xóa sản phẩm này?</h3>
+            <div class="alert alert-warning">
+                <strong>Cảnh báo!</strong> Hành động này sẽ xóa sản phẩm phụ và không thể hoàn tác.
+            </div>
+
+            <div class="table-responsive">
+                <h4>Thông tin sản phẩm phụ:</h4>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Tên giá gốc</th>
+                            <td>@Html.DisplayFor(model => model.OriginalPrice)</td>
+                        </tr>
+                        <tr>
+                            <th>Giá giảm</th>
+                            <td>@Html.DisplayFor(model => model.DiscountedPrice)</td>
+                        </tr>
+                        <tr>
+                            <th>Ngày tạo</th>
+                            <td>@Html.DisplayFor(model => model.CreationDate)</td>
+                        </tr>
+                        <tr>
+                            <th>Hình ảnh</th>
+                            <td>
+                                <img src="@Html.DisplayFor(model => model.Linkimage)" alt="Hình ảnh sản phẩm" class="img-fluid" style="max-width: 200px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Trạng thái</th>
+                            <td>@Html.DisplayFor(model => model.Status)</td>
+                        </tr>
+                        <tr>
+                            <th>Màu sắc</th>
+                            <td>@Html.DisplayFor(model => model.Color.ColorId)</td>
+                        </tr>
+                        <tr>
+                            <th>Sản phẩm chính</th>
+                            <td>@Html.DisplayFor(model => model.MainProduct.ProductId)</td>
+                        </tr>
+                        <tr>
+                            <th>Chất liệu</th>
+                            <td>@Html.DisplayFor(model => model.Material.MaterialId)</td>
+                        </tr>
+                        <tr>
+                            <th>Kích thước</th>
+                            <td>@Html.DisplayFor(model => model.Size.ProductSizeId)</td>
+                        </tr>
+                        <tr>
+                            <th>SKU Code</th>
+                            <td>@Html.DisplayFor(model => model.Sku.SkuId)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <form asp-action="Delete" method="post">
                 <input type="hidden" asp-for="SubProductId" />
-                <input type="submit" value="Delete" class="btn btn-danger" />
-                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt me-1"></i> Xóa sản phẩm
+                </button>
+                <a asp-action="Index" asp-route-productId="@ViewBag.MainProductId" class="btn btn-secondary ms-2">
+                    <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                </a>
             </form>
         </div>
     </div>

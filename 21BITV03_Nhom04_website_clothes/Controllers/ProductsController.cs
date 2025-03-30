@@ -7,12 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using _21BITV03_Nhom04_website_clothes.Data;
 using _21BITV03_Nhom04_website_clothes.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace _21BITV03_Nhom04_website_clothes.Controllers
 {
-    [Authorize]
-    [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
         private readonly WebsiteClothesContext _context;
@@ -47,161 +44,168 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         }
 
         // GET: Products/Create
+        [HttpGet]
         public IActionResult Create()
         {
-            var viewModel = new ProductViewAdminModel
+            var model = new ManageProduct
             {
-                AvailableProductTypes = _context.ProductTypes.ToList() // Fetch the available product types from the database
+                Product = new Product(),
+                AvailableProductTypes = _context.ProductTypes.ToList()
             };
-            return View(viewModel);
+            return View(model);
         }
-
-
-        // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductViewAdminModel viewModel)
+        public IActionResult Create(ManageProduct model)
         {
-            if (ModelState.IsValid)
+            // Nếu chưa chọn loại sản phẩm
+            if (model.SelectedProductTypeIds == null || !model.SelectedProductTypeIds.Any())
             {
-                var product = new Product
-                {
-                    ProductName = viewModel.ProductName,
-                    Description = viewModel.Description,
-                    DeleteStatus = false,
-                    DeletionDate = null,
-                };
-
-                _context.Products.Add(product);
-                await _context.SaveChangesAsync();
-
-                // Add selected ProductTypeLinks
-                foreach (var productTypeId in viewModel.SelectedProductTypeIds)
-                {
-                    var productTypeLink = new ProductTypeLink
-                    {
-                        ProductId = product.ProductId,
-                        ProductTypeId = productTypeId
-                    };
-                    _context.ProductTypeLinks.Add(productTypeLink);
-                }
-
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("SelectedProductTypeIds", "Vui lòng chọn ít nhất một loại sản phẩm.");
             }
 
-            // Re-populate AvailableProductTypes if the model state is invalid
-            viewModel.AvailableProductTypes = _context.ProductTypes.ToList();
-            return View(viewModel);
+            // In lỗi ra console (nếu có)
+            if (!ModelState.IsValid)
+            {
+                foreach (var state in ModelState)
+                {
+                    var key = state.Key;
+                    var errors = state.Value.Errors;
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine($"ModelState Error for {key}: {error.ErrorMessage}");
+                    }
+
+                }
+
+                // Nếu có lỗi → load lại danh sách loại sản phẩm để hiển thị lại View
+                model.AvailableProductTypes = _context.ProductTypes.ToList();
+                return View(model);
+            }
+
+            // Nếu hợp lệ thì lưu sản phẩm
+            var newProduct = model.Product;
+            newProduct.DeleteStatus = false;
+            newProduct.DeletionDate = null;
+
+            _context.Products.Add(newProduct);
+            _context.SaveChanges();
+
+            foreach (var typeId in model.SelectedProductTypeIds)
+            {
+                var link = new ProductTypeLink
+                {
+                    ProductId = newProduct.ProductId,
+                    ProductTypeId = typeId
+                };
+                _context.ProductTypeLinks.Add(link);
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
+
+
+
+
+
         // GET: Products/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Products/Edit/5
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = _context.Products.Find(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            // Populate the view model
-            var viewModel = new ProductViewAdminModel
+            // Lấy danh sách ProductTypeId đang liên kết với sản phẩm
+            var selectedTypeIds = _context.ProductTypeLinks
+                .Where(l => l.ProductId == product.ProductId)
+                .Select(l => l.ProductTypeId)
+                .Where(id => id.HasValue)
+                .Select(id => id.Value)
+                .ToList();
+
+
+            var model = new ManageProduct
             {
-                ProductId = product.ProductId,
-                ProductName = product.ProductName,
-                Description = product.Description,
-                DeleteStatus = product.DeleteStatus,
-                AvailableProductTypes = _context.ProductTypes.ToList(), // Load available product types
-                SelectedProductTypeIds = _context.ProductTypeLinks
-    .Where(pt => pt.ProductId == product.ProductId)
-    .Select(pt => pt.ProductTypeId.HasValue ? pt.ProductTypeId.Value : 0) // Convert nullable to non-nullable
-    .ToList()
+                Product = product,
+                AvailableProductTypes = _context.ProductTypes.ToList(),
+                SelectedProductTypeIds = selectedTypeIds
             };
 
-            return View(viewModel);
+            return View(model);
         }
+
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductViewAdminModel viewModel)
+        public IActionResult Edit(int id, ManageProduct model)
         {
-            if (id != viewModel.ProductId)
+            if (id != model.Product.ProductId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            // Kiểm tra nếu chưa chọn loại sản phẩm
+            if (model.SelectedProductTypeIds == null || !model.SelectedProductTypeIds.Any())
             {
-                try
-                {
-                    var product = await _context.Products.FindAsync(id);
-                    if (product == null)
-                    {
-                        return NotFound();
-                    }
-
-                    // Update product fields
-                    product.ProductName = viewModel.ProductName;
-                    product.Description = viewModel.Description;
-                    product.DeleteStatus = viewModel.DeleteStatus;
-
-                    // Automatically set DeletionDate if DeleteStatus is true
-                    if (viewModel.DeleteStatus == true)
-                    {
-                        product.DeletionDate = DateTime.Now;
-                    }
-                    else
-                    {
-                        product.DeletionDate = null; // Clear the DeletionDate if DeleteStatus is false
-                    }
-
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-
-                    // Update ProductTypeLinks
-                    var existingLinks = _context.ProductTypeLinks.Where(pt => pt.ProductId == id).ToList();
-                    _context.ProductTypeLinks.RemoveRange(existingLinks);
-                    await _context.SaveChangesAsync();
-
-                    foreach (var productTypeId in viewModel.SelectedProductTypeIds)
-                    {
-                        var productTypeLink = new ProductTypeLink
-                        {
-                            ProductId = product.ProductId,
-                            ProductTypeId = productTypeId
-                        };
-                        _context.ProductTypeLinks.Add(productTypeLink);
-                    }
-
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(viewModel.ProductId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                ModelState.AddModelError("SelectedProductTypeIds", "Vui lòng chọn ít nhất một loại sản phẩm.");
             }
 
-            // Re-populate AvailableProductTypes if the model state is invalid
-            viewModel.AvailableProductTypes = _context.ProductTypes.ToList();
-            return View(viewModel);
-        }
+            if (!ModelState.IsValid)
+            {
+                // In lỗi ra console (giúp debug)
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"ModelState Error - {state.Key}: {error.ErrorMessage}");
+                    }
+                }
 
+                model.AvailableProductTypes = _context.ProductTypes.ToList();
+                return View(model);
+            }
+
+            // Cập nhật thông tin sản phẩm
+            var existingProduct = _context.Products.Find(id);
+            if (existingProduct == null)
+            {
+                return NotFound();
+            }
+
+            existingProduct.ProductName = model.Product.ProductName;
+            existingProduct.Description = model.Product.Description;
+            existingProduct.DeleteStatus = model.Product.DeleteStatus;
+            existingProduct.DeletionDate = model.Product.DeletionDate;
+
+            _context.Update(existingProduct);
+
+            // Xóa các liên kết cũ trong ProductTypeLink
+            var oldLinks = _context.ProductTypeLinks.Where(l => l.ProductId == id);
+            _context.ProductTypeLinks.RemoveRange(oldLinks);
+
+            // Thêm lại các liên kết mới
+            foreach (var typeId in model.SelectedProductTypeIds)
+            {
+                _context.ProductTypeLinks.Add(new ProductTypeLink
+                {
+                    ProductId = id,
+                    ProductTypeId = typeId
+                });
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
 
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)

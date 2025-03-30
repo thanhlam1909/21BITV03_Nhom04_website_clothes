@@ -7,14 +7,15 @@
     <h1 class="text-center text-white display-6">Trang giỏ hàng</h1>
     <ol class="breadcrumb justify-content-center mb-0">
         <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-        <li class="breadcrumb-item"><a href="#">Giỏ hàng</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Giỏ hàng</li>
     </ol>
 </div>
+
 <div class="container-fluid py-5">
     <div class="container py-5">
         @if (Model.CartProducts.Count == 0)
         {
-            <p>Your cart is empty.</p>
+            <p>Giỏ hàng của bạn đang trống.</p>
         }
         else
         {
@@ -22,13 +23,13 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Products</th>
-                            <th scope="col">Color</th>
-                            <th scope="col">Size</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col">Sản phẩm</th>
+                            <th scope="col">Màu sắc</th>
+                            <th scope="col">Kích cỡ</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Đơn giá</th>
+                            <th scope="col">Thành tiền</th>
+                            <th scope="col">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,8 +39,10 @@
                                 <th scope="row">
                                     <div class="d-flex align-items-center">
                                         <img src="@item.ImageUrl" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="@item.ProductName" />
+                                        <span class="ms-2">@item.ProductName</span>
                                     </div>
                                 </th>
+                                <td><p class="mb-0 mt-4">@item.ProductName</p></td>
                                 <td><p class="mb-0 mt-4">@item.ColorName</p></td>
                                 <td><p class="mb-0 mt-4">@item.SizeName</p></td>
                                 <td>
@@ -58,11 +61,10 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <p class="mb-0 mt-4">@item.DiscountedPrice.ToString("N0")</p>
+                                    <p class="mb-0 mt-4">@item.DiscountedPrice.ToString("N0") ₫</p>
                                 </td>
                                 <td id="total-@item.CartProductListId" data-price="@item.DiscountedPrice">
-                                    <p class="mb-0 mt-4">@((item.Quantity * item.DiscountedPrice).ToString("N0"))</p>
-
+                                    <p class="mb-0 mt-4">@((item.Quantity * item.DiscountedPrice).ToString("N0")) ₫</p>
                                 </td>
                                 <td>
                                     <p class="mb-0 mt-3">
@@ -81,20 +83,22 @@
                 <div class="col-8"></div>
                 <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
                     <div class="bg-light rounded">
-
                         <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                            <h5 class="mb-0 ps-4 me-4">Total</h5>
+                            <h5 class="mb-0 ps-4 me-4">Tổng cộng</h5>
                             <p class="mb-0 pe-4" id="cart-total">
-                                $@Model.CartProducts.Sum(p => p.Quantity * p.DiscountedPrice).ToString("N0")
+                                @Model.CartProducts.Sum(p => p.Quantity * p.DiscountedPrice).ToString("N0") ₫
                             </p>
                         </div>
-                        <a asp-controller="Checkout" asp-action="Index" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">Proceed Checkout</a>
+                        <a asp-controller="Checkout" asp-action="Index" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">
+                            Tiến hành thanh toán
+                        </a>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
 
 <script>
     function updateQuantity(cartProductListId, change) {

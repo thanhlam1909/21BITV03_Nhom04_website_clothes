@@ -1,0 +1,316 @@
+﻿@{
+    ViewData["Title"] = "Thống kê";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+    .dashboard-card {
+        background-color: #f8f9fa;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .dashboard-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1rem;
+        color: #343a40;
+    }
+
+    .chart-container {
+        width: 100%;
+        height: 350px;
+    }
+
+    .highlight-text {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+</style>
+<div class="container-fluid px-4 pt-4 m-2">
+    <div class="row g-4">
+
+        <!-- Hàng đầu tiên: Tổng quan hệ thống -->
+        <div class="col-lg-12 col-md-12">
+            <div class="dashboard-card">
+                <div class="dashboard-title">Biểu đồ Cột - Tổng quan hệ thống</div>
+                <canvas id="overviewBarChart" class="chart-container"></canvas>
+            </div>
+        </div>
+
+        <!-- Hàng thứ hai: Biểu đồ Tròn và Tỷ lệ đơn hàng -->
+        <div class="col-lg-6 col-md-12">
+            <div class="dashboard-card">
+                <div class="dashboard-title">Biểu đồ Tròn - Tỷ trọng thống kê</div>
+                <canvas id="overviewPieChart" class="chart-container"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="dashboard-card">
+                <div class="dashboard-title">Tỷ lệ đơn hàng</div>
+                <canvas id="orderStatusChart" class="chart-container"></canvas>
+            </div>
+        </div>
+
+        <!-- Hàng thứ ba: Tỷ lệ người dùng và Thông tin người dùng/sản phẩm -->
+        <div class="col-lg-6 col-md-12">
+            <div class="dashboard-card">
+                <div class="dashboard-title">Tỷ lệ người dùng</div>
+                <canvas id="userStatusChart" class="chart-container"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="dashboard-card text-center">
+                <div class="dashboard-title">Người có nhiều đơn hàng nhất</div>
+                <p><span class="highlight-text">Tên:</span> @ViewBag.TopUserName</p>
+                <p><span class="highlight-text">Số đơn hàng:</span> @ViewBag.TopUserOrderCount</p>
+            </div>
+            <div class="dashboard-card text-center mt-4">
+                <div class="dashboard-title">Sản phẩm bán chạy nhất</div>
+                <p><span class="highlight-text">Sản phẩm:</span> @ViewBag.BestSeller</p>
+                <p><span class="highlight-text">Số lượng đã bán:</span> @ViewBag.BestSellerQuantity</p>
+            </div>
+            <h4 class="text-center mt-2">Biểu đồ đơn hàng theo giai đoạn trong tháng</h4>
+            <canvas id="ordersByPeriodChart" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Hàng thứ tư: Doanh thu theo năm và tháng -->
+        <div class="col-lg-6 col-md-12">
+            <div class="dashboard-card">
+                <div class="dashboard-title">Biểu đồ Cột - Doanh thu theo năm</div>
+                <canvas id="yearlyRevenueChart" class="chart-container"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="dashboard-card">
+                <div class="dashboard-title">Biểu đồ Đường - Doanh thu theo tháng</div>
+                <canvas id="monthlyRevenueChart" class="chart-container"></canvas>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12">
+            <div class="dashboard-card">
+                <div class="dashboard-title">Biểu đồ Cột - Tổng số lượng sản phẩm theo kho</div>
+                <canvas id="warehouseProductChart" class="chart-container"></canvas>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Dữ liệu Tổng quan hệ thống
+    const overviewLabels = ['Sản phẩm', 'Biến thể', 'Đơn hàng', 'Tồn kho', 'Nhà cung cấp', 'Kho'];
+    const overviewData = [
+    @ViewBag.TotalProducts ?? 0,
+    @ViewBag.TotalSubProducts ?? 0,
+    @ViewBag.TotalOrders ?? 0,
+    @ViewBag.TotalStock ?? 0,
+    @ViewBag.TotalSuppliers ?? 0,
+    @ViewBag.TotalWarehouses ?? 0
+    ];
+
+    // Biểu đồ Cột Tổng quan
+    new Chart(document.getElementById('overviewBarChart'), {
+        type: 'bar',
+        data: {
+            labels: overviewLabels,
+            datasets: [{
+                label: 'Tổng quan hệ thống',
+                data: overviewData,
+                backgroundColor: ['#4bc0c0', '#36a2eb', '#ffce56', '#ff6384', '#9966ff', '#ff9f40'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // Biểu đồ Tròn Tỷ trọng thống kê
+    new Chart(document.getElementById('overviewPieChart'), {
+        type: 'pie',
+        data: {
+            labels: overviewLabels,
+            datasets: [{
+                data: overviewData,
+                backgroundColor: ['#4bc0c0', '#36a2eb', '#ffce56', '#ff6384', '#9966ff', '#ff9f40']
+            }]
+        },
+        options: { responsive: true }
+    });
+    // Biểu đồ Tròn Tỷ lệ người dùng
+    const userStatusLabels = ['Đã mua', 'Chưa mua'];
+    const userStatusData = [
+    @ViewBag.UsersWithOrders ?? 0,
+    @ViewBag.UsersWithoutOrders ?? 0
+    ];
+    new Chart(document.getElementById('userStatusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: userStatusLabels,
+            datasets: [{
+                data: userStatusData,
+                backgroundColor: ['#28a745', '#dc3545']
+            }]
+        },
+        options: { responsive: true }
+    });
+    // Biểu đồ Tròn Tỷ lệ đơn hàng
+    const orderStatusLabels = ['Hoàn tất', 'Đã hủy', 'Khác'];
+    const orderStatusData = [
+    @ViewBag.CompletedOrders ?? 0,
+    @ViewBag.CancelledOrders ?? 0,
+    @ViewBag.OtherOrders ?? 0
+    ];
+    new Chart(document.getElementById('orderStatusChart'), {
+        type: 'pie',
+        data: {
+            labels: orderStatusLabels,
+            datasets: [{
+                data: orderStatusData,
+                backgroundColor: ['#28a745', '#dc3545', '#ffc107']
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    // Biểu đồ Đường - Doanh thu theo tháng
+    const monthLabels = @Html.Raw(Json.Serialize(ViewBag.MonthLabels ?? new List<string>()));
+    const monthlyRevenue = @Html.Raw(Json.Serialize(ViewBag.MonthlyRevenue ?? new List<decimal>()));
+    new Chart(document.getElementById('monthlyRevenueChart'), {
+        type: 'line',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: 'Doanh thu theo tháng (VNĐ)',
+                data: monthlyRevenue,
+                borderColor: '#4bc0c0',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // Biểu đồ Cột - Doanh thu theo năm
+    const yearlyLabels = @Html.Raw(Json.Serialize(ViewBag.YearlyLabels ?? new List<string>()));
+    const yearlyRevenue = @Html.Raw(Json.Serialize(ViewBag.YearlyRevenue ?? new List<decimal>()));
+    new Chart(document.getElementById('yearlyRevenueChart'), {
+        type: 'bar',
+        data: {
+            labels: yearlyLabels,
+            datasets: [{
+                label: 'Doanh thu theo năm (VNĐ)',
+                data: yearlyRevenue,
+                backgroundColor: '#36a2eb'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+    const warehouseLabels = @Html.Raw(Json.Serialize(ViewBag.WarehouseLabels ?? new List<string>()));
+        const warehouseProductQuantities = @Html.Raw(Json.Serialize(ViewBag.WarehouseProductQuantities ?? new List<int>()));
+
+        new Chart(document.getElementById('warehouseProductChart'), {
+            type: 'bar',
+            data: {
+                labels: warehouseLabels,
+                datasets: [{
+                    label: 'Tổng số lượng sản phẩm',
+                    data: warehouseProductQuantities,
+                    backgroundColor: '#4bc0c0',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Số lượng sản phẩm' } }
+                }
+            }
+        });
+
+         var ctx = document.getElementById('ordersByPeriodChart').getContext('2d');
+
+    var ordersByPeriodChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Đầu tháng (1-10)', 'Giữa tháng (11-20)', 'Cuối tháng (21-31)'],
+            datasets: [{
+                label: 'Số đơn hàng',
+                data: [
+    @ViewBag.FirstPeriodOrders,
+    @ViewBag.SecondPeriodOrders,
+    @ViewBag.ThirdPeriodOrders
+                ],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(255, 205, 86, 0.6)',
+                    'rgba(255, 99, 132, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 205, 86, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Thống kê đơn hàng theo giai đoạn trong tháng',
+                    font: {
+                        size: 18
+                    }
+                },
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return ' ' + context.parsed.y + ' đơn hàng';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Số lượng đơn hàng'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Giai đoạn trong tháng'
+                    }
+                }
+            }
+        }
+    });
+</script>

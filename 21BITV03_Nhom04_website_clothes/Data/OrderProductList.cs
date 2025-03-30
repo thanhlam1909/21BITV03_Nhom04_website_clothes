@@ -19,6 +19,12 @@ public partial class OrderProductList
 
     public string? SizeName { get; set; }
 
+    public double? Price { get; set; }
+
+    public int? SubproductId { get; set; }
+
+    public string? MaterialName { get; set; }
+
     public virtual Order? Order { get; set; }
 
     public virtual Product? Product { get; set; }

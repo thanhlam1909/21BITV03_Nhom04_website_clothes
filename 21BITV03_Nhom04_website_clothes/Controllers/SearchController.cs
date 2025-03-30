@@ -8,7 +8,6 @@ using System.Linq;
 
 namespace _21BITV03_Nhom04_website_clothes.Controllers
 {
-
     public class SearchController : Controller
     {
         private readonly WebsiteClothesContext _context;
@@ -97,24 +96,27 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             return View("Index", model);
         }
         [HttpGet]
-        public IActionResult FilterColor_Size(List<int> colorIds, List<int> sizeIds, double? minPrice, double? maxPrice)
+        public IActionResult FilterColor_Size(List<int> colorIds, List<int> sizeIds, List<int> productTypeIds, double? minPrice, double? maxPrice)
         {
             var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
-            if (redirectResult != null)
-            {
-                return redirectResult;
-            }
+            if (redirectResult != null) return redirectResult;
+
             var filterViewModel = new FilterViewModel
             {
                 AvailableColors = _context.ProductColors.ToList(),
                 AvailableSizes = _context.ProductSizes.ToList(),
+                AvailableProductTypes = _context.ProductTypes.ToList(),
                 SelectedColorIds = colorIds ?? new List<int>(),
                 SelectedSizeIds = sizeIds ?? new List<int>(),
+                SelectedProductTypeIds = productTypeIds ?? new List<int>(),
                 MinPrice = minPrice.HasValue ? (decimal?)minPrice.Value : null,
                 MaxPrice = maxPrice.HasValue ? (decimal?)maxPrice.Value : null
             };
 
-            var filteredSubProducts = _context.SubProducts.AsQueryable();
+            var filteredSubProducts = _context.SubProducts
+                .Include(sp => sp.MainProduct)
+                    .ThenInclude(p => p.ProductTypeLinks)
+                .AsQueryable();
 
             if (colorIds != null && colorIds.Any())
             {
@@ -126,22 +128,22 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 filteredSubProducts = filteredSubProducts.Where(sp => sizeIds.Contains(sp.SizeId.GetValueOrDefault()));
             }
 
-            // Check if minPrice and maxPrice are set to their default values
-            bool isMinPriceDefault = !minPrice.HasValue || minPrice.Value == 0;
-            bool isMaxPriceDefault = !maxPrice.HasValue || maxPrice.Value >= 500000; // Update default to 50,000
-
-            if (!isMinPriceDefault || !isMaxPriceDefault)
+            if (minPrice.HasValue)
             {
-                // Apply price filtering only if minPrice or maxPrice are not default
-                if (!isMinPriceDefault)
-                {
-                    filteredSubProducts = filteredSubProducts.Where(sp => sp.DiscountedPrice.HasValue && sp.DiscountedPrice.Value >= minPrice.Value);
-                }
+                filteredSubProducts = filteredSubProducts.Where(sp => sp.DiscountedPrice.HasValue && sp.DiscountedPrice.Value >= minPrice.Value);
+            }
 
-                if (!isMaxPriceDefault)
-                {
-                    filteredSubProducts = filteredSubProducts.Where(sp => sp.DiscountedPrice.HasValue && sp.DiscountedPrice.Value <= maxPrice.Value);
-                }
+            if (maxPrice.HasValue && maxPrice.Value < 5000000)
+            {
+                filteredSubProducts = filteredSubProducts.Where(sp => sp.DiscountedPrice.HasValue && sp.DiscountedPrice.Value <= maxPrice.Value);
+            }
+
+            // Lọc theo loại sản phẩm
+            if (filterViewModel.SelectedProductTypeIds != null && filterViewModel.SelectedProductTypeIds.Any())
+            {
+                filteredSubProducts = filteredSubProducts.Where(sp =>
+                    sp.MainProduct.ProductTypeLinks.Any(ptl => ptl.ProductTypeId.HasValue &&
+                                                               filterViewModel.SelectedProductTypeIds.Contains(ptl.ProductTypeId.Value)));
             }
 
             var filteredProducts = filteredSubProducts
@@ -152,13 +154,7 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
 
             filterViewModel.FilteredProducts = filteredProducts;
 
-            return PartialView("FilterColor_Size", filterViewModel); // Return a partial view to load into the page
+            return PartialView("FilterColor_Size", filterViewModel);
         }
-
-
-
-
-
-
     }
 }

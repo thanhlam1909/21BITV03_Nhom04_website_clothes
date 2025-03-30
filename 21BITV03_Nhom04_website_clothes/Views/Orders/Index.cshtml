@@ -1,42 +1,53 @@
 ﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.Order>
 
 @{
-    ViewData["Title"] = "Order Management";
+    ViewData["Title"] = "Quản lý đơn hàng";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Order Management</h1>
+    <h1 class="mt-4">Quản lý đơn hàng</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active">Orders</li>
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Đơn hàng</li>
     </ol>
 
     <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-shopping-cart me-1"></i>
-            Order List
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-shopping-cart me-1"></i>
+                Danh sách đơn hàng
+            </div>
+            <form asp-controller="Orders" asp-action="ExportToExcel" method="post" style="margin-bottom: 15px;">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-file-excel"></i> Tải xuống tất cả đơn hàng
+                </button>
+            </form>
         </div>
+
         <div class="card-body">
             <table id="datatablesSimple" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.Message)</th>
-                        <th>@Html.DisplayNameFor(model => model.PaymentMethod)</th>
-                        <th>@Html.DisplayNameFor(model => model.OrderStatus)</th>
-                        <th>@Html.DisplayNameFor(model => model.User)</th>
-                        <th style="text-align: center;">Actions</th>
+                        <th>Lời nhắn</th>
+                        <th>Phương thức thanh toán</th>
+                        <th>Trạng thái đơn hàng</th>
+                        <th>Người dùng</th>
+                        <th style="text-align: center;">Thông tin chi tiết đơn hàng</th>
+                        <th style="text-align: center;">Thao tác</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.Message)</th>
-                        <th>@Html.DisplayNameFor(model => model.PaymentMethod)</th>
-                        <th>@Html.DisplayNameFor(model => model.OrderStatus)</th>
-                        <th>@Html.DisplayNameFor(model => model.User)</th>
-                        <th style="text-align: center;">Actions</th>
+                        <th>Lời nhắn</th>
+                        <th>Phương thức thanh toán</th>
+                        <th>Trạng thái đơn hàng</th>
+                        <th>Người dùng</th>
+                        <th style="text-align: center;">Xem chi tiết</th>
+                        <th style="text-align: center;">Thao tác</th>
                     </tr>
                 </tfoot>
+
                 <tbody>
                     @foreach (var item in Model)
                     {
@@ -44,28 +55,33 @@
                             <td>@Html.DisplayFor(modelItem => item.Message)</td>
                             <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
                             <td>@Html.DisplayFor(modelItem => item.OrderStatus)</td>
-                            <td>@Html.DisplayFor(modelItem => item.User.UserId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.User.FullName)</td>
+                            <td style="text-align: center;">
+                                <a asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-eye"></i> Xem thông tin chi tiết
+                                </a>
+                            </td>
                             <td style="text-align: center;">
                                 <form asp-action="UpdateStatusToCancelled" method="post" style="display:inline;">
                                     <input type="hidden" name="id" value="@item.OrderId" />
                                     <button type="submit" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-ban"></i> Cancel
+                                        <i class="fas fa-ban"></i> Hủy đơn
                                     </button>
                                 </form>
                                 <form asp-action="UpdateStatusToShipped" method="post" style="display:inline;">
                                     <input type="hidden" name="id" value="@item.OrderId" />
                                     <button type="submit" class="btn btn-sm btn-info">
-                                        <i class="fas fa-shipping-fast"></i> Shipped
+                                        <i class="fas fa-shipping-fast"></i> Đã giao hàng
                                     </button>
                                 </form>
                                 <form asp-action="UpdateStatusToCompleted" method="post" style="display:inline;">
                                     <input type="hidden" name="id" value="@item.OrderId" />
                                     <button type="submit" class="btn btn-sm btn-success">
-                                        <i class="fas fa-check"></i> Completed
+                                        <i class="fas fa-check"></i> Hoàn tất
                                     </button>
                                 </form>
                                 <a asp-action="Delete" asp-route-id="@item.OrderId" class="btn btn-sm btn-danger">
-                                    <i class="fas fa-trash"></i> Delete
+                                    <i class="fas fa-trash"></i> Xóa
                                 </a>
                             </td>
                         </tr>

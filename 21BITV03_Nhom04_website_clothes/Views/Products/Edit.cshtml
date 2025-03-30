@@ -1,96 +1,107 @@
-﻿@model _21BITV03_Nhom04_website_clothes.Models.ProductViewAdminModel
+﻿@model _21BITV03_Nhom04_website_clothes.Models.ManageProduct
 
 @{
-    ViewData["Title"] = "Edit Product";
+    ViewData["Title"] = "Chỉnh sửa sản phẩm";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Edit Product</h1>
+    <h1 class="mt-4">Chỉnh sửa sản phẩm</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Products</a></li>
-        <li class="breadcrumb-item active">Edit</li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home me-1"></i> Trang quản trị</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Products" asp-action="Index"><i class="fas fa-box me-1"></i> Danh sách sản phẩm</a>
+        </li>
+        <li class="breadcrumb-item active">Chỉnh sửa</li>
     </ol>
 
-    <div class="card mb-4">
+    <div class="card shadow-sm rounded-3 mb-4">
         <div class="card-header">
-            <i class="fas fa-edit me-1"></i>
-            Edit Product
+            <i class="fas fa-edit me-2"></i> Cập nhật thông tin sản phẩm
         </div>
-        <div class="card-body">
-            <form asp-action="Edit" method="post">
+        <div class="card-body p-4">
+            <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                <input type="hidden" asp-for="ProductId" />
+
+                <input type="hidden" asp-for="Product.ProductId" />
 
                 <div class="form-group mb-3">
-                    <label asp-for="ProductName" class="form-label"></label>
-                    <input asp-for="ProductName" class="form-control" />
-                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                    <label asp-for="Product.ProductName" class="form-label fw-bold">Tên sản phẩm</label>
+                    <input asp-for="Product.ProductName" class="form-control" placeholder="Nhập tên sản phẩm..." />
+                    <span asp-validation-for="Product.ProductName" class="text-danger small"></span>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label asp-for="Description" class="form-label"></label>
-                    <input asp-for="Description" class="form-control" />
-                    <span asp-validation-for="Description" class="text-danger"></span>
+                    <label asp-for="Product.Description" class="form-label fw-bold">Mô tả</label>
+                    <textarea asp-for="Product.Description" class="form-control" rows="3" placeholder="Mô tả chi tiết sản phẩm (nếu có)..."></textarea>
+                    <span asp-validation-for="Product.Description" class="text-danger small"></span>
                 </div>
 
-                <!-- Multi-select for Product Types -->
                 <div class="form-group mb-3">
-                    <label for="SelectedProductTypeIds" class="form-label">Product Types</label>
-                    <select asp-for="SelectedProductTypeIds" class="form-control" multiple>
-                        @foreach (var type in Model.AvailableProductTypes)
-                        {
-                            <option value="@type.ProductTypeId">
-                                @type.ProductTypeName
-                                @if (Model.SelectedProductTypeIds.Contains(type.ProductTypeId))
-                                {
-                                    @Html.Raw("selected")
-                                }
-                            </option>
+                    <label asp-for="Product.DeleteStatus" class="form-label fw-bold">Trạng thái xóa</label>
+                    <select asp-for="Product.DeleteStatus" class="form-select">
+                        <option value="false">Còn sử dụng</option>
+                        <option value="true">Đã xóa</option>
+                    </select>
+                    <span asp-validation-for="Product.DeleteStatus" class="text-danger small"></span>
+                </div>
 
+                <div class="form-group mb-3">
+                    <label asp-for="Product.DeletionDate" class="form-label fw-bold">Ngày xóa (nếu có)</label>
+                    <input asp-for="Product.DeletionDate" class="form-control" type="date" />
+                    <span asp-validation-for="Product.DeletionDate" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label fw-bold">Loại sản phẩm</label>
+                    <div class="row">
+                        @{
+                            var half = (int)Math.Ceiling((double)Model.AvailableProductTypes.Count / 2);
+                            var leftColumn = Model.AvailableProductTypes.Take(half).ToList();
+                            var rightColumn = Model.AvailableProductTypes.Skip(half).ToList();
                         }
-                    </select>
+
+                        <div class="col-md-6">
+                            @foreach (var type in leftColumn)
+                            {
+                                <div class="form-check mb-1">
+                                    <input type="checkbox" class="form-check-input"
+                                           name="SelectedProductTypeIds"
+                                           value="@type.ProductTypeId"
+                                    @(Model.SelectedProductTypeIds.Contains(type.ProductTypeId) ? "checked" : "") />
+                                    <label class="form-check-label">@type.ProductTypeName</label>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="col-md-6">
+                            @foreach (var type in rightColumn)
+                            {
+                                <div class="form-check mb-1">
+                                    <input type="checkbox" class="form-check-input"
+                                           name="SelectedProductTypeIds"
+                                           value="@type.ProductTypeId"
+                                    @(Model.SelectedProductTypeIds.Contains(type.ProductTypeId) ? "checked" : "") />
+                                    <label class="form-check-label">@type.ProductTypeName</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <span asp-validation-for="SelectedProductTypeIds" class="text-danger small"></span>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="DeleteStatus" class="form-label">Delete Status</label>
-                    <select asp-for="DeleteStatus" class="form-control">
-                        <option value="true">True @if (Model.DeleteStatus == true)
-                            {
-                                <text>selected</text>
-                            }</option>
-                        <option value="false">False @if (Model.DeleteStatus == false)
-                            {
-                                <text>selected</text>
-                            }</option>
-                    </select>
-                    <span asp-validation-for="DeleteStatus" class="text-danger"></span>
-                </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Status" class="form-label">Status</label>
-                    <select asp-for="Status" class="form-control">
-                        <option value="true">True @if (Model.Status == true)
-                            {
-                                <text>selected</text>
-                            }</option>
-                        <option value="false">False @if (Model.Status == false)
-                            {
-                                <text>selected</text>
-                            }</option>
-                    </select>
-                    <span asp-validation-for="Status" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                <div class="form-group d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Lưu thay đổi
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
                 </div>
             </form>
         </div>
-    </div>
-
-    <div class="mt-4">
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 </div>

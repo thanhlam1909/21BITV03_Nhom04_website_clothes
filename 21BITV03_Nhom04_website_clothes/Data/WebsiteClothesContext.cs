@@ -39,6 +39,8 @@ public partial class WebsiteClothesContext : DbContext
 
     public virtual DbSet<InventoryTransactionDetail> InventoryTransactionDetails { get; set; }
 
+    public virtual DbSet<Material> Materials { get; set; }
+
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<OrderDiscountList> OrderDiscountLists { get; set; }
@@ -57,6 +59,8 @@ public partial class WebsiteClothesContext : DbContext
 
     public virtual DbSet<ReviewProduct> ReviewProducts { get; set; }
 
+    public virtual DbSet<Sku> Skus { get; set; }
+
     public virtual DbSet<SubProduct> SubProducts { get; set; }
 
     public virtual DbSet<Supplier> Suppliers { get; set; }
@@ -64,6 +68,10 @@ public partial class WebsiteClothesContext : DbContext
     public virtual DbSet<UserInfo> UserInfos { get; set; }
 
     public virtual DbSet<Warehouse> Warehouses { get; set; }
+
+    public virtual DbSet<WarehouseBatch> WarehouseBatches { get; set; }
+
+    public virtual DbSet<WarehouseProduct> WarehouseProducts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -229,9 +237,7 @@ public partial class WebsiteClothesContext : DbContext
             entity.ToTable("InventoryTransaction");
 
             entity.Property(e => e.Notes).HasMaxLength(255);
-            entity.Property(e => e.TransactionDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.TransactionDate).HasColumnType("datetime");
             entity.Property(e => e.TransactionType).HasMaxLength(50);
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.InventoryTransactions)
@@ -261,12 +267,24 @@ public partial class WebsiteClothesContext : DbContext
                 .HasConstraintName("FK_TransactionDetail_Transaction");
         });
 
+        modelBuilder.Entity<Material>(entity =>
+        {
+            entity.ToTable("Material");
+
+            entity.Property(e => e.MaterialId).HasColumnName("Material_ID");
+            entity.Property(e => e.MaterialName)
+                .HasMaxLength(255)
+                .HasColumnName("Material_Name");
+        });
+
         modelBuilder.Entity<Order>(entity =>
         {
             entity.ToTable("Order");
 
             entity.Property(e => e.OrderId).HasColumnName("Order_id");
+            entity.Property(e => e.DeliveryDate).HasColumnType("datetime");
             entity.Property(e => e.Message).HasMaxLength(50);
+            entity.Property(e => e.OrderDate).HasColumnType("datetime");
             entity.Property(e => e.OrderStatus)
                 .HasMaxLength(50)
                 .HasColumnName("Order_Status");
@@ -311,6 +329,9 @@ public partial class WebsiteClothesContext : DbContext
             entity.Property(e => e.ColorName)
                 .HasMaxLength(50)
                 .HasColumnName("Color_name");
+            entity.Property(e => e.MaterialName)
+                .HasMaxLength(200)
+                .HasColumnName("Material_Name");
             entity.Property(e => e.OrderId).HasColumnName("Order_id");
             entity.Property(e => e.ProductId).HasColumnName("Product_ID");
             entity.Property(e => e.ProductName)
@@ -319,6 +340,7 @@ public partial class WebsiteClothesContext : DbContext
             entity.Property(e => e.SizeName)
                 .HasMaxLength(50)
                 .HasColumnName("Size_name");
+            entity.Property(e => e.SubproductId).HasColumnName("Subproduct_ID");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderProductLists)
                 .HasForeignKey(d => d.OrderId)
@@ -338,7 +360,6 @@ public partial class WebsiteClothesContext : DbContext
             entity.Property(e => e.DeletionDate)
                 .HasColumnType("datetime")
                 .HasColumnName("Deletion_date");
-            entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.ProductName)
                 .HasMaxLength(50)
                 .HasColumnName("Product_name");
@@ -419,6 +440,20 @@ public partial class WebsiteClothesContext : DbContext
                 .HasConstraintName("FK_ReviewProduct_Products");
         });
 
+        modelBuilder.Entity<Sku>(entity =>
+        {
+            entity.HasKey(e => e.SkuId).HasName("PK__SKU__4BB929BA0CF4EB47");
+
+            entity.ToTable("SKU");
+
+            entity.HasIndex(e => e.SkuCode, "UQ__SKU__005F304C3F60565E").IsUnique();
+
+            entity.Property(e => e.SkuId).HasColumnName("SKU_ID");
+            entity.Property(e => e.SkuCode)
+                .HasMaxLength(200)
+                .HasColumnName("SKU_Code");
+        });
+
         modelBuilder.Entity<SubProduct>(entity =>
         {
             entity.ToTable("Sub_Product");
@@ -431,9 +466,10 @@ public partial class WebsiteClothesContext : DbContext
             entity.Property(e => e.DiscountedPrice).HasColumnName("Discounted_Price");
             entity.Property(e => e.Linkimage).HasMaxLength(50);
             entity.Property(e => e.MainProductId).HasColumnName("Main_product_id");
+            entity.Property(e => e.MaterialId).HasColumnName("Material_Id");
             entity.Property(e => e.OriginalPrice).HasColumnName("Original_Price");
-            entity.Property(e => e.QuantityInStock).HasDefaultValue(0);
             entity.Property(e => e.SizeId).HasColumnName("Size_ID");
+            entity.Property(e => e.SkuId).HasColumnName("SKU_ID");
             entity.Property(e => e.Status).HasMaxLength(50);
 
             entity.HasOne(d => d.Color).WithMany(p => p.SubProducts)
@@ -445,10 +481,20 @@ public partial class WebsiteClothesContext : DbContext
                 .HasForeignKey(d => d.MainProductId)
                 .HasConstraintName("FK_Sub_Product_Products");
 
+            entity.HasOne(d => d.Material).WithMany(p => p.SubProducts)
+                .HasForeignKey(d => d.MaterialId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Sub_Product_Material");
+
             entity.HasOne(d => d.Size).WithMany(p => p.SubProducts)
                 .HasForeignKey(d => d.SizeId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Sub_Product_Product_size");
+
+            entity.HasOne(d => d.Sku).WithMany(p => p.SubProducts)
+                .HasForeignKey(d => d.SkuId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_SubProduct_SKU");
         });
 
         modelBuilder.Entity<Supplier>(entity =>
@@ -493,6 +539,53 @@ public partial class WebsiteClothesContext : DbContext
 
             entity.Property(e => e.Location).HasMaxLength(255);
             entity.Property(e => e.WarehouseName).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<WarehouseBatch>(entity =>
+        {
+            entity.HasKey(e => e.BatchId).HasName("PK__Warehous__5D55CE58B892049E");
+
+            entity.ToTable("WarehouseBatch");
+
+            entity.Property(e => e.ImportDate).HasColumnType("datetime");
+            entity.Property(e => e.Note).HasMaxLength(255);
+            entity.Property(e => e.UnitCost).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.Sku).WithMany(p => p.WarehouseBatches)
+                .HasForeignKey(d => d.SkuId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_WarehouseBatch_SKU");
+
+            entity.HasOne(d => d.Supplier).WithMany(p => p.WarehouseBatches)
+                .HasForeignKey(d => d.SupplierId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_WarehouseBatch_Supplier");
+
+            entity.HasOne(d => d.Warehouse).WithMany(p => p.WarehouseBatches)
+                .HasForeignKey(d => d.WarehouseId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_WarehouseBatch_Warehouse");
+        });
+
+        modelBuilder.Entity<WarehouseProduct>(entity =>
+        {
+            entity.HasKey(e => e.WarehouseProductId).HasName("PK__Warehous__08D59F039E0F9074");
+
+            entity.ToTable("WarehouseProduct");
+
+            entity.Property(e => e.LastUpdated)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.SkuId).HasColumnName("SKU_ID");
+
+            entity.HasOne(d => d.Sku).WithMany(p => p.WarehouseProducts)
+                .HasForeignKey(d => d.SkuId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_WarehouseProduct_SKU");
+
+            entity.HasOne(d => d.Warehouse).WithMany(p => p.WarehouseProducts)
+                .HasForeignKey(d => d.WarehouseId)
+                .HasConstraintName("FK_WarehouseProduct_Warehouse");
         });
 
         OnModelCreatingPartial(modelBuilder);

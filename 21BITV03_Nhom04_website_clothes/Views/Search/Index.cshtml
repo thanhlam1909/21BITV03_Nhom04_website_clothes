@@ -19,48 +19,67 @@
                     <div class="row g-4">
 
 
-                        
-                        <div class="col-lg-12">
-                            <div class="mb-3">
-                                <h4>Màu</h4>
-                                @foreach (var color in Model.Colors)
-                                {
-                                    <div class="mb-2">
-                                        <input type="checkbox" class="me-2" id="color-@color.ColorId" name="colorIds" value="@color.ColorId" @(Model.SelectedColorIds.Contains(color.ColorId) ? "checked" : "")>
-                                        <label for="color-@color.ColorId"> @color.ColorName</label>
 
+                        <div class="row g-4">
+                            <!-- Màu sắc -->
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <h4>Chọn màu sắc:</h4>
+                                    <div class="row">
+                                        @foreach (var color in Model.Colors)
+                                        {
+                                            <div class="col-md-6">
+                                                <div class="form-check mb-2">
+                                                    <input type="checkbox" class="form-check-input" id="color-@color.ColorId" name="colorIds" value="@color.ColorId"
+                                                    @(Model.SelectedColorIds.Contains(color.ColorId) ? "checked" : "") />
+                                                    <label class="form-check-label" for="color-@color.ColorId">@color.ColorName</label>
+                                                </div>
+                                            </div>
+                                        }
                                     </div>
-                                }
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="mb-3">
-                                <h4>Kích thước</h4>
-                                @foreach (var size in Model.Sizes)
-                                {
-                                    <div class="mb-2">
-
-                                        <input type="checkbox" class="me-2" id="size-@size.ProductSizeId" name="sizeIds" value="@size.ProductSizeId" @(Model.SelectedSizeIds.Contains(size.ProductSizeId) ? "checked" : "") />
-                                        <label for="size-@size.ProductSizeId">@size.SizeName</label>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="mb-3">
-                                <h4>Giá tiền</h4>
-                                <input type="range" class="form-range" id="minPriceRange" min="0" max="500000" value="0" step="1">
-                                <input type="range" class="form-range" id="maxPriceRange" min="0" max="500000" value="500000" step="1">
-                                <div class="d-flex justify-content-between">
-                                    <span>Thấp nhất: $<span id="minPriceDisplay">0</span></span>
-                                    <span>Cao nhất: $<span id="maxPriceDisplay">50000</span></span>
                                 </div>
-                                <input type="hidden" name="minPrice" id="minPriceInput" value="0">
-                                <input type="hidden" name="maxPrice" id="maxPriceInput" value="500000">
+                            </div>
+
+                            <!-- Kích cỡ -->
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <h4>Chọn kích cỡ:</h4>
+                                    <div class="row">
+                                        @foreach (var size in Model.Sizes)
+                                        {
+                                            <div class="col-md-6">
+                                                <div class="form-check mb-2">
+                                                    <input type="checkbox" class="form-check-input" id="size-@size.ProductSizeId" name="sizeIds" value="@size.ProductSizeId"
+                                                    @(Model.SelectedSizeIds.Contains(size.ProductSizeId) ? "checked" : "") />
+                                                    <label class="form-check-label" for="size-@size.ProductSizeId">@size.SizeName</label>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Lọc</button>
 
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <h4>Khoảng giá:</h4>
+                                <label for="minPriceRange" class="form-label">Giá tối thiểu</label>
+                                <input type="range" class="form-range" id="minPriceRange" min="0" max="5000000" value="0" step="10000">
+                                <label for="maxPriceRange" class="form-label">Giá hơn</label>
+                                <input type="range" class="form-range" id="maxPriceRange" min="0" max="5000000" value="5000000" step="10000">
+
+                                <div class="d-flex justify-content-between">
+                                    <span>Giá tối thiểu: <strong><span id="minPriceDisplay">0</span> ₫</strong></span>
+                                    <span>Giá hơn: <strong><span id="maxPriceDisplay">500000</span> ₫</strong></span>
+                                </div>
+
+                                <input type="hidden" name="minPrice" id="minPriceInput" value="0">
+                                <input type="hidden" name="maxPrice" id="maxPriceInput" value="5000000">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center">
+                            <button type="submit" class="btn btn-primary w-100">Lọc sản phẩm</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -74,28 +93,27 @@
                             if (subProduct != null)
                             {
                                 <div class="col-md-6 col-lg-4">
+                                    <a href="@Url.Action("Index", "ProductDetail", new { id = product.ProductId })" class="text-decoration-none text-dark">
                                     <div class="rounded position-relative product-item">
                                         <div class="product-img">
-                                            <img src="@(string.IsNullOrEmpty(product.SubProducts.FirstOrDefault()?.Linkimage) ? "placeholder.jpg" : product.SubProducts.FirstOrDefault()?.Linkimage)"
-                                                 class="img-fluid w-100 rounded-top"
-                                                 alt="@product.ProductName"
-                                                 style="height: 200px; object-fit: cover;">
+                                            <img src="@subProduct.Linkimage" class="img-fluid w-100 rounded-top" alt="Product Image" style="height: 200px;" />
                                         </div>
-
 
                                         <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                                             <h4 style="text-align:center">@product.ProductName</h4>
                                             <div class="d-flex justify-content-center">
-                                                <p class="text-dark fs-5 fw-bold mb-0"><strong> $</strong>@product.SubProducts.FirstOrDefault()?.DiscountedPrice.Value.ToString("N0")</p>
+                                                <p class="text-dark fs-5 fw-bold mb-0"><strong> </strong>@product.SubProducts.FirstOrDefault()?.DiscountedPrice.Value.ToString("N0")</p>
                                             </div>
                                             <div class="d-flex justify-content-center">
-                                                <a href="@Url.Action("ProductDetail", "ThuNghiem", new { id = product.ProductId })" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                <a href="@Url.Action("Index", "ProductDetail", new { id = product.ProductId })" class="btn border border-secondary rounded-pill px-3 text-primary">
                                                     <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                                 </a>
                                             </div>
                                         </div>
 
                                     </div>
+
+    </a>
                                 </div>
                             }
                         }

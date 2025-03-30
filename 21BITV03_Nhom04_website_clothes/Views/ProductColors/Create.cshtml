@@ -1,48 +1,62 @@
-﻿@model _21BITV03_Nhom04_website_clothes.Data.ProductColor
+﻿@model _21BITV03_Nhom04_website_clothes.Data.InventoryTransactionDetail
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Tạo Chi Tiết Giao Dịch Kho";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var transactionId = ViewBag.TransactionId as int?;
 }
+
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Create Product Color</h1>
+    <h1 class="mt-4">Tạo Chi Tiết Giao Dịch Kho</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
-        <li class="breadcrumb-item"><a asp-controller="ProductColors" asp-action="Index">Product Colors</a></li>
-        <li class="breadcrumb-item active">Create</li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Admin" asp-action="Index"><i class="fas fa-home me-1"></i> Trang quản trị</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-controller="InventoryTransactionDetails" asp-action="Index" asp-route-transactionId="@transactionId"><i class="fas fa-boxes me-1"></i> Danh sách chi tiết giao dịch</a>
+        </li>
+        <li class="breadcrumb-item active">Tạo mới</li>
     </ol>
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-plus me-1"></i>
-            Create Product Color
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-plus-circle me-2"></i> Thêm chi tiết giao dịch kho
         </div>
-        <div class="card-body">
-            <form asp-action="Create">
+        <div class="card-body p-4">
+            <form asp-action="Create" class="needs-validation" novalidate>
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+                <input type="hidden" asp-for="TransactionId" value="@transactionId" />
 
-                <div class="form-group mb-3">
-                    <label asp-for="ColorName" class="form-label"></label>
-                    <input asp-for="ColorName" class="form-control" />
-                    <span asp-validation-for="ColorName" class="text-danger"></span>
+                <div class="mb-3">
+                    <label asp-for="SubProductId" class="form-label fw-semibold">Sản phẩm phụ</label>
+                    <select asp-for="SubProductId" class="form-select" asp-items="ViewBag.SubProductId">
+                        <option value="">-- Chọn sản phẩm phụ --</option>
+                    </select>
+                    <span asp-validation-for="SubProductId" class="text-danger small"></span>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Description" class="form-label"></label>
-                    <input asp-for="Description" class="form-control" />
-                    <span asp-validation-for="Description" class="text-danger"></span>
+                <div class="mb-3">
+                    <label asp-for="Quantity" class="form-label fw-semibold">Số lượng</label>
+                    <input asp-for="Quantity" class="form-control" placeholder="Nhập số lượng..." />
+                    <span asp-validation-for="Quantity" class="text-danger small"></span>
                 </div>
 
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                <div class="mb-3">
+                    <label asp-for="UnitPrice" class="form-label fw-semibold">Đơn giá (VNĐ)</label>
+                    <input asp-for="UnitPrice" class="form-control" placeholder="Nhập đơn giá..." />
+                    <span asp-validation-for="UnitPrice" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-start gap-2">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="fas fa-check me-1"></i> Tạo mới
+                    </button>
+                    <a asp-action="Index" asp-route-transactionId="@ViewBag.TransactionId" class="btn btn-secondary px-4">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
                 </div>
             </form>
         </div>
     </div>
-
-    <div class="mt-4">
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
 </div>
-

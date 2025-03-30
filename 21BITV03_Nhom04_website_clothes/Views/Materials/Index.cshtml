@@ -1,0 +1,62 @@
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Data.Material>
+
+@{
+    ViewData["Title"] = "Danh sách chất liệu";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Danh sách chất liệu</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang quản trị</a></li>
+        <li class="breadcrumb-item active">Chất liệu</li>
+    </ol>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Thêm chất liệu
+        </a>
+    </p>
+
+    <div class="card mb-4 shadow-sm rounded-3">
+        <div class="card-header">
+            <i class="fas fa-cubes me-2"></i> Danh sách chất liệu
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tên chất liệu</th>
+                        <th>Mô tả</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot class="table-light">
+                    <tr>
+                        <th>Tên chất liệu</th>
+                        <th>Mô tả</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.MaterialName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.MaterialId" class="btn btn-sm btn-warning me-1" title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+
+                                <a asp-action="Delete" asp-route-id="@item.MaterialId" class="btn btn-sm btn-danger" title="Xoá">
+                                    <i class="fas fa-trash"></i> Xoá
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

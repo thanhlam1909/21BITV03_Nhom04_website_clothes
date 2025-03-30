@@ -1,5 +1,6 @@
 ﻿using _21BITV03_Nhom04_website_clothes.Data;
 using _21BITV03_Nhom04_website_clothes.Models;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -222,8 +223,45 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
 
             return RedirectToAction(nameof(Index)); // Redirect to an appropriate action after deletion
         }
+        [HttpPost]
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var users = await _context.AspNetUsers
+                .Include(u => u.UserInfo)
+                .ToListAsync();
 
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Users");
 
+                // Header
+                worksheet.Cell(1, 1).Value = "Mã người dùng";
+                worksheet.Cell(1, 2).Value = "Họ và tên";
+                worksheet.Cell(1, 3).Value = "Email";
+                worksheet.Cell(1, 4).Value = "Số điện thoại";
+                worksheet.Cell(1, 5).Value = "Địa chỉ";
+
+                int row = 2;
+                foreach (var user in users)
+                {
+                    worksheet.Cell(row, 1).Value = user.Id;
+                    worksheet.Cell(row, 2).Value = user.UserInfo?.FullName ?? "N/A";
+                    worksheet.Cell(row, 3).Value = user.Email;
+                    worksheet.Cell(row, 4).Value = user.PhoneNumber;
+                    worksheet.Cell(row, 5).Value = user.UserInfo?.Address ?? "N/A";
+                    row++;
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    return File(content,
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "UserList.xlsx");
+                }
+            }
+        }
 
     }
 }

@@ -1,0 +1,50 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.InventoryTransaction
+
+@{
+    ViewData["Title"] = "Xóa giao dịch kho";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4 text-danger">Xác nhận xóa giao dịch</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang quản trị</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Giao dịch kho</a></li>
+        <li class="breadcrumb-item active">Xóa</li>
+    </ol>
+
+    <div class="card shadow-sm rounded-3 border-danger mb-4">
+        <div class="card-body">
+            <h4 class="text-danger fw-bold mb-3">Bạn có chắc chắn muốn xóa giao dịch sau?</h4>
+
+            <dl class="row">
+                <dt class="col-sm-3">Loại giao dịch</dt>
+                <dd class="col-sm-9">@Model.TransactionType</dd>
+
+                <dt class="col-sm-3">Ngày giao dịch</dt>
+                <dd class="col-sm-9">@Model.TransactionDate</dd>
+
+                <dt class="col-sm-3">Ghi chú</dt>
+                <dd class="col-sm-9">@Model.Notes</dd>
+
+                <dt class="col-sm-3">Nhà cung cấp</dt>
+                <dd class="col-sm-9">@Model.SupplierId</dd>
+
+                <dt class="col-sm-3">Kho hàng</dt>
+                <dd class="col-sm-9">@Model.WarehouseId</dd>
+            </dl>
+
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="TransactionId" />
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-1"></i> Xóa
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

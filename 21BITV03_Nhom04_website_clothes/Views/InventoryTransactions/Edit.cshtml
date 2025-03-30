@@ -1,0 +1,69 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.InventoryTransaction
+
+@{
+    ViewData["Title"] = "Chỉnh sửa giao dịch kho";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Chỉnh sửa giao dịch kho</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang quản trị</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Giao dịch kho</a></li>
+        <li class="breadcrumb-item active">Chỉnh sửa</li>
+    </ol>
+
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input type="hidden" asp-for="TransactionId" />
+
+                <div class="mb-3">
+                    <label asp-for="TransactionType" class="form-label fw-bold "></label>
+                    <input asp-for="TransactionType" class="form-control" readonly />
+                    <span asp-validation-for="TransactionType" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="TransactionDate" class="form-label fw-bold"></label>
+                    <input asp-for="TransactionDate" class="form-control" type="date" />
+                    <span asp-validation-for="TransactionDate" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="WarehouseId" class="form-label fw-bold"></label>
+                    <select asp-for="WarehouseId" class="form-select" asp-items="ViewBag.WarehouseId"></select>
+                    <span asp-validation-for="WarehouseId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SupplierId" class="form-label fw-bold"></label>
+                    <select asp-for="SupplierId" class="form-select" asp-items="ViewBag.SupplierId">
+                        <option value="">-- Không có nhà cung cấp --</option>
+                    </select>
+                    <span asp-validation-for="SupplierId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Notes" class="form-label fw-bold"></label>
+                    <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Ghi chú thêm nếu có..."></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Lưu thay đổi
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

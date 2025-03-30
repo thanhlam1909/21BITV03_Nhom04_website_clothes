@@ -1,95 +1,137 @@
 ﻿@model _21BITV03_Nhom04_website_clothes.Models.FilterViewModel
 
 @{
-    ViewData["Title"] = "Filter Products by Color, Size, and Price";
+    ViewData["Title"] = "Lọc sản phẩm theo màu sắc, kích cỡ và giá";
     Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
 }
 
 <div class="container-fluid page-header-login py-5">
-    <h1 class="text-center text-white display-6">Trang tìm kiếm</h1>
+    <h1 class="text-center text-white display-6">Trang tìm kiếm sản phẩm</h1>
     <ol class="breadcrumb justify-content-center mb-0">
         <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-        <li class="breadcrumb-item">Trang tìm kiếm</li>
+        <li class="breadcrumb-item active">Tìm kiếm</li>
     </ol>
 </div>
 
 <div class="container-fluid fruite py-5">
     <div class="container py-5">
         <div class="row g-4">
+            <!-- Cột Lọc -->
             <div class="col-lg-3">
                 <form asp-action="FilterColor_Size" method="get">
-                    <!-- Filters Section -->
                     <div class="row g-4">
+                        <!-- Màu sắc -->
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <h4>Màu</h4>
-                                @foreach (var color in Model.AvailableColors)
-                                {
-                                    <div class="mb-2">
-                                        <input type="checkbox" class="me-2" id="color-@color.ColorId" name="colorIds" value="@color.ColorId" @(Model.SelectedColorIds.Contains(color.ColorId) ? "checked" : "") />
-                                        <label for="color-@color.ColorId">@color.ColorName</label>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12">
-                            <div class="mb-3">
-                                <h4>Kích thước</h4>
-                                @foreach (var size in Model.AvailableSizes)
-                                {
-                                    <div class="mb-2">
-                                        <input type="checkbox" class="me-2" id="size-@size.ProductSizeId" name="sizeIds" value="@size.ProductSizeId" @(Model.SelectedSizeIds.Contains(size.ProductSizeId) ? "checked" : "") />
-                                        <label for="size-@size.ProductSizeId">@size.SizeName</label>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12">
-                            <div class="mb-3">
-                                <h4>Giá tiền</h4>
-                                <input type="range" class="form-range" id="minPriceRange" min="0" max="500000" value="0" step="1">
-                                <input type="range" class="form-range" id="maxPriceRange" min="0" max="500000" value="500000" step="1">
-                                <div class="d-flex justify-content-between">
-                                    <span>Thấp nhất: $<span id="minPriceDisplay">0</span></span>
-                                    <span>Cao nhất: $<span id="maxPriceDisplay">50000</span></span>
+                                <h4>Chọn màu sắc:</h4>
+                                <div class="row">
+                                    @foreach (var color in Model.AvailableColors)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="form-check mb-2">
+                                                <input type="checkbox" class="form-check-input" id="color-@color.ColorId" name="colorIds" value="@color.ColorId"
+                                                @(Model.SelectedColorIds.Contains(color.ColorId) ? "checked" : "") />
+                                                <label class="form-check-label" for="color-@color.ColorId">@color.ColorName</label>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-                                <input type="hidden" name="minPrice" id="minPriceInput" value="0">
-                                <input type="hidden" name="maxPrice" id="maxPriceInput" value="500000">
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Filter</button>
+
+                        <!-- Kích cỡ -->
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <h4>Chọn kích cỡ:</h4>
+                                <div class="row">
+                                    @foreach (var size in Model.AvailableSizes)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="form-check mb-2">
+                                                <input type="checkbox" class="form-check-input" id="size-@size.ProductSizeId" name="sizeIds" value="@size.ProductSizeId"
+                                                @(Model.SelectedSizeIds.Contains(size.ProductSizeId) ? "checked" : "") />
+                                                <label class="form-check-label" for="size-@size.ProductSizeId">@size.SizeName</label>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Loại sản phẩm -->
+
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <h4>Chọn loại sản phẩm:</h4>
+                                <div class="row">
+                                    @foreach (var type in Model.AvailableProductTypes)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="form-check mb-2">
+                                                <input type="checkbox" class="form-check-input" id="type-@type.ProductTypeId" name="productTypeIds" value="@type.ProductTypeId"
+                                                @(Model.SelectedProductTypeIds.Contains(type.ProductTypeId) ? "checked" : "") />
+                                                <label class="form-check-label" for="type-@type.ProductTypeId">@type.ProductTypeName</label>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Giá -->
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <h4>Khoảng giá:</h4>
+
+                                <label for="minPriceRange" class="form-label">Giá tối thiểu</label>
+                                <input type="range" class="form-range" id="minPriceRange" min="0" max="5000000" value="0" step="10000">
+
+                                <label for="maxPriceRange" class="form-label">Giá tối đa</label>
+                                <input type="range" class="form-range" id="maxPriceRange" min="0" max="5000000" value="5000000" step="10000">
+
+                                <div class="d-flex justify-content-between">
+                                    <span>Giá tối thiểu: <strong><span id="minPriceDisplay">0</span> ₫</strong></span>
+                                    <span>Giá tối đa: <strong><span id="maxPriceDisplay">5.000.000</span> ₫</strong></span>
+                                </div>
+
+                                <input type="hidden" name="minPrice" id="minPriceInput" value="0">
+                                <input type="hidden" name="maxPrice" id="maxPriceInput" value="5000000">
+                            </div>
+                        </div>
+
+
+                        <!-- Nút lọc -->
+                        <div class="col-lg-12 text-center">
+                            <button type="submit" class="btn btn-primary w-100">Lọc sản phẩm</button>
+                        </div>
                     </div>
                 </form>
             </div>
 
+            <!-- Cột Sản phẩm -->
             <div class="col-lg-9">
-                <!-- Filtered Products Display -->
                 @if (Model.FilteredProducts != null && Model.FilteredProducts.Any())
                 {
                     <div class="row g-4 justify-content-center">
                         @foreach (var product in Model.FilteredProducts)
                         {
                             <div class="col-md-6 col-lg-4">
-                                <a href="@Url.Action("ProductDetail", "ThuNghiem", new { id = product.ProductId })" class="text-decoration-none text-dark">
-                                    <div class="card mb-3">
+                                <a href="@Url.Action("Index", "ProductDetail", new { id = product.ProductId })" class="text-decoration-none text-dark">
+                                    <div class="card mb-3 shadow-sm">
                                         <div class="product-img">
-                                            <img src="@(string.IsNullOrEmpty(product.SubProducts.FirstOrDefault()?.Linkimage) ? "placeholder.jpg" : product.SubProducts.FirstOrDefault()?.Linkimage)"
-                                                 class="img-fluid w-100 rounded-top"
-                                                 alt="@product.ProductName"
-                                                 style="height: 200px; object-fit: cover;">
+                                            <img src="@(product.SubProducts.FirstOrDefault()?.Linkimage ?? "placeholder.jpg")"
+                                                 class="img-fluid w-100 rounded-top" alt="@product.ProductName" style="height: 200px; object-fit: cover;">
                                         </div>
-
                                         <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                            <h4 style="text-align:center">@product.ProductName</h4>
-                                            <div class="d-flex justify-content-center">
-                                                <p class="text-dark fs-5 fw-bold mb-0"><strong>$</strong>@product.SubProducts.FirstOrDefault()?.DiscountedPrice.Value.ToString("N0")</p>
+                                            <h5 class="text-center mb-3">@product.ProductName</h5>
+                                            <div class="text-center text-danger fw-bold mb-2">
+                                                @((product.SubProducts.FirstOrDefault()?.DiscountedPrice ?? 0).ToString("N0")) ₫
                                             </div>
-                                            <div class="d-flex justify-content-center">
-                                                <a href="@Url.Action("ProductDetail", "ThuNghiem", new { id = product.ProductId })" class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                            <div class="text-center">
+                                                <a href="@Url.Action("Index", "ProductDetail", new { id = product.ProductId })"
+                                                   class="btn btn-outline-primary rounded-pill px-3">
+                                                    <i class="fa fa-shopping-bag me-2"></i> Thêm vào giỏ hàng
                                                 </a>
                                             </div>
                                         </div>
@@ -101,19 +143,19 @@
                 }
                 else
                 {
-                    <p>No products match the selected criteria.</p>
+                    <p class="text-center">Không có sản phẩm nào phù hợp với tiêu chí đã chọn.</p>
                 }
 
+                <!-- Phân trang -->
                 <div class="col-12">
-                    <div class="pagination d-flex justify-content-center mt-5" id="pagination">
-                        <!-- Pagination links will be dynamically generated here -->
-                    </div>
+                    <div class="pagination d-flex justify-content-center mt-5" id="pagination"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- JS xử lý hiển thị giá -->
 <script>
     const minPriceRange = document.getElementById('minPriceRange');
     const maxPriceRange = document.getElementById('maxPriceRange');
@@ -123,67 +165,66 @@
     const maxPriceInput = document.getElementById('maxPriceInput');
 
     function updatePriceLabels() {
-        minPriceDisplay.textContent = minPriceRange.value;
-        maxPriceDisplay.textContent = maxPriceRange.value;
+        minPriceDisplay.textContent = parseInt(minPriceRange.value).toLocaleString();
+        maxPriceDisplay.textContent = parseInt(maxPriceRange.value).toLocaleString();
         minPriceInput.value = minPriceRange.value;
         maxPriceInput.value = maxPriceRange.value;
     }
 
     minPriceRange.addEventListener('input', updatePriceLabels);
     maxPriceRange.addEventListener('input', updatePriceLabels);
-
-    // Initialize price labels
     updatePriceLabels();
+</script>
 
+<!-- JS xử lý phân trang -->
+<script>
     document.addEventListener("DOMContentLoaded", function () {
-        const totalPages = @Model.TotalPages; // Ensure TotalPages is part of the model
-        const currentPage = @Model.PageNumber; // Ensure PageNumber is part of the model
+        const totalPages = @Model.TotalPages;
+        const currentPage = @Model.PageNumber;
 
         function createPagination() {
             const paginationElement = document.getElementById('pagination');
-            paginationElement.innerHTML = ''; // Clear existing pagination
+            paginationElement.innerHTML = '';
 
-            // Previous button
             if (currentPage > 1) {
-                const prevButton = document.createElement('a');
-                prevButton.href = '#';
-                prevButton.className = 'btn btn-secondary mx-1';
-                prevButton.textContent = 'Previous';
-                prevButton.onclick = () => changePage(currentPage - 1);
-                paginationElement.appendChild(prevButton);
+                const prev = createPageButton("Trang trước", currentPage - 1);
+                paginationElement.appendChild(prev);
             }
 
-            // Page numbers
             for (let i = 1; i <= totalPages; i++) {
-                const pageButton = document.createElement('a');
-                pageButton.href = '#';
-                pageButton.className = 'btn btn-secondary mx-1' + (i === currentPage ? ' active' : '');
-                pageButton.textContent = i;
-                pageButton.onclick = () => changePage(i);
-                paginationElement.appendChild(pageButton);
+                const btn = createPageButton(i, i);
+                if (i === currentPage) btn.classList.add('btn-primary');
+                paginationElement.appendChild(btn);
             }
 
-            // Next button
             if (currentPage < totalPages) {
-                const nextButton = document.createElement('a');
-                nextButton.href = '#';
-                nextButton.className = 'btn btn-secondary mx-1';
-                nextButton.textContent = 'Next';
-                nextButton.onclick = () => changePage(currentPage + 1);
-                paginationElement.appendChild(nextButton);
+                const next = createPageButton("Trang sau", currentPage + 1);
+                paginationElement.appendChild(next);
             }
+        }
+
+        function createPageButton(text, pageNumber) {
+            const a = document.createElement('a');
+            a.href = '#';
+            a.className = 'btn btn-outline-secondary mx-1';
+            a.textContent = text;
+            a.onclick = function (e) {
+                e.preventDefault();
+                changePage(pageNumber);
+            };
+            return a;
         }
 
         function changePage(pageNumber) {
             const form = document.createElement('form');
-            form.method = 'get'; // Ensure method matches your filtering form
-            form.action = '@Url.Action("FilterColor_Size", "Search")'; // Adjust action to your controller method
+            form.method = 'get';
+            form.action = '@Url.Action("FilterColor_Size", "Search")';
 
-            const pageInput = document.createElement('input');
-            pageInput.type = 'hidden';
-            pageInput.name = 'PageNumber';
-            pageInput.value = pageNumber;
-            form.appendChild(pageInput);
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'PageNumber';
+            input.value = pageNumber;
+            form.appendChild(input);
 
             document.body.appendChild(form);
             form.submit();

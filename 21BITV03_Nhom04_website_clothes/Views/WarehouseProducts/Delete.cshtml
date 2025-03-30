@@ -1,0 +1,54 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.WarehouseProduct
+
+@{
+    ViewData["Title"] = "Xóa sản phẩm khỏi kho";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home me-1"></i> Trang quản trị</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-route-warehouseId="@Model.WarehouseId" asp-action="Index"><i class="fas fa-cogs me-1"></i> Danh sách sản phẩm trong kho</a>
+        </li>
+        <li class="breadcrumb-item active">Xóa</li>
+    </ol>
+
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-danger text-white">
+            <i class="fas fa-trash-alt me-2"></i> Xác nhận xóa sản phẩm khỏi kho
+        </div>
+        <div class="card-body p-4">
+            <h5>Bạn có chắc chắn muốn xóa thông tin này?</h5>
+            <hr />
+            <dl class="row mb-3">
+                <dt class="col-sm-4 fw-bold">Số lượng</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Quantity)</dd>
+
+                <dt class="col-sm-4 fw-bold">Cập nhật lần cuối</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.LastUpdated)</dd>
+
+                <dt class="col-sm-4 fw-bold">Mã SKU</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Sku.SkuId)</dd>
+
+                <dt class="col-sm-4 fw-bold">Kho</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Warehouse.WarehouseId)</dd>
+            </dl>
+
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="WarehouseProductId" />
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash3-fill me-1"></i> Xóa
+                    </button>
+                    <a asp-action="Index" asp-route-warehouseId="@Model.WarehouseId" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+﻿@model _21BITV03_Nhom04_website_clothes.Data.InventoryTransactionDetail
+
+@{
+    ViewData["Title"] = "Thêm chi tiết giao dịch kho";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Thêm chi tiết giao dịch kho</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang quản trị</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-route-transactionId="@ViewBag.TransactionId">Chi tiết giao dịch kho</a></li>
+        <li class="breadcrumb-item active">Thêm mới</li>
+    </ol>
+
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-header">
+            <i class="fas fa-plus me-2"></i> Thêm chi tiết giao dịch
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <input type="hidden" asp-for="TransactionDetailId" />
+                <input type="hidden" asp-for="TransactionId" value="@ViewBag.TransactionId" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="SubProductId" class="form-label">Sản phẩm phụ</label>
+                    <select asp-for="SubProductId" class="form-select" asp-items="ViewBag.SubProductId">
+                        <option value="">-- Chọn sản phẩm phụ --</option>
+                    </select>
+                    <span asp-validation-for="SubProductId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Quantity" class="form-label">Số lượng</label>
+                    <input asp-for="Quantity" class="form-control" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="UnitPrice" class="form-label">Đơn giá</label>
+                    <input asp-for="UnitPrice" class="form-control" />
+                    <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                </div>
+
+                @* Nếu bạn muốn thêm TransactionType *@
+                @* 
+                <div class="mb-3">
+                    <label asp-for="TransactionType" class="form-label">Loại giao dịch</label>
+                    <select asp-for="TransactionType" class="form-select" asp-items="ViewBag.TransactionTypeList">
+                        <option value="">-- Chọn loại giao dịch --</option>
+                    </select>
+                    <span asp-validation-for="TransactionType" class="text-danger"></span>
+                </div>
+                *@
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Lưu
+                    </button>
+                    <a asp-action="Index" asp-route-transactionId="@ViewBag.TransactionId" class="btn btn-secondary ms-2">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

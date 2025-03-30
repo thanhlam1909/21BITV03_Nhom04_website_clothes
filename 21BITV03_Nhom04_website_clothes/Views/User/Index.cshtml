@@ -1,57 +1,61 @@
 ﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Models.User>
 
 @{
-    ViewData["Title"] = "User Management";
+    ViewData["Title"] = "Quản lý người dùng";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">User Management</h1>
+    <h1 class="mt-4">Quản lý người dùng</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active">Users</li>
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Người dùng</li>
     </ol>
 
-    <p>
-        <a asp-action="Create" class="btn btn-primary">Create New User</a>
-    </p>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <a asp-action="Create" class="btn btn-primary">Thêm người dùng mới</a>
+        <form asp-action="ExportToExcel" method="post">
+            <button type="submit" class="btn btn-success">Tải xuống file Excel</button>
+        </form>
+    </div>
 
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-user me-1"></i>
-            User List
+            Danh sách người dùng
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>User ID</th>
-                        <th>Full Name</th>
+                        <th>Mã người dùng</th>
+                        <th>Họ và tên</th>
                         <th>Email</th>
-                        <th style="text-align: center;">Actions</th>
+                        <th style="text-align: center;">Thao tác</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>User ID</th>
-                        <th>Full Name</th>
+                        <th>Mã người dùng</th>
+                        <th>Họ và tên</th>
                         <th>Email</th>
-                        <th style="text-align: center;">Actions</th>
+                        <th style="text-align: center;">Thao tác</th>
                     </tr>
                 </tfoot>
+
                 <tbody>
                     @foreach (var item in Model)
                     {
                         <tr id="user-row-@item.Users.Id">
                             <td>@Html.DisplayFor(modelItem => item.Users.Id)</td>
-                            <td>@(item.UserInfo?.FullName ?? "N/A")</td>
-                            <td>@(item.UserInfo?.Email ?? "N/A")</td>
+                            <td>@(item.UserInfo?.FullName ?? "Không có dữ liệu")</td>
+                            <td>@(item.UserInfo?.Email ?? "Không có dữ liệu")</td>
                             <td style="text-align: center;">
                                 <a asp-action="Edit" asp-route-id="@item.Users.Id" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i> Edit
+                                    <i class="fas fa-edit"></i> Sửa
                                 </a>
                                 <a asp-action="Delete" asp-route-id="@item.Users.Id" class="btn btn-sm btn-danger">
-                                    <i class="fas fa-trash"></i> Delete
+                                    <i class="fas fa-trash"></i> Xóa
                                 </a>
                             </td>
                         </tr>
@@ -61,7 +65,3 @@
         </div>
     </div>
 </div>
-
-
-
-
