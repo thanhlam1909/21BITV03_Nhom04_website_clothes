@@ -40,6 +40,9 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 .Include(c => c.CartProductLists)
                     .ThenInclude(cpl => cpl.SubProduct)
                         .ThenInclude(sp => sp.Size)
+                          .Include(c => c.CartProductLists)
+                    .ThenInclude(cpl => cpl.SubProduct)
+                        .ThenInclude(sp => sp.Material)
                 .Include(c => c.CartProductLists)
                     .ThenInclude(cpl => cpl.SubProduct)
                         .ThenInclude(sp => sp.MainProduct)
@@ -62,6 +65,8 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                     ProductName = cpl.SubProduct?.MainProduct?.ProductName ?? "Unknown Product",
                     ColorName = cpl.SubProduct?.Color?.ColorName ?? "Unknown Color",
                     SizeName = cpl.SubProduct?.Size?.SizeName ?? "Unknown Size",
+                    MaterialName = cpl.SubProduct?.Material?.MaterialName ?? "Unknown Material",
+
                     Quantity = cpl.Quantity ?? 1,
                     OriginalPrice = cpl.SubProduct?.OriginalPrice ?? 0,
                     DiscountedPrice = cpl.SubProduct?.DiscountedPrice ?? cpl.SubProduct?.OriginalPrice ?? 0,

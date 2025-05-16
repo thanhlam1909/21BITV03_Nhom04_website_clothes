@@ -1,0 +1,119 @@
+﻿@model DiscountViewModel
+@{
+    ViewData["Title"] = Model.Discount.DiscountId == 0 ? "Tạo khuyến mãi" : "Chỉnh sửa khuyến mãi";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    bool isCreate = Model.Discount.DiscountId == 0;
+    string formAction = isCreate ? "Create" : "Edit";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Khuyến mãi</a></li>
+        <li class="breadcrumb-item active">@(isCreate ? "Tạo mới" : "Chỉnh sửa")</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-tags me-1"></i>
+            Thông tin khuyến mãi
+        </div>
+        <div class="card-body">
+            <form asp-action="@formAction" method="post">
+                @if (!isCreate)
+                {
+                    <input type="hidden" asp-for="Discount.DiscountId" />
+                }
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Discount.DiscountName" class="control-label">Tên khuyến mãi</label>
+                    <input asp-for="Discount.DiscountName" class="form-control" />
+                    <span asp-validation-for="Discount.DiscountName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Discount.DiscountType" class="control-label">Loại khuyến mãi</label>
+                    <select asp-for="Discount.DiscountType" class="form-control">
+                        <option value="">-- Chọn loại khuyến mãi --</option>
+                        <option value="Percent">Phần trăm (%)</option>
+                        <option value="Fixed">Số tiền cố định</option>
+                    </select>
+                    <span asp-validation-for="Discount.DiscountType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Discount.DiscountAmount" class="control-label">Giá trị khuyến mãi</label>
+                    <input asp-for="Discount.DiscountAmount" type="number" step="0.01" class="form-control" />
+                    <span asp-validation-for="Discount.DiscountAmount" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Discount.StartTime" class="control-label">Thời gian bắt đầu</label>
+                    <input asp-for="Discount.StartTime"
+                           class="form-control"
+                           type="datetime-local"
+                           value="@(Model.Discount.StartTime.HasValue ? Model.Discount.StartTime.Value.ToString("yyyy-MM-ddTHH:mm") : "")" />
+                    <span asp-validation-for="Discount.StartTime" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Discount.EndTime" class="control-label">Thời gian kết thúc</label>
+                    <input asp-for="Discount.EndTime"
+                           class="form-control"
+                           type="datetime-local"
+                           value="@(Model.Discount.EndTime.HasValue ? Model.Discount.EndTime.Value.ToString("yyyy-MM-ddTHH:mm") : "")" />
+                    <span asp-validation-for="Discount.EndTime" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="control-label">Áp dụng cho sản phẩm:</label><br />
+                    <div class="row">
+                        @foreach (var product in Model.Products)
+                        {
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="SelectedProductIds"
+                                           value="@product.ProductId"
+                                           id="prod_@product.ProductId"
+                                    @(Model.SelectedProductIds != null && Model.SelectedProductIds.Contains(product.ProductId) ? "checked" : "") />
+                                    <label class="form-check-label" for="prod_@product.ProductId">@product.ProductName</label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại danh sách</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const startInput = document.querySelector('input[name="Discount.StartTime"]');
+            const endInput = document.querySelector('input[name="Discount.EndTime"]');
+            const form = document.querySelector('form');
+
+            form.addEventListener("submit", function (e) {
+                const start = new Date(startInput.value);
+                const end = new Date(endInput.value);
+
+                if (start && end && start > end) {
+                    e.preventDefault();
+                    alert("❌ Thời gian bắt đầu không được lớn hơn thời gian kết thúc.");
+                    endInput.focus();
+                }
+            });
+        });
+    </script>
+}

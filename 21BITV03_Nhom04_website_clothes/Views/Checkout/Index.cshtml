@@ -22,18 +22,21 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Sản phẩm</th>
-                                    <th scope="col">Tên</th>
-                                    <th scope="col">Giá</th>
-                                    <th scope="col">Số lượng</th>
-                                    <th scope="col">Tổng</th>
+                                    <th class="text-center" scope="col">Sản phẩm</th>
+                                    <th class="text-center" scope="col">Tên</th>
+                                    <th class="text-center" scope="col">Màu </th>
+                                    <th class="text-center" scope="col">Kích cỡ</th>
+                                    <th class="text-center" scope="col">Chất liệu</th>
+                                    <th class="text-center" scope="col">Giá</th>
+                                    <th class="text-center" scope="col">Số lượng</th>
+                                    <th class="text-center" scope="col">Tổng</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (Model.CartProducts.Count == 0)
                                 {
                                     <tr>
-                                        <td colspan="5" class="text-center">Giỏ hàng của bạn trống.</td>
+                                        <td colspan="8" class="text-center">Giỏ hàng của bạn trống.</td>
                                     </tr>
                                 }
                                 else
@@ -48,23 +51,31 @@
                                                     <img src="@item.ImageUrl" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="@item.ProductName" />
                                                 </div>
                                             </th>
-                                            <td class="py-5">@item.ProductName</td>
-                                            <td class="py-5">@item.DiscountedPrice.ToString("N0") $</td>
-                                            <td class="py-5">@item.Quantity</td>
-                                            <td class="py-5">@((item.Quantity * item.DiscountedPrice).ToString("N0")) $</td>
+                                            <td  class="py-5 text-center">@item.ProductName</td>
+                                            <td class="py-5 text-center">@item.ColorName</td>
+                                            <td class="py-5 text-center">@item.SizeName</td>
+                                            <td class="py-5 text-center">@item.MaterialName</td>
+                                            <td class="py-5 text-center" style="width: 20%;">@item.DiscountedPrice.ToString("N0") $</td>
+                                            <td class="py-5 text-center">@item.Quantity</td>
+                                            <td class="py-5 text-center" style="width: 20%;">@((item.Quantity * item.DiscountedPrice).ToString("N0")) $</td>
                                         </tr>
                                     }
                                     <!-- Tổng phụ -->
                                     <tr>
                                         <th scope="row"></th>
-                                        <td class="py-5"></td>
-                                        <td class="py-5"></td>
                                         <td class="py-5">
                                             <p class="mb-0 text-dark py-3">Tổng phụ</p>
                                         </td>
+                                        <td class="py-5"></td>
+                                        <td class="py-5"></td>
+                                        <td class="py-5"></td>
+                                        <td class="py-5"></td>
+                          
+                                        <td class="py-5">
+                                        </td>
                                         <td class="py-5">
                                             <div class="py-3 border-bottom border-top">
-                                                <p class="mb-0 text-dark">@Model.CartProducts.Sum(p => p.Quantity * p.DiscountedPrice).ToString("N0") $</p>
+                                                <p class="text-center mb-0 text-dark">@Model.CartProducts.Sum(p => p.Quantity * p.DiscountedPrice).ToString("N0") $</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -76,9 +87,12 @@
                                         </td>
                                         <td class="py-5"></td>
                                         <td class="py-5"></td>
+                                        <td class="py-5"></td>
+                                        <td class="py-5"></td>
+                                        <td class="py-5"></td>
                                         <td class="py-5">
                                             <div class="py-3 border-bottom border-top">
-                                                <p class="mb-0 text-dark">@Model.CartProducts.Sum(p => p.Quantity * p.DiscountedPrice).ToString("N0") $</p>
+                                                <p class=" text-center mb-0 text-dark">@Model.CartProducts.Sum(p => p.Quantity * p.DiscountedPrice).ToString("N0") $</p>
                                             </div>
                                         </td>
                                     </tr>

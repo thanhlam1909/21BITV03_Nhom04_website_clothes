@@ -3,6 +3,7 @@ using _21BITV03_Nhom04_website_clothes.Helper;
 using _21BITV03_Nhom04_website_clothes.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace _21BITV03_Nhom04_website_clothes.Controllers
@@ -23,20 +24,37 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             }
             // Fetch the specific product by ID from the database
             var product = await _context.Products
-                 .Include(p => p.SubProducts)
-                     .ThenInclude(sp => sp.Color)
-                 .Include(p => p.SubProducts)
-                     .ThenInclude(sp => sp.Size)
-                 .Include(p => p.SubProducts)
-                     .ThenInclude(sp => sp.Material)
-                 .Include(p => p.ReviewProducts)
-                 .FirstOrDefaultAsync(p => p.ProductId == id);
+                    .Include(p => p.SubProducts).ThenInclude(sp => sp.Color)
+                    .Include(p => p.SubProducts).ThenInclude(sp => sp.Size)
+                    .Include(p => p.SubProducts).ThenInclude(sp => sp.Material)
+                    .Include(p => p.ReviewProducts)
+                    .Include(p => p.DiscountedProductLists).ThenInclude(dp => dp.Discount)
+                    .FirstOrDefaultAsync(p => p.ProductId == id);
 
             // Check if the product exists
             if (product == null)
             {
                 return NotFound(); // Return a 404 error if the product is not found
             }
+            // Lấy danh sách tất cả các mã giảm giá còn hiệu lực
+            var discounts = product.DiscountedProductLists
+                .Where(dpl => dpl.Discount != null
+                           && dpl.ProductId == id
+                           && dpl.Discount.StartTime <= DateTime.Now
+                           && dpl.Discount.EndTime >= DateTime.Now
+                           )
+                .Select(dpl => new ProductDiscountViewModel
+                {
+                    DiscountId = dpl.Discount.DiscountId,
+                    MainProductDiscountId = dpl.ProductId ?? 0,
+                    DiscountName = dpl.Discount.DiscountName,
+                    DiscountAmount = dpl.Discount.DiscountAmount,
+                    DiscountType = dpl.Discount.DiscountType,
+                    DiscountConditions = dpl.Discount.DiscountConditions,
+                    StartTime = dpl.Discount.StartTime,
+                    EndTime = dpl.Discount.EndTime
+                }).ToList();
+
 
             // Map the product to ProductViewModel
             var productViewModel = new ProductViewModel
@@ -47,7 +65,9 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
                 OriginalPrice = product.SubProducts.FirstOrDefault()?.OriginalPrice ?? 0,
                 DiscountedPrice = product.SubProducts.FirstOrDefault()?.DiscountedPrice,
                 ImageUrl = product.SubProducts.FirstOrDefault()?.Linkimage ?? "default-image.png",
+                DiscountInfos = discounts,
                 SubProducts = product.SubProducts.Select(sp => new SubProductViewModel
+
                 {
                     SubProductId = sp.SubProductId,
                     MainProductId = sp.MainProductId ?? 0,

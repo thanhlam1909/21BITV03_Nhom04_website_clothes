@@ -75,41 +75,23 @@ public partial class WebsiteClothesContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=website_clothes;Integrated Security=True;Trust Server Certificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=website_clothes;Trust Server Certificate=True;Integrated Security=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AspNetRole>(entity =>
         {
-            entity.ToTable(tb =>
-                {
-                    tb.HasTrigger("PreventAdminUserCreation");
-                    tb.HasTrigger("PreventAdminUserDeletion");
-                });
-
-            entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
-                .IsUnique()
-                .HasFilter("([NormalizedName] IS NOT NULL)");
-
             entity.Property(e => e.Name).HasMaxLength(256);
             entity.Property(e => e.NormalizedName).HasMaxLength(256);
         });
 
         modelBuilder.Entity<AspNetRoleClaim>(entity =>
         {
-            entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
-
             entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
         });
 
         modelBuilder.Entity<AspNetUser>(entity =>
         {
-            entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
-
-            entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
-                .IsUnique()
-                .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
             entity.Property(e => e.Email).HasMaxLength(256);
             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
@@ -124,22 +106,17 @@ public partial class WebsiteClothesContext : DbContext
                     {
                         j.HasKey("UserId", "RoleId");
                         j.ToTable("AspNetUserRoles");
-                        j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
                     });
         });
 
         modelBuilder.Entity<AspNetUserClaim>(entity =>
         {
-            entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
-
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
         });
 
         modelBuilder.Entity<AspNetUserLogin>(entity =>
         {
             entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
-
-            entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
 
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
         });
@@ -200,6 +177,9 @@ public partial class WebsiteClothesContext : DbContext
             entity.Property(e => e.DiscountConditions)
                 .HasMaxLength(50)
                 .HasColumnName("Discount_Conditions");
+            entity.Property(e => e.DiscountName)
+                .HasMaxLength(100)
+                .HasColumnName("Discount_Name");
             entity.Property(e => e.DiscountType)
                 .HasMaxLength(50)
                 .HasColumnName("Discount_Type");
@@ -232,7 +212,7 @@ public partial class WebsiteClothesContext : DbContext
 
         modelBuilder.Entity<InventoryTransaction>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Inventor__55433A6B168DC7A0");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Inventor__55433A6B2B4009E0");
 
             entity.ToTable("InventoryTransaction");
 
@@ -252,7 +232,7 @@ public partial class WebsiteClothesContext : DbContext
 
         modelBuilder.Entity<InventoryTransactionDetail>(entity =>
         {
-            entity.HasKey(e => e.TransactionDetailId).HasName("PK__Inventor__F2B27FC675E9A800");
+            entity.HasKey(e => e.TransactionDetailId).HasName("PK__Inventor__F2B27FC671F3CE73");
 
             entity.ToTable("InventoryTransactionDetail");
 
@@ -420,7 +400,7 @@ public partial class WebsiteClothesContext : DbContext
 
         modelBuilder.Entity<ReviewProduct>(entity =>
         {
-            entity.HasKey(e => e.IdRv).HasName("PK__ReviewPr__B7702B0F124E5792");
+            entity.HasKey(e => e.IdRv).HasName("PK__ReviewPr__B7702B0F7C83BC1A");
 
             entity.ToTable("ReviewProduct");
 
@@ -442,11 +422,11 @@ public partial class WebsiteClothesContext : DbContext
 
         modelBuilder.Entity<Sku>(entity =>
         {
-            entity.HasKey(e => e.SkuId).HasName("PK__SKU__4BB929BA0CF4EB47");
+            entity.HasKey(e => e.SkuId).HasName("PK__SKU__4BB929BA85D1FC97");
 
             entity.ToTable("SKU");
 
-            entity.HasIndex(e => e.SkuCode, "UQ__SKU__005F304C3F60565E").IsUnique();
+            entity.HasIndex(e => e.SkuCode, "UQ__SKU__005F304CCC26146A").IsUnique();
 
             entity.Property(e => e.SkuId).HasColumnName("SKU_ID");
             entity.Property(e => e.SkuCode)
@@ -499,7 +479,7 @@ public partial class WebsiteClothesContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE666B4AC5FCC87");
+            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE666B466CB4FF3");
 
             entity.ToTable("Supplier");
 
@@ -533,7 +513,7 @@ public partial class WebsiteClothesContext : DbContext
 
         modelBuilder.Entity<Warehouse>(entity =>
         {
-            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__2608AFF92EDE8C3F");
+            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__2608AFF92BB6E791");
 
             entity.ToTable("Warehouse");
 
@@ -543,7 +523,7 @@ public partial class WebsiteClothesContext : DbContext
 
         modelBuilder.Entity<WarehouseBatch>(entity =>
         {
-            entity.HasKey(e => e.BatchId).HasName("PK__Warehous__5D55CE58B892049E");
+            entity.HasKey(e => e.BatchId).HasName("PK__Warehous__5D55CE5834DF8856");
 
             entity.ToTable("WarehouseBatch");
 
@@ -569,7 +549,7 @@ public partial class WebsiteClothesContext : DbContext
 
         modelBuilder.Entity<WarehouseProduct>(entity =>
         {
-            entity.HasKey(e => e.WarehouseProductId).HasName("PK__Warehous__08D59F039E0F9074");
+            entity.HasKey(e => e.WarehouseProductId).HasName("PK__Warehous__08D59F0301F7D655");
 
             entity.ToTable("WarehouseProduct");
 

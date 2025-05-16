@@ -20,8 +20,10 @@ namespace _21BITV03_Nhom04_website_clothes.Models
         public List<ProductColor> ColorOptions { get; set; } = new List<ProductColor>();
         public List<ProductSize> SizeOptions { get; set; } = new List<ProductSize>();
         public List<Material> MaterialOptions { get; set; } = new List<Material>();
+        public List<ReviewProductView> Reviews { get; set; } = new List<ReviewProductView>();
+        public List<ProductDiscountViewModel> DiscountInfos { get; set; } = new List<ProductDiscountViewModel>();
 
-        public List<ReviewProductView> Reviews { get; set; } = new List<ReviewProductView>(); 
+
 
     }
 
@@ -49,5 +51,16 @@ namespace _21BITV03_Nhom04_website_clothes.Models
         public string? Email { get; set; }
         public string? Comment { get; set; }
     }
+    public class ProductDiscountViewModel
+    {
+        public int DiscountId { get; set; }
+        public int? MainProductDiscountId { get; set; }
 
+        public string? DiscountType { get; set; }
+        public double? DiscountAmount { get; set; }
+        public string? DiscountConditions { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public string? DiscountName { get; set; }
+    }
 }

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<_21BITV03_Nhom04_website_clothes.Models.DiscountViewModel>
+
+@{
+    ViewData["Title"] = "Discount Management";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Quản lý khuyến mãi</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Khuyến mãi</li>
+    </ol>
+
+    <p>
+        <a asp-action="Create" class="btn btn-success">Tạo chương trình khuyến mãi mới</a>
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-tags me-1"></i>
+            Danh sách khuyến mãi
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Tên khuyến mãi</th>
+
+                        <th>Loại khuyến mãi</th>
+                        <th>Số tiền / %</th>
+
+                        <th>Thời gian bắt đầu</th>
+                        <th>Thời gian kết thúc</th>
+                        <th>Sản phẩm áp dụng</th>
+                        <th style="text-align: center;">Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var discount in Model)
+                    {
+                        <tr>
+                            <td>@discount.Discount?.DiscountName</td>
+                            <td>@discount.Discount?.DiscountType</td>
+                            <td>@discount.Discount?.DiscountAmount</td>
+                            <td>@(discount.Discount?.StartTime?.ToString("g"))</td>
+                            <td>@(discount.Discount?.EndTime?.ToString("g"))</td>
+                            <td>
+                                @if (discount.Discount?.DiscountedProductLists != null)
+                                {
+                                    foreach (var dp in discount.Discount.DiscountedProductLists)
+                                    {
+                                        <span class="badge bg-info text-dark me-1">@dp.Product?.ProductName</span>
+                                    }
+                                }
+                            </td>
+                            <td style="text-align: center;">
+                                <a asp-action="Edit" asp-route-id="@discount.Discount?.DiscountId" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+                                <form asp-action="DeleteConfirmed" method="post" asp-route-id="@discount.Discount?.DiscountId" onsubmit="return confirm('Bạn có chắc muốn xóa khuyến mãi này?');" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash-alt"></i> Xóa
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
