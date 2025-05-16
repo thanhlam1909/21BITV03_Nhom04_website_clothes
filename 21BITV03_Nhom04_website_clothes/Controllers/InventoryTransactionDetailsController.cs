@@ -21,49 +21,50 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         // GET: InventoryTransactionDetails
         public async Task<IActionResult> Index(int? transactionId)
         {
-            // Kiểm tra transactionId có giá trị hay không
-            if (transactionId == null)
-            {
-                return NotFound(); // Hoặc chuyển hướng đến trang danh sách giao dịch
-            }
-
-            // Lấy thông tin giao dịch
-            var transaction = await _context.InventoryTransactions
-                .Include(t => t.Warehouse)
-                .Include(t => t.Supplier)
-                .Include(t => t.InventoryTransactionDetails)
-                .ThenInclude(d => d.SubProduct)
-                   .ThenInclude(SubProduct => SubProduct.MainProduct)
-                .FirstOrDefaultAsync(t => t.TransactionId == transactionId);
-
-            // Kiểm tra xem giao dịch có tồn tại không
             if (transactionId == null)
             {
                 return NotFound();
             }
 
-            // Lấy chi tiết giao dịch
+            var transaction = await _context.InventoryTransactions
+                .Include(t => t.Warehouse)
+                .Include(t => t.Supplier)
+                .Include(t => t.InventoryTransactionDetails)
+                    .ThenInclude(d => d.SubProduct)
+                        .ThenInclude(sp => sp.MainProduct)
+                .FirstOrDefaultAsync(t => t.TransactionId == transactionId);
+
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
             var details = await _context.InventoryTransactionDetails
                 .Where(d => d.TransactionId == transactionId)
                 .Include(d => d.SubProduct)
                 .ToListAsync();
 
-            // Truyền dữ liệu vào View
-            ViewBag.TransactionId = transactionId; // Truyền thông tin giao dịch qua ViewBag
-            return View(transaction.InventoryTransactionDetails.ToList()); // Truyền danh sách chi tiết vào View
+            // Tạo ViewData cho SubProducts với tên hiển thị đầy đủ
+            var subProducts = _context.SubProducts
+                .Include(sp => sp.MainProduct)
+                .Include(sp => sp.Color)
+                .Include(sp => sp.Size)
+                .Include(sp => sp.Material)
+                .ToList()
+                .Select(sp => new
+                {
+                    SubProductId = sp.SubProductId,
+                    DisplayName = $"{sp.MainProduct?.ProductName ?? "Không rõ"} - {sp.Color?.ColorName ?? "Không rõ"} - {sp.Size?.SizeName ?? "Không rõ"} - {sp.Material?.MaterialName ?? "Không rõ"}"
+                });
+
+            ViewData["SubProductId"] = new SelectList(subProducts, "SubProductId", "DisplayName");
+            ViewBag.TransactionId = transactionId;
+
+            return View(transaction.InventoryTransactionDetails.ToList());
         }
+
 
         // GET: InventoryTransactionDetails/Details/5
-
-        // GET: InventoryTransactionDetails/Create
-        public IActionResult Create(int? transactionId)
-        {
-            ViewData["SubProductId"] = new SelectList(_context.SubProducts, "SubProductId", "SubProductId"); // Thay "SubProductId" bằng "Name" để hiển thị tên
-            ViewData["TransactionId"] = new SelectList(_context.InventoryTransactions, "TransactionId", "TransactionId", transactionId);
-            ViewBag.TransactionId = transactionId; // Giữ transactionId để truyền sang view
-            return View(new InventoryTransactionDetail { TransactionId = transactionId ?? 0 }); // Khởi tạo model với TransactionId
-        }
-
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         //public async Task<IActionResult> Create([Bind("TransactionDetailId,TransactionId,SubProductId,Quantity,UnitPrice")] InventoryTransactionDetail inventoryTransactionDetail)
@@ -82,6 +83,31 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         //    ViewBag.TransactionId = inventoryTransactionDetail.TransactionId;
         //    return RedirectToAction(nameof(Index), new { transactionId = inventoryTransactionDetail.TransactionId });
         //}
+        // GET: InventoryTransactionDetails/Create
+        public IActionResult Create(int? transactionId)
+        {
+            var subProducts = _context.SubProducts
+                .Include(sp => sp.MainProduct)
+                .Include(sp => sp.Color)
+                .Include(sp => sp.Size)
+                .Include(sp => sp.Material)
+                .ToList()
+                .Select(sp => new
+                {
+                    SubProductId = sp.SubProductId,
+                    DisplayName = $"{sp.MainProduct?.ProductName ?? "Không rõ"} - {sp.Color?.ColorName ?? "Không rõ"} - {sp.Size?.SizeName ?? "Không rõ"} - {sp.Material?.MaterialName ?? "Không rõ"}"
+                });
+
+            ViewData["SubProductId"] = new SelectList(subProducts, "SubProductId", "DisplayName");
+
+            ViewData["TransactionId"] = new SelectList(_context.InventoryTransactions, "TransactionId", "TransactionId", transactionId);
+            ViewBag.TransactionId = transactionId;
+
+            return View(new InventoryTransactionDetail { TransactionId = transactionId ?? 0 });
+        }
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TransactionDetailId,TransactionId,SubProductId,Quantity,UnitPrice")] InventoryTransactionDetail inventoryTransactionDetail)
@@ -158,22 +184,41 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         }
 
         // GET: InventoryTransactionDetails/Edit/5
-        public async Task<IActionResult> Edit(int? id, int transactionId )
+        public async Task<IActionResult> Edit(int? id, int transactionId)
         {
             if (id == null)
             {
                 return NotFound();
             }
+
             ViewBag.TransactionId = transactionId;
+
             var inventoryTransactionDetail = await _context.InventoryTransactionDetails.FindAsync(id);
             if (inventoryTransactionDetail == null)
             {
                 return NotFound();
             }
-            ViewData["SubProductId"] = new SelectList(_context.SubProducts, "SubProductId", "SubProductId", inventoryTransactionDetail.SubProductId);
+
+            // Load dữ liệu SubProduct kèm thông tin liên quan
+            var subProducts = await _context.SubProducts
+                .Include(sp => sp.MainProduct)
+                .Include(sp => sp.Color)
+                .Include(sp => sp.Size)
+                .Include(sp => sp.Material)
+                .ToListAsync();
+
+            var subProductSelectList = subProducts.Select(sp => new
+            {
+                SubProductId = sp.SubProductId,
+                DisplayName = $"{sp.MainProduct?.ProductName ?? "Không rõ"} - {sp.Color?.ColorName ?? "Không rõ"} - {sp.Size?.SizeName ?? "Không rõ"} - {sp.Material?.MaterialName ?? "Không rõ"}"
+            });
+
+            ViewData["SubProductId"] = new SelectList(subProductSelectList, "SubProductId", "DisplayName", inventoryTransactionDetail.SubProductId);
             ViewData["TransactionId"] = new SelectList(_context.InventoryTransactions, "TransactionId", "TransactionId", inventoryTransactionDetail.TransactionId);
+
             return View(inventoryTransactionDetail);
         }
+
 
         // POST: InventoryTransactionDetails/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.

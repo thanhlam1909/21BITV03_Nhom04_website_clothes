@@ -14,7 +14,7 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id, int? color, int? size, int? material)
         {
             var redirectResult = NavigationHelper.RedirectToRoleBasedPage(this);
             if (redirectResult != null)
@@ -23,14 +23,14 @@ namespace _21BITV03_Nhom04_website_clothes.Controllers
             }
             // Fetch the specific product by ID from the database
             var product = await _context.Products
-                .Include(p => p.SubProducts)
-                    .ThenInclude(sp => sp.Color)  // Include ProductColor
-                .Include(p => p.SubProducts)
-                    .ThenInclude(sp => sp.Size)
-                                    .Include(p => p.SubProducts)
-                    .ThenInclude(sp => sp.Material)
-                .Include(p => p.ReviewProducts)
-                .FirstOrDefaultAsync(p => p.ProductId == id);
+                 .Include(p => p.SubProducts)
+                     .ThenInclude(sp => sp.Color)
+                 .Include(p => p.SubProducts)
+                     .ThenInclude(sp => sp.Size)
+                 .Include(p => p.SubProducts)
+                     .ThenInclude(sp => sp.Material)
+                 .Include(p => p.ReviewProducts)
+                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
             // Check if the product exists
             if (product == null)

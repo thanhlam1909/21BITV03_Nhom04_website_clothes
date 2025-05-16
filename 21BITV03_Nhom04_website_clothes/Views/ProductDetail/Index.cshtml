@@ -3,6 +3,22 @@
     ViewData["Title"] = "ProductDetail";
     Layout = "~/Views/Shared/_Layout_LoginAndRegister.cshtml";
 }
+@section MetaTags {
+    <meta name="description" content="@Html.Raw(Model.Description.Substring(0, Math.Min(Model.Description.Length, 160)))">
+    <meta name="keywords" content="@Html.Raw(Model.ProductName), Mua @Html.Raw(Model.ProductName), Giá @Html.Raw(Model.ProductName)">
+    <meta name="author" content="Your Brand Name">
+    <meta property="og:title" content="@Html.Raw(Model.ProductName) - Shop Name">
+    <meta property="og:description" content="@Html.Raw(Model.Description.Substring(0, Math.Min(Model.Description.Length, 160)))">
+   @using System.Web
+@{
+        var ogImage = Model.SubProducts.FirstOrDefault()?.LinkImage ?? "default-image.jpg";
+        var encodedOgImage = HttpUtility.UrlEncode(ogImage);
+    }
+    <meta property="og:image" content="@encodedOgImage">
+
+    <meta property="og:url" content="@Url.Action("Index", "ProductDetail", new { id = Model.ProductId }, "https")">
+    <meta property="og:type" content="product">
+}
 <style>
     .btn.active {
         background-color: #007bff; /* Change to desired active color */

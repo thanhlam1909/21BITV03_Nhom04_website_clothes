@@ -48,7 +48,16 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.SubProduct?.MainProduct?.ProductName</td>
+                            <td>
+                                @{
+                                    var sp = item.SubProduct;
+                                    string displayName = $"{sp?.MainProduct?.ProductName ?? "Không rõ"} - " +
+                                    $"{sp?.Color?.ColorName ?? "Không rõ"} - " +
+                                    $"{sp?.Size?.SizeName ?? "Không rõ"} - " +
+                                    $"{sp?.Material?.MaterialName ?? "Không rõ"}";
+                                }
+                                @displayName
+                            </td>
                             <td>@item.Quantity</td>
                             <td>@String.Format("{0:N0}₫", item.UnitPrice)</td>
                             <td>@item.TransactionId</td>
